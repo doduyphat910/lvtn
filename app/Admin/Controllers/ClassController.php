@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Models\ClassSTU;
 
+use App\Models\Department;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Facades\Admin;
@@ -74,7 +75,14 @@ class ClassController extends Controller
         return Admin::grid(ClassSTU::class, function (Grid $grid) {
 
             $grid->id('ID')->sortable();
-
+            $grid->name('Tên lớp');
+            $grid->id_department('Tên khoa')->display(function ($idDepartment){
+                if($idDepartment) {
+                    return Department::find($idDepartment)->name;
+                } else {
+                    return '';
+                }
+            });
             $grid->created_at();
             $grid->updated_at();
         });
@@ -90,6 +98,8 @@ class ClassController extends Controller
         return Admin::form(ClassSTU::class, function (Form $form) {
 
             $form->display('id', 'ID');
+            $form->text('name', 'Tên lớp')->rules('required');
+            $form->select('id_department')->options(Department::all()->pluck('name', 'id'))->rules('required');
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
         });

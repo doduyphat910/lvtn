@@ -74,7 +74,7 @@ class DepartmentController extends Controller
         return Admin::grid(Department::class, function (Grid $grid) {
 
             $grid->id('ID')->sortable();
-
+            $grid->name('name');
             $grid->created_at();
             $grid->updated_at();
         });
@@ -90,7 +90,7 @@ class DepartmentController extends Controller
         return Admin::form(Department::class, function (Form $form) {
 
             $form->display('id', 'ID');
-
+            $form->text('name', 'Tên khoa');
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
         });

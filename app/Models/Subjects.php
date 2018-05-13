@@ -25,5 +25,8 @@ class Subjects extends Model
     public function semester() {
         return $this->belongsTo(Semester::class);
     }
+    public function rate() {
+        return $this->belongsTo(Rate::class);
+    }
 
 }

@@ -2,6 +2,8 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Extensions\Rate\AdminRateFacades;
+use App\Admin\Extensions\Rate\FormRate;
 use App\Models\Rate;
 
 use Encore\Admin\Form;
@@ -74,7 +76,10 @@ class RateController extends Controller
         return Admin::grid(Rate::class, function (Grid $grid) {
 
             $grid->id('ID')->sortable();
-
+            $grid->name('Tỷ lệ');
+            $grid->attendance('Chuyên cần');
+            $grid->midterm('Giữa kì');
+            $grid->end_term('Cuối kì');
             $grid->created_at();
             $grid->updated_at();
         });
@@ -87,12 +92,12 @@ class RateController extends Controller
      */
     protected function form()
     {
-        return Admin::form(Rate::class, function (Form $form) {
+        return AdminRateFacades::form(Rate::class, function (FormRate $form) {
             $form->display('id', 'ID');
-            $form->text('name', 'Name')->rules('required');
-            $form->number('attendance', 'Tỉ lệ điểm chuyên cần')->rules('Integer:20');
-            $form->number('midterm', 'Tỉ lệ điểm giữa kì');
-            $form->number('end_term', 'Tỉ lệ điểm cuối kì');
+            $form->text('name', 'Tên tỷ lệ')->rules('required');
+            $form->number('attendance', 'Tỉ lệ điểm chuyên cần')->rules('integer|max:20')->rules('integer|min:0');
+            $form->number('midterm', 'Tỉ lệ điểm giữa kì')->rules('integer|max:50')->rules('integer|min:0');
+            $form->number('end_term', 'Tỉ lệ điểm cuối kì')->rules('integer|max:100')->rules('integer|min:50');
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
         });
