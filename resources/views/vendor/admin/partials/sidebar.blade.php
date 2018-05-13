@@ -38,3 +38,8 @@
     </section>
     <!-- /.sidebar -->
 </aside>
+<style>
+    body {
+        font-family: "Times New Roman";
+    }
+</style>
