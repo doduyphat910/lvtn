@@ -14,7 +14,7 @@ class ClassSTU extends Model
     public function department() {
         return $this->belongsTo(Department::class);
     }
-    public function student_user() {
-        return $this->hasMany(StudentUser::class);
+    public function user_teacher() {
+        return $this->belongsTo(UserAdmin::class);
     }
 }

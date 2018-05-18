@@ -36,12 +36,15 @@ Route::group([
     //rate
     $router->resource('rate', RateController::class);
 
-    //User
-    $router->get('student_user/create');
-    $router->resource('all_user',StudentUserController::class );
-    $router->resource('teacher_user', StudentUserController::class);
-    $router->resource('student_user', StudentUserController::class);
+    // User
+    $router->get('user_admin/create');
+    $router->resource('user_admin',UserAdminController::class );
+    $router->resource('teacher_user',UserAdminController::class );
+    $router->resource('all_user',UserAdminController::class );
+//    $router->resource('student_user', UserAdminController::class);
 
+//    //Teacher User
+//    $router->resource('teacher_user', TeacherUserController::class);
     //class
     $router->resource('class', ClassController::class);
 

@@ -3,7 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Models\ClassSTU;
-use App\Models\StudentUser;
+use App\Models\UserAdmin;
 use App\Models\SubjectGroup;
 
 use Encore\Admin\Auth\Database\Permission;
@@ -17,7 +17,7 @@ use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\ModelForm;
 use Illuminate\Support\Facades\Route;
 
-class StudentUserController extends UserController
+class UserAdminController extends UserController
 {
     use ModelForm;
 
@@ -75,18 +75,15 @@ class StudentUserController extends UserController
      */
     protected function grid()
     {
-        return Admin::grid(StudentUser::class,function (Grid $grid) {
+        return Admin::grid(UserAdmin::class,function (Grid $grid) {
             $grid->id('ID')->sortable();
             $currentPath = Route::getFacadeRoot()->current()->uri();
-            if($currentPath == 'admin/student_user') {
-                $grid->model()->where('is_teacher', '0');
-                $grid->code_number('Mã số sinh viên');
-            } elseif($currentPath == 'admin/teacher_user') {
-                $grid->model()->where('is_teacher', '1');
-                $grid->code_number('Mã số giảng viên');
-            } else {
-                $grid->code_number('Mã số');
+            if ($currentPath == 'admin/teacher_user') {
+                $grid->model()->where('type_user', '0');
+            } else if($currentPath == 'admin/user_admin') {
+                $grid->model()->where('type_user', '1');
             }
+            $grid->code_number('Mã số');
             $grid->username(trans('admin.username'));
             $grid->name(trans('admin.name'));
             $grid->roles(trans('admin.roles'))->pluck('name')->label();
@@ -96,6 +93,13 @@ class StudentUserController extends UserController
                     return ClassSTU::find($idClass)->name;
                 } else {
                     return 'Không có';
+                }
+            });
+            $grid->type_user('Loại tài khoản')->display(function ($typeUser){
+                if($typeUser == 0) {
+                    return 'Giảng viên';
+                } else if($typeUser == 1) {
+                    return 'Quản trị';
                 }
             });
             $grid->created_at(trans('admin.created_at'));
@@ -122,10 +126,26 @@ class StudentUserController extends UserController
      */
     public function form()
     {
-        return Admin::form(StudentUser::class, function (Form $form) {
+        return Admin::form(UserAdmin::class, function (Form $form) {
+            $script = <<<EOT
+        $(function () {
+            $("label.radio-inline ,.iCheck-helper").on("click",function(){
+                       var value_target =  $("input[name='type_user']:checked").val();
+                      if(value_target =='0')
+                      {
+                         $('.id_class').parent().parent().css("display", "block");
+                     }else{
+                         if(value_target =='1'){
+                             $('.id_class').parent().parent().css("display", "none");
+                           }
+                     }
+                        
+                });
+            });
+EOT;
+            Admin::script($script);
 
             $form->display('id', 'ID');
-
             $form->text('username', trans('admin.username'))->rules('required');
             $form->text('name', trans('admin.name'))->rules('required');
             $form->email('email', 'Email');
@@ -137,19 +157,42 @@ class StudentUserController extends UserController
                 });
 
             $form->ignore(['password_confirmation']);
-            $form->select('id_class', 'Class')->options(ClassSTU::all()->pluck('name', 'id'));
-            $form->select('is_teacher', 'Loại tài khoản')->options(['0'=>'Sinh viên', '1'=>'Giảng viên', '2'=>'Quản trị viên']);
+            $form->radio('type_user', 'Loại tài khoản')->options(['0' => 'Giảng viên', '1'=> 'Quản trị']);
+
+            $form->select('id_class', 'Lớp')->options(ClassSTU::all()->pluck('name', 'id'))
+                ->setElementClass('id_class');
             $form->multipleSelect('roles', trans('admin.roles'))->options(Role::all()->pluck('name', 'id'));
             $form->multipleSelect('permissions', trans('admin.permissions'))->options(Permission::all()->pluck('name', 'id'));
 
             $form->display('created_at', trans('admin.created_at'));
             $form->display('updated_at', trans('admin.updated_at'));
-
+            $form->hidden('code_number');
             $form->saving(function (Form $form) {
                 if ($form->password && $form->model()->password != $form->password) {
                     $form->password = bcrypt($form->password);
                 }
             });
+            $form->hidden('code_number');
+            $form->saving(function (Form $form) {
+                if($form->type_user == 0) {
+                    $code = 'GV';
+                    $count = UserAdmin::where('type_user', 0)->get()->count();
+                    $form->code_number = $code . '500'. ($count + 1);
+                } else if($form->type_user == 1) {
+                    $code = 'QT';
+                    $count = UserAdmin::where('type_user', 1)->get()->count();
+                    $form->code_number = $code . '00'. ($count + 1);
+
+                }
+            });
+
+
+//            $form->saving(function (Form $form) {
+//                $count = StudentUser::where('school_year', $form->school_year )->count();
+//                $year = $form->school_year;
+//                $year = substr( $year, 2, 2);
+//                $form->code_number = $form->level . '5' . $year . '00'. ($count + 1);
+//            });
         });
     }
 }
