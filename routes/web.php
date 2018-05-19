@@ -14,5 +14,12 @@
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('getLogin',function(){
+	return view('User.getLogin');
+});
+Route::post('postLogin','UserController@postlogin');
 
-Route::get('user', 'UserController@test');
+Route::group(['prefix'=>'user', 'middleware'=>'studentLogin'], function(){
+	Route::get('student', 'UserController@test');
+});
+
