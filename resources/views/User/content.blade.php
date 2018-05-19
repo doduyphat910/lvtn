@@ -1,4 +1,4 @@
-@extends('admin::index')
+@extends('User.index2')
 
 @section('content')
     <section class="content-header">

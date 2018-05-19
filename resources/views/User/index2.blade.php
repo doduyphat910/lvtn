@@ -40,20 +40,20 @@
 </head>
 
 <body class="hold-transition {{config('admin.skin')}} {{join(' ', config('admin.layout'))}}">
-<div class="wrapper">
+{{--<div class="wrapper ">--}}
 
-    @include('admin::partials.header')
+    @include('User.partials.header')
 
-    @include('admin::partials.sidebar')
+{{--    @include('User.partials.sidebar')--}}
 
-    <div class="content-wrapper" id="pjax-container">
+    <div class="container" id="pjax-container">
         @yield('content')
         {!! Admin::script() !!}
     </div>
 
-    @include('admin::partials.footer')
+    @include('User.partials.footer')
 
-</div>
+{{--</div>--}}
 
 <!-- ./wrapper -->
 

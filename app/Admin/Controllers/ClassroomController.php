@@ -96,4 +96,24 @@ class ClassroomController extends Controller
             $form->display('updated_at', 'Updated At');
         });
     }
+
+    public function details($id){
+        return Admin::content(function (Content $content) use ($id) {
+            $classRoom = Classroom::findOrFail($id);
+            $content->header('Lớp');
+            $content->description($classRoom->name);
+            $content->body($this->detailsView($id));
+        });
+    }
+
+    public function detailsView($id){
+        $form = $this->form()->view($id);
+        return view('vendor.details',
+            [
+                'template_body_name' => 'admin.ClassRoom.info',
+                'form' => $form,
+
+            ]
+        );
+    }
 }

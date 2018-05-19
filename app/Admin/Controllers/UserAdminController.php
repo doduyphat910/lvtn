@@ -163,16 +163,14 @@ EOT;
                 ->setElementClass('id_class');
             $form->multipleSelect('roles', trans('admin.roles'))->options(Role::all()->pluck('name', 'id'));
             $form->multipleSelect('permissions', trans('admin.permissions'))->options(Permission::all()->pluck('name', 'id'));
-
+            $form->hidden('code_number');
             $form->display('created_at', trans('admin.created_at'));
             $form->display('updated_at', trans('admin.updated_at'));
-            $form->hidden('code_number');
             $form->saving(function (Form $form) {
                 if ($form->password && $form->model()->password != $form->password) {
                     $form->password = bcrypt($form->password);
                 }
             });
-            $form->hidden('code_number');
             $form->saving(function (Form $form) {
                 if($form->type_user == 0) {
                     $code = 'GV';

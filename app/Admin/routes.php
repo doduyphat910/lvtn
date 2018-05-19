@@ -31,6 +31,7 @@ Route::group([
     $router->resource('subject_group', SubjectGroupController::class);
 
     //class_room
+    $router->get('class_room/{id}/details', 'ClassroomController@details');
     $router->resource('class_room', ClassroomController::class);
 
     //rate
@@ -45,10 +46,13 @@ Route::group([
 
 //    //Teacher User
 //    $router->resource('teacher_user', TeacherUserController::class);
+
     //class
+    $router->get('class/{id}/details', 'ClassController@details');
     $router->resource('class', ClassController::class);
 
     //department
+    $router->get('department/{id}/details', 'DepartmentController@details');
     $router->resource('department', DepartmentController::class);
 
 }
