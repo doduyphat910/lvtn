@@ -12,7 +12,7 @@ class UserSubjectRegister extends Model
         return $this->hasOne(Point::class);
     }
     public function student_user() {
-        return $this->belongsTo(StudentUser::class);
+        return $this->belongsTo(UserAdmin::class);
     }
     public function subject_register() {
         return $this->belongsTo(SubjectRegister::class);

@@ -12,7 +12,7 @@ class UserSubject extends Model
     protected $table = 'user_subject';
 
     public function student_user() {
-        return $this->belongsTo(StudentUser::class);
+        return $this->belongsTo(UserAdmin::class);
     }
     public function subject() {
         return $this->belongsTo(Subjects::class);

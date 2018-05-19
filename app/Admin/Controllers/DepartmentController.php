@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\ClassSTU;
 use App\Models\Department;
 
 use Encore\Admin\Form;
@@ -74,12 +75,40 @@ class DepartmentController extends Controller
         return Admin::grid(Department::class, function (Grid $grid) {
 
             $grid->id('ID')->sortable();
-
+            $grid->name('Tên khoa')->display(function ($name){
+                return '<a href="/admin/department/' . $this->id . '/details">'.$name.'</a>';
+            });
+            $grid->actions(function ($actions) {
+                $actions->append('<a href="/admin/department/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
+            });
             $grid->created_at();
             $grid->updated_at();
         });
     }
 
+    protected function gridClass($idClass)
+    {
+        return Admin::grid(ClassSTU::class, function (Grid $grid) use ($idClass) {
+            $grid->model()->whereIn('id', $idClass);
+            $grid->id('ID')->sortable();
+            $grid->name('Tên lớp');
+            $grid->id_department('Tên khoa')->display(function ($idDepartment){
+                if($idDepartment) {
+                    return Department::find($idDepartment)->name;
+                } else {
+                    return '';
+                }
+            });
+            $grid->created_at();
+            $grid->updated_at();
+
+            $grid->disableExport();
+            $grid->disableCreation();
+            $grid->disableExport();
+            $grid->disableRowSelector();
+            $grid->disableFilter();
+        });
+    }
     /**
      * Make a form builder.
      *
@@ -90,9 +119,32 @@ class DepartmentController extends Controller
         return Admin::form(Department::class, function (Form $form) {
 
             $form->display('id', 'ID');
-
-            $form->display('created_at', 'Created At');
-            $form->display('updated_at', 'Updated At');
+            $form->text('name', 'Tên khoa');
+            $form->display('created_at', 'Tạo vào lúc');
+            $form->display('updated_at', 'Cập nhật vào lúc');
         });
+    }
+
+    public function details($id){
+        return Admin::content(function (Content $content) use ($id) {
+            $department = Department::findOrFail($id);
+            $content->header('Khoa');
+            $content->description($department->name);
+            $content->body($this->detailsView($id));
+        });
+    }
+
+    public function detailsView($id) {
+         $form = $this->form()->view($id);
+         $idClass = ClassSTU::where('id_department', $id)->pluck('id');
+         $gridClass = $this->gridClass($idClass)->render();
+         return view('vendor.details',
+             [
+                 'template_body_name' => 'admin.Department.info',
+                 'form' => $form,
+                 'gridClass' => $gridClass
+             ]
+         );
+
     }
 }

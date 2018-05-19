@@ -20,7 +20,7 @@ class SubjectRegister extends Model
     }
 
     public function student_user() {
-        return $this->belongsTo(StudentUser::class);
+        return $this->belongsTo(UserAdmin::class);
     }
     public function subject() {
         return $this->belongsTo(Subjects::class);
@@ -30,6 +30,11 @@ class SubjectRegister extends Model
     }
     public function class_room() {
         return $this->belongsTo(Classroom::class);
+    }
+
+    //learning session
+    public function time_study(){
+        return $this->hasMany(TimeStudy::class, 'id_subject_register');
     }
 
 }

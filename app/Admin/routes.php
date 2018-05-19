@@ -31,12 +31,29 @@ Route::group([
     $router->resource('subject_group', SubjectGroupController::class);
 
     //class_room
+    $router->get('class_room/{id}/details', 'ClassroomController@details');
     $router->resource('class_room', ClassroomController::class);
 
     //rate
     $router->resource('rate', RateController::class);
 
+    // User
+    $router->get('user_admin/create');
+    $router->resource('user_admin',UserAdminController::class );
+    $router->resource('teacher_user',UserAdminController::class );
+    $router->resource('all_user',UserAdminController::class );
+//    $router->resource('student_user', UserAdminController::class);
 
+//    //Teacher User
+//    $router->resource('teacher_user', TeacherUserController::class);
+
+    //class
+    $router->get('class/{id}/details', 'ClassController@details');
+    $router->resource('class', ClassController::class);
+
+    //department
+    $router->get('department/{id}/details', 'DepartmentController@details');
+    $router->resource('department', DepartmentController::class);
 
 }
 

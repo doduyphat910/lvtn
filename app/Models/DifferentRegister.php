@@ -12,7 +12,7 @@ class DifferentRegister extends Model
     protected $table = 'different_register';
 
     public function student_user() {
-        return $this->belongsTo(StudentUser::class);
+        return $this->belongsTo(UserAdmin::class);
     }
     public function subject_register() {
         return $this->belongsTo(SubjectRegister::class);
