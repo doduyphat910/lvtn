@@ -29,8 +29,8 @@ class SubjectRegisterController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('header');
-            $content->description('description');
+            $content->header('Học phần');
+            $content->description('Danh sách học phần');
 
             $content->body($this->grid());
         });
@@ -79,7 +79,9 @@ class SubjectRegisterController extends Controller
         return Admin::grid(SubjectRegister::class, function (Grid $grid) {
 
             $grid->id('ID')->sortable();
-            $grid->code_subject_register('Mã học phần');
+            $grid->code_subject_register('Mã học phần')->display(function ($name){
+                return  '<a href="/admin/subject_register/' . $this->id . '/details">'.$name.'</a>';
+            });
             $grid->id_subjects('Môn học')->display(function ($idSubject){
                 if($idSubject){
                     return Subjects::find($idSubject)->name;
@@ -139,6 +141,12 @@ class SubjectRegisterController extends Controller
            // });
             $grid->created_at('Tạo vào lúc');
             $grid->updated_at('Cập nhật vào lúc');
+
+            //action
+            $grid->actions(function ($actions) {
+                $actions->append('<a href="/admin/subject_register/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
+            });
+
         });
     }
 
@@ -157,21 +165,26 @@ class SubjectRegisterController extends Controller
             var action  = action_link[action_link.length-1]
             if(action=="create"){
                 var is_create_error = $('i').hasClass('fa-times-circle-o');
-                if(is_create_error){
-                     $('.remove')[0].remove();
-                }else{
+//                if(is_create_error){
+//                     $('.remove')[0].remove();
+//                }else{
                    $('.add').click();
-                   $('.remove').remove();
-                }
+                  // $('.remove').remove();
+               // }
             }
             if(action=="edit")
             {
                 $('.remove')[0].remove();
             }
+            if(action=="details")
+            {
+                $('.remove').remove();
+                $('.add').remove();
+            }
 
         });
 EOT;
-//            Admin::script($script);
+            Admin::script($script);
             $form->display('id', 'ID');
             $form->text('code_subject_register', 'Mã học phần')->rules('required');
             $form->select('id_subjects', 'Môn học')->options(Subjects::all()->pluck('name', 'id'));
@@ -187,7 +200,7 @@ EOT;
             $form->display('updated_at', 'Updated At');
             $form->hasMany('time_study', 'Thời gian học', function (Form\NestedForm $form) {
                 $options = ['0'=>'Thứ 2', '1'=>'Thứ 3', '2'=>'Thứ 4', '3'=>'Thứ 5', '4'=>'Thứ 5', '5'=>'Thứ 6', '6'=>'Thứ 7'];
-                $form->select('day', 'Buổi học')->options($options);
+                $form->select('day', 'Ngày học')->options($options);
                 $form->time('time_study_start', 'Giờ học bắt đầu');
                 $form->time('time_study_end', 'Giờ học kết thúc');
             })->rules('required');
@@ -197,5 +210,25 @@ EOT;
 
 
         });
+    }
+
+    public function details($id){
+        return Admin::content(function (Content $content) use ($id) {
+            $subjectRegister = SubjectRegister::findOrFail($id);
+            $content->header('Học phần');
+            $content->description($subjectRegister->code_subject_register);
+            $content->body($this->detailsView($id));
+        });
+    }
+
+    public function detailsView($id){
+        $form = $this->form()->view($id);
+        return view('vendor.details',
+            [
+                'template_body_name' => 'admin.SubjectRegister.info',
+                'form' => $form
+
+            ]
+        );
     }
 }

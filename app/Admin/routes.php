@@ -13,21 +13,26 @@ Route::group([
     $router->get('/', 'HomeController@index');
 
     //year
+    $router->get('year/{id}/details', 'YearController@details');
     $router->resource('year', YearController::class);
 
     //semester
+    $router->get('semester/{id}/details', 'SemesterController@details');
     $router->resource('semester', SemesterController::class);
 
     //subject_register
+    $router->get('subject_register/{id}/details', 'SubjectRegisterController@details');
     $router->resource('subject_register', SubjectRegisterController::class);
 
     //time_register
     $router->resource('time_register', TimeRegisterController::class);
 
     //subject
+    $router->get('subject/{id}/details', 'SubjectsController@details');
     $router->resource('subjects', SubjectsController::class);
 
     //subject_group
+    $router->get('subject_group/{id}/details', 'SubjectGroupController@details');
     $router->resource('subject_group', SubjectGroupController::class);
 
     //class_room
@@ -35,6 +40,7 @@ Route::group([
     $router->resource('class_room', ClassroomController::class);
 
     //rate
+    $router->get('rate/{id}/details', 'RateController@details');
     $router->resource('rate', RateController::class);
 
     // User

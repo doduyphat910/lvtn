@@ -15,9 +15,9 @@ class SubjectRegister extends Model
         return $this->hasMany(UserSubjectRegister::class);
     }
 
-    public function different_register() {
-        return $this->hasMany(DifferentRegister::class);
-    }
+//    public function different_register() {
+//        return $this->hasMany(DifferentRegister::class);
+//    }
 
     public function student_user() {
         return $this->belongsTo(UserAdmin::class);

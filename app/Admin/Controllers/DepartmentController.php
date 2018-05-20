@@ -25,8 +25,8 @@ class DepartmentController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('header');
-            $content->description('description');
+            $content->header('Khoa, lớp');
+            $content->description('Danh sách khoa');
 
             $content->body($this->grid());
         });
@@ -107,6 +107,7 @@ class DepartmentController extends Controller
             $grid->disableExport();
             $grid->disableRowSelector();
             $grid->disableFilter();
+
         });
     }
     /**
