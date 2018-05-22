@@ -199,7 +199,7 @@ EOT;
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
             $form->hasMany('time_study', 'Thời gian học', function (Form\NestedForm $form) {
-                $options = ['0'=>'Thứ 2', '1'=>'Thứ 3', '2'=>'Thứ 4', '3'=>'Thứ 5', '4'=>'Thứ 5', '5'=>'Thứ 6', '6'=>'Thứ 7'];
+                $options = ['0'=>'Thứ 2', '1'=>'Thứ 3', '2'=>'Thứ 4', '3'=>'Thứ 5', '4'=>'Thứ 5', '5'=>'Thứ 6', '6'=>'Thứ 7', '7'=>'Chủ nhật'];
                 $form->select('day', 'Ngày học')->options($options);
                 $form->time('time_study_start', 'Giờ học bắt đầu');
                 $form->time('time_study_end', 'Giờ học kết thúc');

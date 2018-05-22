@@ -61,6 +61,8 @@ Route::group([
     $router->get('department/{id}/details', 'DepartmentController@details');
     $router->resource('department', DepartmentController::class);
 
+    //subject_before_after
+    $router->resource('subject_before_after', SubjectBeforeAfterController::class);
 }
 
 );

@@ -27,7 +27,7 @@ class SubjectGroupController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('Môn học, nhóm môn học');
+            $content->header('Môn học');
             $content->description('Danh sách nhóm môn học');
 
             $content->body($this->grid());
@@ -79,6 +79,9 @@ class SubjectGroupController extends Controller
             $grid->id('ID')->sortable();
             $grid->name('Tên nhóm môn')->display(function ($name){
                 return  '<a href="/admin/subject_group/' . $this->id . '/details">'.$name.'</a>';
+            });
+            $grid->actions(function ($actions) {
+                $actions->append('<a href="/admin/subject_group/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
             });
             $grid->created_at();
             $grid->updated_at();

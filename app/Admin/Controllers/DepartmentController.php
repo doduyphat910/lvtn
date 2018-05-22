@@ -91,7 +91,9 @@ class DepartmentController extends Controller
         return Admin::grid(ClassSTU::class, function (Grid $grid) use ($idClass) {
             $grid->model()->whereIn('id', $idClass);
             $grid->id('ID')->sortable();
-            $grid->name('Tên lớp');
+            $grid->name('Tên lớp')->display(function ($name){
+                return '<a href="/admin/class/' . $this->id . '/details">'.$name.'</a>';
+            });
             $grid->id_department('Tên khoa')->display(function ($idDepartment){
                 if($idDepartment) {
                     return Department::find($idDepartment)->name;
@@ -99,11 +101,18 @@ class DepartmentController extends Controller
                     return '';
                 }
             });
-            $grid->created_at();
-            $grid->updated_at();
-
-            $grid->disableExport();
-            $grid->disableCreation();
+            $grid->actions(function ($actions) {
+                $actions->append('<a href="/admin/class/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
+            });
+            $grid->created_at('Tạo vào lúc');
+            $grid->updated_at('Cập nhật vào lúc');
+            $grid->actions(function ($actions) {
+                $actions->disableEdit();
+                $actions->disableDelete();
+                $actions->append('<a href="/admin/class/' . $actions->getKey() . '/edit"><i class="fa fa-edit" ></i></a>');
+                $actions->append('<a href="/admin/class/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
+            });
+            $grid->disableCreateButton();
             $grid->disableExport();
             $grid->disableRowSelector();
             $grid->disableFilter();

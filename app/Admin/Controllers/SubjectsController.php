@@ -30,8 +30,8 @@ class SubjectsController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('header');
-            $content->description('description');
+            $content->header('Môn học');
+            $content->description('Danh sách môn học');
 
             $content->body($this->grid());
         });
