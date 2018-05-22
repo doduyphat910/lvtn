@@ -2,9 +2,12 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\Classroom;
 use App\Models\Rate;
+use App\Models\SubjectRegister;
 use App\Models\Subjects;
 
+use App\Models\UserAdmin;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Facades\Admin;
@@ -27,8 +30,8 @@ class SubjectsController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('header');
-            $content->description('description');
+            $content->header('Môn học');
+            $content->description('Danh sách môn học');
 
             $content->body($this->grid());
         });
@@ -78,7 +81,9 @@ class SubjectsController extends Controller
 
             $grid->id('ID')->sortable();
             $grid->subject_code('Mã môn học');
-            $grid->name('Tên môn học');
+            $grid->name('Tên môn học')->display(function ($name){
+                return  '<a href="/admin/subject/' . $this->id . '/details">'.$name.'</a>';
+            });
             $grid->credits('Số tín chỉ');
             $grid->credits_fee('Số tín chỉ học phí');
             $grid->id_semester('Học kỳ')->display(function ($id) {
@@ -110,6 +115,10 @@ class SubjectsController extends Controller
             });
             $grid->created_at();
             $grid->updated_at();
+            //action
+            $grid->actions(function ($actions) {
+                $actions->append('<a href="/admin/subject/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
+            });
         });
     }
 
@@ -143,5 +152,81 @@ class SubjectsController extends Controller
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
         });
+    }
+
+    protected function gridSubjectRegister($idSubjects)
+    {
+        return Admin::grid(SubjectRegister::class, function (Grid $grid) use ($idSubjects) {
+            $grid->model()->where('id_Subjects', $idSubjects);
+            $grid->id('ID')->sortable();
+            $grid->code_subject_register('Mã học phần');
+            $grid->id_subjects('Môn học')->display(function ($idSubject){
+                if($idSubject){
+                    return Subjects::find($idSubject)->name;
+                } else {
+                    return '';
+                }
+            });
+            $grid->id_classroom('Phòng học')->display(function ($id_classroom){
+                if($id_classroom){
+                    return Classroom::find($id_classroom)->name;
+                } else {
+                    return '';
+                }
+            });
+            $grid->id_user_teacher('Giảng viên')->display(function ($id_user_teacher){
+                if($id_user_teacher){
+                    $teacher = UserAdmin::find($id_user_teacher);
+                    if($teacher){
+                        return $teacher->name;
+                    } else {
+                        return '';
+                    }
+                } else {
+                    return '';
+                }
+            });
+            $grid->qty_current('Số lượng hiện tại');
+
+            $grid->date_start('Ngày bắt đầu');
+            $grid->date_end('Ngày kết thúc');
+
+            $grid->created_at('Tạo vào lúc');
+            $grid->updated_at('Cập nhật vào lúc');
+
+            $grid->disableExport();
+            $grid->disableCreation();
+            $grid->disableExport();
+            $grid->disableRowSelector();
+            $grid->disableFilter();
+            $grid->actions(function ($actions) {
+                $actions->disableEdit();
+                $actions->disableDelete();
+                $actions->append('<a href="/admin/subject_register/' . $actions->getKey() . '/edit"><i class="fa fa-edit" ></i></a>');
+                $actions->append('<a href="/admin/subject_register/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
+            });
+        });
+    }
+
+    public function details($id){
+        return Admin::content(function (Content $content) use ($id) {
+            $subject = Subjects::findOrFail($id);
+            $content->header('Môn học');
+            $content->description($subject->name);
+            $content->body($this->detailsView($id));
+        });
+    }
+
+    public function detailsView($id){
+        $form = $this->form()->view($id);
+        $gridSubjectRegister = $this->gridSubjectRegister($id)->render();
+        return view('vendor.details',
+            [
+                'template_body_name' => 'admin.Subject.info',
+                'form' => $form,
+                'gridSubjectRegister' => $gridSubjectRegister
+
+            ]
+        );
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\Semester;
 use App\Models\Year;
 
 use Encore\Admin\Form;
@@ -24,8 +25,8 @@ class YearController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('header');
-            $content->description('description');
+            $content->header('Năm, học kỳ');
+            $content->description('Danh sách năm');
 
             $content->body($this->grid());
         });
@@ -74,9 +75,43 @@ class YearController extends Controller
         return Admin::grid(Year::class, function (Grid $grid) {
 
             $grid->id('ID')->sortable();
-            $grid->name('Tên năm');
+            $grid->name('Tên năm')->display(function ($name){
+                return  '<a href="/admin/year/' . $this->id . '/details">'.$name.'</a>';
+            });
+            $grid->actions(function ($actions) {
+                $actions->append('<a href="/admin/year/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
+            });
+            $grid->created_at('Tạo vào lúc');
+            $grid->updated_at('Cập nhật vào lúc');
+        });
+    }
+
+    protected function gridSemester($idYear)
+    {
+        return Admin::grid(Semester::class, function (Grid $grid) use ($idYear) {
+            $grid->model()->where('id_year', $idYear);
+
+            $grid->id('ID')->sortable();
+            $grid->name('Tên')->display(function ($name){
+                return  '<a href="/admin/semester/' . $this->id . '/details">'.$name.'</a>';
+            });
+            $grid->credits_max('Số tín chỉ lớn nhất');
+            $grid->credits_min('Số tín chỉ nhỏ nhất');
+            $grid->id_year('Tên năm')->display(function ($idyear) {
+                return Year::find($idyear)->name;
+            });
+            $grid->actions(function ($actions) {
+                $actions->append('<a href="/admin/semester/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
+            });
             $grid->created_at();
             $grid->updated_at();
+            //disable
+            $grid->disableCreateButton();
+            $grid->disableExport();
+            $grid->disableRowSelector();
+            $grid->disableFilter();
+
+
         });
     }
 
@@ -91,8 +126,29 @@ class YearController extends Controller
 
             $form->display('id', 'ID');
             $form->text('name', 'Tên năm');
-            $form->display('created_at', 'Created At');
-            $form->display('updated_at', 'Updated At');
+            $form->display('created_at', 'Tạo vào lúc');
+            $form->display('updated_at', 'Cập nhật vào lúc');
         });
+    }
+    public function details($id){
+        return Admin::content(
+            function (Content $content) use ($id) {
+                $year = Year::findOrFail($id);
+                $content->header('Năm');
+                $content->description($year->name);
+                $content->body($this->detailsView($id));
+            });
+    }
+    public function detailsView($id) {
+        $form = $this->form()->view($id);
+        $gridSemester = $this->gridSemester($id)->render();
+        return view('vendor.details',
+            [
+                'template_body_name' => 'admin.Year.info',
+                'form' => $form,
+                'gridSemester' => $gridSemester
+            ]
+        );
+
     }
 }

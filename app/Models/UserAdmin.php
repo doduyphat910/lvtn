@@ -47,4 +47,10 @@ class UserAdmin extends Model implements AuthenticatableContract
         $this->setTable(config('admin.database.users_table'));
         parent::__construct($attributes);
     }
+    public function setPasswordAttribute($password)
+    {
+        if($password && $password != $this->password) {
+            $this->attributes['password'] = bcrypt($password);
+        }
+    }
 }

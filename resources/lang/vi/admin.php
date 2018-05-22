@@ -17,7 +17,7 @@ return [
     'new'          => 'Tạo mới',
     'create'       => 'Tạo',
     'delete'       => 'Xóa',
-    'remove'       => 'Di chuyển',
+    'remove'       => 'Hủy bỏ',
     'edit'         => 'Chỉnh sửa',
     'view'         => 'Xem',
     'browse'       => 'Trình duyệt',

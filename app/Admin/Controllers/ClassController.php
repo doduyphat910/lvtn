@@ -25,8 +25,8 @@ class ClassController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('header');
-            $content->description('description');
+            $content->header('Khoa, lớp');
+            $content->description('Danh sách lớp');
 
             $content->body($this->grid());
         });
