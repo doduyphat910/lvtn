@@ -23,10 +23,13 @@ class Subjects extends Model
         return $this->belongsTo(SubjectGroup::class);
     }
     public function semester() {
-        return $this->belongsTo(Semester::class);
+        return $this->belongsToMany(Semester::class);
     }
     public function rate() {
         return $this->belongsTo(Rate::class);
     }
+//    public function semester_subjects() {
+//        return $this->hasMany(SemesterSubjects::class);
+//    }
 
 }

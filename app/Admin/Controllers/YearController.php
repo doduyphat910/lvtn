@@ -78,6 +78,7 @@ class YearController extends Controller
             $grid->name('Tên năm')->display(function ($name){
                 return  '<a href="/admin/year/' . $this->id . '/details">'.$name.'</a>';
             });
+
             $grid->actions(function ($actions) {
                 $actions->append('<a href="/admin/year/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
             });
@@ -100,7 +101,20 @@ class YearController extends Controller
             $grid->id_year('Tên năm')->display(function ($idyear) {
                 return Year::find($idyear)->name;
             });
+            $grid->time_start('Thời gian bắt đầu');
+            $grid->time_end('Thời gian kết thúc');
+            $grid->status('Trạng thái mở đăng ký môn học')->display(function ($status){
+                if($status == 1){
+                    return "<span class='label label-success'>Đang mở</span>";
+                } else {
+                    return "<span class='label label-danger'>Đang đóng</span>";
+
+                }
+            });
             $grid->actions(function ($actions) {
+                $actions->disableEdit();
+                $actions->disableDelete();
+                $actions->append('<a href="/admin/semester/' . $actions->getKey() . '/edit"><i class="fa fa-edit" ></i></a>');
                 $actions->append('<a href="/admin/semester/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
             });
             $grid->created_at();

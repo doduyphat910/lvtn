@@ -75,7 +75,6 @@ class SubjectGroupController extends Controller
     protected function grid()
     {
         return Admin::grid(SubjectGroup::class, function (Grid $grid) {
-
             $grid->id('ID')->sortable();
             $grid->name('Tên nhóm môn')->display(function ($name){
                 return  '<a href="/admin/subject_group/' . $this->id . '/details">'.$name.'</a>';

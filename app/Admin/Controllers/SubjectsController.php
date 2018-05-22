@@ -78,7 +78,8 @@ class SubjectsController extends Controller
     protected function grid()
     {
         return Admin::grid(Subjects::class, function (Grid $grid) {
-
+//            debug($this->id);
+//            $grid->model()->where();
             $grid->id('ID')->sortable();
             $grid->subject_code('Mã môn học');
             $grid->name('Tên môn học')->display(function ($name){
