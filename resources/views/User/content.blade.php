@@ -1,7 +1,7 @@
 @extends('User.index2')
 
 @section('content')
-    <section class="content-header">
+    <section class="content-header" style="margin-top: 50px;">
         <h1>
             {{ $header or trans('admin.title') }}
             <small>{{ $description or trans('admin.description') }}</small>

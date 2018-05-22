@@ -2,12 +2,7 @@
 <header class="main-header">
 
     <!-- Logo -->
-    <a href="{{ admin_base_path('/') }}" class="logo">
-        <!-- mini logo for sidebar mini 50x50 pixels -->
-        <span class="logo-mini">{!! config('admin.logo-mini', config('admin.name')) !!}</span>
-        <!-- logo for regular state and mobile devices -->
-        <span class="logo-lg">{!! config('admin.logo', config('admin.name')) !!}</span>
-    </a>
+
 
     <!-- Header Navbar -->
     {{--<nav class="navbar navbar-static-top" role="navigation">--}}
@@ -60,7 +55,7 @@
             {{--</ul>--}}
         {{--</div>--}}
     {{--</nav>--}}
-    <nav class="navbar navbar-default">
+{{--     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container-fluid">
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -83,5 +78,46 @@
                 </ul>
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
+    </nav> --}}
+    <style>
+        .navbar-default .navbar-toggle .icon-bar {background-color: white;}
+    </style>
+    <nav class="navbar navbar-default navbar-fixed-top" style="margin-left: 0px;">
+      <div class="container-flud">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+            <a href="{{ url('user/student') }}" class="logo" style="width: auto;">
+                <!-- mini logo for sidebar mini 50x50 pixels -->
+                <span class="logo-mini">{!! config('admin.logo-mini', config('admin.name')) !!}</span>
+                <!-- logo for regular state and mobile devices -->
+                <span class="logo-lg">{!! config('admin.logo', config('admin.name')) !!}</span>
+            </a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Trang chủ <span class="sr-only">(current)</span></a></li>
+                    <li><a href="#">Đăng ký môn học</a></li>
+                    <li><a href="#">Xem điểm</a></li>
+                    <li><a href="#">Xem môn song song</a></li>
+                    <li><a href="#">Xem môn tiên quyết</a></li>
+                    <li><a href="#">Góp ý kiến</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right" style="margin-right: 0px;">
+
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img src="" class="user-image" alt="User Image"> <span class="caret"></span></a>
+                 <ul class="dropdown-menu">
+                        <li><a href="#">Thông tin cá nhân</a></li>
+                       <li><a href="#">Đăng xuất</a></li>
+                </ul>
+             </li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
     </nav>
 </header>
