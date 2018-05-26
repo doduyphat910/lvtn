@@ -23,7 +23,7 @@ class Subjects extends Model
         return $this->belongsTo(SubjectGroup::class);
     }
     public function semester() {
-        return $this->belongsToMany(Semester::class);
+        return $this->belongsToMany(Semester::class, 'semester_subjects', 'subjects_id', 'semester_id');
     }
     public function rate() {
         return $this->belongsTo(Rate::class);

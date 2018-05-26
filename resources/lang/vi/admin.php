@@ -45,7 +45,7 @@ return [
     'input'             => 'Nhập',
     'succeeded'         => 'Thành công',
     'failed'            => 'Thất bại',
-    'delete_confirm'    => 'Bạn có chắc chắn muốn xóa mục này không ?',
+    'delete_confirm'    => 'Bạn có chắc chắn muốn xóa mục này không?',
     'delete_succeeded'  => 'Xóa thành công !',
     'delete_failed'     => 'Xóa thất bại !',
     'update_succeeded'  => 'Cập nhật thành công !',

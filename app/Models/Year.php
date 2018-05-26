@@ -10,6 +10,6 @@ class Year extends Model
     use SoftDeletes;
     protected $table = 'year';
     public function semester() {
-        return $this->hasMany(Semester::class);
+        return $this->hasMany(Semester::class, 'id_year', 'id');
     }
 }

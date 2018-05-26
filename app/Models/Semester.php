@@ -15,10 +15,10 @@ class Semester extends Model
         return $this->hasMany(TimeRegister::class);
     }
     public function subjects() {
-        return $this->belongsToMany(Subjects::class);
+        return $this->belongsToMany(Subjects::class, 'semester_subjects', 'semester_id', 'subjects_id');
     }
     public function year() {
-        return $this->belongsTo(Year::class);
+        return $this->belongsTo(Year::class, 'id_year', 'id');
     }
 
 }

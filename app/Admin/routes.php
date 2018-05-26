@@ -48,11 +48,13 @@ Route::group([
     $router->resource('user_admin',UserAdminController::class );
     $router->resource('teacher_user',UserAdminController::class );
     $router->resource('all_user',UserAdminController::class );
-//    $router->resource('student_user', UserAdminController::class);
 
-//    //Teacher User
-//    $router->resource('teacher_user', TeacherUserController::class);
+    //Student User
+    $router->get('student_user/{id}/details', 'StudentUserController@details');
+    $router->resource('student_user', StudentUserController::class);
 
+    //status
+    $router->resource('student_status', StatusController::class);
     //class
     $router->get('class/{id}/details', 'ClassController@details');
     $router->resource('class', ClassController::class);

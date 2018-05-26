@@ -87,7 +87,8 @@ class SemesterController extends Controller
             $grid->credits_max('Số tín chỉ lớn nhất');
             $grid->credits_min('Số tín chỉ nhỏ nhất');
             $grid->id_year('Tên năm')->display(function ($idyear) {
-                return Year::find($idyear)->name;
+                $name = Year::find($idyear)->name;
+                return "<span class='label label-info'>{$name}</span>";
             });
             $grid->time_start('Thời gian bắt đầu');
             $grid->time_end('Thời gian kết thúc');
@@ -119,8 +120,17 @@ class SemesterController extends Controller
             });
             $grid->credits('Số tín chỉ');
             $grid->credits_fee('Số tín chỉ học phí');
-            $grid->id_semester('Học kỳ')->display(function ($id) {
-                return Semester::find($id)->name;
+            $grid->column('Học kỳ - Năm')->display(function () {
+                $id = $this->id;
+                $subject = Subjects::find($id);
+                $arraySemester = $subject->semester()->pluck('id')->toArray();
+                $name = array_map( function ($arraySemester){
+                    $nameSemester = Semester::find($arraySemester)->name;
+                    $year = Semester::find($arraySemester)->year()->get();
+                    $nameYear = $year['0']->name;
+                    return "<span class='label label-info'>{$nameSemester} - {$nameYear}</span>"  ;
+                }, $arraySemester);
+                return join('&nbsp;', $name);
             });
             $grid->id_subject_group('Nhóm môn')->display(function ($id) {
                 return SubjectGroup::find($id)->name;

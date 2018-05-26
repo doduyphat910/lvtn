@@ -85,7 +85,7 @@ return [
     ],
     'string'               => ' :attribute phải là một chuỗi.',
     'timezone'             => ' :attribute phải là một khu vực hợp lệ.',
-    'unique'               => ' :attribute đã được thực hiện.',
+    'unique'               => ' :attribute đã tồn tại.',
     'uploaded'             => ' :attribute không thể tải lên.',
     'url'                  => ' :attribute định dạng không hợp lệ.',
 
