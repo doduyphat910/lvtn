@@ -17,15 +17,9 @@
     <!-- Custom CSS -->
     <link href="student/css/helper.css" rel="stylesheet">
     <link href="student/css/style.css" rel="stylesheet">
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:** -->
-    <!--[if lt IE 9]>
-    <script src="https:**oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https:**oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-<![endif]-->
 </head>
 
-<body class="fix-header fix-sidebar">
+<body class="fix-header fix-sidebar"  style="background-color: whitesmoke">
     <!-- Preloader - style you can find in spinners.css -->
     <div class="preloader">
         <svg class="circular" viewBox="25 25 50 50">
@@ -36,37 +30,38 @@
 
         <div class="unix-login">
             <div class="container-fluid">
-                             
-                                @if(count($errors)>0)
-                                <div class="alert alert-danger">
-                                    @foreach($errors->all() as $err)
-                                        {{$err}}<br>
-                                    @endforeach
-                                </div>
-                            @endif
-                            </div>
-                            @if(session('notification'))                               
-                                    {{session('notification')}}                                
-                            @endif
-
-
                 <div class="row justify-content-center">
                     <div class="col-lg-4">
                         <div class="login-content card">
                             <div class="login-form">
-                                <h4>Login</h4>
+                                <h4>Đăng nhập</h4>
+
                                 <form action="postLogin" method="POST">
                                     <input type="hidden" name="_token" value="{{csrf_token()}}">
                                     <div class="form-group">
-                                        <label>Ten dn</label>
-                                        <input type="text" name="username" class="form-control" placeholder="Name">
+                                        <label>Tài khoản</label>
+                                        <input type="text" name="username" class="form-control" placeholder="Mã số sinh viên">
                                     </div>
                                     <div class="form-group">
-                                        <label>Password</label>
-                                        <input type="password" name="password" class="form-control" placeholder="Password">
+                                        <label>Mật khẩu</label>
+                                        <input type="password" name="password" class="form-control" placeholder="Mật khẩu">
                                     </div>
-                                    <button type="submit" class="btn btn-primary btn-flat m-b-30 m-t-30">Sign in</button>
+                                    <button type="submit" class="btn btn-primary btn-flat m-b-30 m-t-30">Đăng nhập</button>
                                 </form>
+                                    @if(count($errors)>0)
+                                    <div class="alert alert-danger text-center">
+                                        @foreach($errors->all() as $err)
+                                            {{$err}}<br>
+                                        @endforeach
+                                    </div>
+                                    @endif
+                                    
+                                    @if(session('notification'))  
+                                    <div class="alert alert-danger text-center">                             
+                                            {{session('notification')}}
+                                            </div>                                
+                                    @endif
+                                    
                             </div>
                         </div>
                     </div>

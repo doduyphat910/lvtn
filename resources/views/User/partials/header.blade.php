@@ -113,7 +113,7 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img src="" class="user-image" alt="User Image"> <span class="caret"></span></a>
                  <ul class="dropdown-menu">
                         <li><a href="#">Thông tin cá nhân</a></li>
-                       <li><a href="#">Đăng xuất</a></li>
+                       <li><a href="{{ url('logout') }}">Đăng xuất</a></li>
                 </ul>
              </li>
           </ul>
