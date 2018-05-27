@@ -49,6 +49,11 @@ Route::group([
     $router->resource('teacher_user',UserAdminController::class );
     $router->resource('all_user',UserAdminController::class );
 
+    //Import user
+    $router->post('/import_student/parse', 'ImportStudentController@parse');
+    $router->post('/import_student/review', 'ImportStudentController@review');
+    $router->resource('import_student',ImportStudentController::class );
+
     //Student User
     $router->get('student_user/{id}/details', 'StudentUserController@details');
     $router->resource('student_user', StudentUserController::class);

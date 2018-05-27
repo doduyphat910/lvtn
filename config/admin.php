@@ -76,6 +76,8 @@ return [
         ],
     ],
 
+
+
     /*
      * Laravel-admin database setting.
      */
@@ -157,5 +159,13 @@ return [
      */
     'extensions' => [
 
+    ],
+
+    'student_user_fields' => [
+        'name',
+        'email',
+        'id_class',
+        'school_year',
+        'level',
     ],
 ];

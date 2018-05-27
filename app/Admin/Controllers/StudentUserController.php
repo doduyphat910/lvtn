@@ -99,7 +99,7 @@ class StudentUserController extends Controller
             $grid->updated_at('Cập nhật vào lúc');
             //import student
             $grid->tools(function ($tools) {
-                $tools->append("<a href='your-create-URI' class='btn btn-info btn-sm '><i class='fa fa-sign-in'></i> Import DS sinh viên</a>");
+                $tools->append("<a href='/admin/import_student' class='btn btn-info btn-sm '><i class='fa fa-sign-in'></i> Import DS sinh viên</a>");
             });
 
         });
@@ -134,7 +134,7 @@ class StudentUserController extends Controller
             $form->select('level', 'Trình độ')->options(['CD'=>'Cao đẳng', 'DH'=>'Đại học']);
             $form->hidden('code_number');
             $form->saving(function (Form $form) {
-                $codeNumber = StudentUser::orderBy('code_number')->where('level', $form->level)->where('school_year', $form->school_year)
+                $codeNumber = StudentUser::orderBy('code_number', 'DESC')->where('level', $form->level)->where('school_year', $form->school_year)
                     ->pluck('code_number');
                 if(count($codeNumber) == 0) {
                     $count = 0;
