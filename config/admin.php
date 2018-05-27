@@ -164,8 +164,9 @@ return [
     'student_user_fields' => [
         'name',
         'email',
-        'id_class',
+        'class',
         'school_year',
         'level',
+        'status'
     ],
 ];

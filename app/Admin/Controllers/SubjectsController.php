@@ -98,8 +98,17 @@ class SubjectsController extends Controller
                     return "<span class='label label-info'>{$nameSemester} - {$nameYear}</span>"  ;
                 }, $arraySemester);
                 return join('&nbsp;', $name);});
-            $grid->id_subject_group('Nhóm môn')->display(function ($id) {
-                return SubjectGroup::find($id)->name;
+            $grid->column('Nhóm môn')->display(function () {
+                $subject = Subjects::find($this->id);
+                $nameGroup = $subject->subject_group()->pluck('name')->toArray();
+                $groupSubject = array_map(function ($nameGroup){
+                    if($nameGroup) {
+                        return "<span class='label label-primary'>{$nameGroup}</span>"  ;
+                    } else {
+                        return '';
+                    }
+                },$nameGroup);
+                return join('&nbsp;', $groupSubject);
             });
             $grid->id_rate('Tỷ lệ chuyên cần')->display(function ($rate){
                 if($rate){
@@ -141,12 +150,15 @@ class SubjectsController extends Controller
         return Admin::form(Subjects::class, function (Form $form) {
 
             $form->display('id', 'ID');
-            $form->text('subject_code', 'Mã môn học')->rules('required|unique:subjects');
+//            $form->text('subject_code', 'Mã môn học')->rules('required|unique:subjects,subject_code');
+            $form->text('subject_code', 'Mã môn học')->rules(function ($form){
+                return 'required|unique:subjects,subject_code,'.$form->model()->id.',id';
+            });
             $form->text('name','Tên môn học');
             $form->number('credits','Tín chỉ');
             $form->number('credits_fee', 'Tín chỉ học phí');
 //            $form->select('id_semester', 'Học kỳ')->options(Semester::all()->pluck('name', 'id'));
-            $form->select('id_subject_group', 'Nhóm môn')->options(SubjectGroup::all()->pluck('name', 'id'));
+            $form->multipleSelect('subject_group', 'Nhóm môn')->options(SubjectGroup::all()->pluck('name', 'id'));
             $rates = Rate::all();
             $arrayRate = [];
             foreach($rates as $rate) {

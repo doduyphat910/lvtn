@@ -115,7 +115,9 @@ class SubjectGroupController extends Controller
 
     public function detailsView($id){
         $form = $this->form()->view($id);
-        $gridSubject = $this->gridSubject($id)->render();
+        $group = SubjectGroup::find($id);
+        $idSubject = $group->subject()->pluck('id')->toArray();
+        $gridSubject = $this->gridSubject($idSubject)->render();
         return view('vendor.details',
             [
                 'template_body_name' => 'admin.SubjectGroup.info',
@@ -126,10 +128,10 @@ class SubjectGroupController extends Controller
         );
     }
 
-    protected function gridSubject($idSubjectGroup)
+    protected function gridSubject($idSubject)
     {
-        return Admin::grid(Subjects::class, function (Grid $grid) use ($idSubjectGroup) {
-            $grid->model()->where('id_subject_group', $idSubjectGroup);
+        return Admin::grid(Subjects::class, function (Grid $grid) use ($idSubject) {
+            $grid->model()->whereIn('id', $idSubject);
             $grid->id('ID')->sortable();
             $grid->subject_code('Mã môn học');
             $grid->name('Tên môn học')->display(function ($name){
@@ -137,11 +139,28 @@ class SubjectGroupController extends Controller
             });
             $grid->credits('Số tín chỉ');
             $grid->credits_fee('Số tín chỉ học phí');
-            $grid->id_semester('Học kỳ')->display(function ($id) {
-                return Semester::find($id)->name;
-            });
-            $grid->id_subject_group('Nhóm môn')->display(function ($id) {
-                return SubjectGroup::find($id)->name;
+            $grid->column('Học kỳ - Năm')->display(function () {
+                $id = $this->id;
+                $subject = Subjects::find($id);
+                $arraySemester = $subject->semester()->pluck('id')->toArray();
+                $name = array_map( function ($arraySemester){
+                    $nameSemester = Semester::find($arraySemester)->name;
+                    $year = Semester::find($arraySemester)->year()->get();
+                    $nameYear = $year['0']->name;
+                    return "<span class='label label-info'>{$nameSemester} - {$nameYear}</span>"  ;
+                }, $arraySemester);
+                return join('&nbsp;', $name);});
+            $grid->column('Nhóm môn')->display(function () {
+                $subject = Subjects::find($this->id);
+                $nameGroup = $subject->subject_group()->pluck('name')->toArray();
+                $groupSubject = array_map(function ($nameGroup){
+                    if($nameGroup) {
+                        return "<span class='label label-primary'>{$nameGroup}</span>"  ;
+                    } else {
+                        return '';
+                    }
+                },$nameGroup);
+                return join('&nbsp;', $groupSubject);
             });
             $grid->id_rate('Tỷ lệ chuyên cần')->display(function ($rate){
                 if($rate){

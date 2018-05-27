@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Department extends Model
 {
-    use SoftDeletes;
+//    use SoftDeletes;
 
     protected $table = 'department';
     public function classSTU() {

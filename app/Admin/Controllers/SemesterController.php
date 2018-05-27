@@ -132,8 +132,17 @@ class SemesterController extends Controller
                 }, $arraySemester);
                 return join('&nbsp;', $name);
             });
-            $grid->id_subject_group('Nhóm môn')->display(function ($id) {
-                return SubjectGroup::find($id)->name;
+            $grid->column('Nhóm môn')->display(function () {
+                $subject = Subjects::find($this->id);
+                $nameGroup = $subject->subject_group()->pluck('name')->toArray();
+                $groupSubject = array_map(function ($nameGroup){
+                    if($nameGroup) {
+                        return "<span class='label label-primary'>{$nameGroup}</span>"  ;
+                    } else {
+                        return '';
+                    }
+                },$nameGroup);
+                return join('&nbsp;', $groupSubject);
             });
             $grid->id_rate('Tỷ lệ chuyên cần')->display(function ($rate){
                 if($rate){

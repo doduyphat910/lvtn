@@ -3,6 +3,7 @@ namespace App\Admin\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\ClassSTU;
 use App\Models\CSVData;
+use App\Models\Status;
 use App\Models\StudentUser;
 use Encore\Admin\Facades\Admin;
 use Encore\Admin\Layout\Content;
@@ -53,23 +54,32 @@ class ImportStudentController extends Controller
         $row_add_successs = 0;
         $error_logs = [];
         foreach($data as $key => $row) {
-            if (empty($row['name']) || empty($row['school_year']) || empty($row['level']) || empty($row['id_class']) || empty($row['email'])) {
+            if (empty($row['name']) || empty($row['school_year'])
+                || empty($row['level']) || empty($row['class']) || empty($row['email']) || empty($row['status'])) {
                 $row_error += 1;
                 $error_logs[$key] = 'Có cột không có dữ liệu';
             } else {
                 $studentUser = new StudentUser();
-                $idClass = ClassSTU::where('name', $row['id_class'])->pluck('id')->first();
+                $idClass = ClassSTU::where('name', $row['class'])->pluck('id')->first();
                 if($idClass == null){
                     $row_error += 1;
                     $error_logs[$key] = 'Cột lớp không có trong cơ sở dữ liệu';
                     break;
-                } elseif ($row['level'] != 'CD' && $row['level'] != 'DH' ) {
+                }
+                if ($row['level'] != 'CD' && $row['level'] != 'DH' ) {
                     $row_error += 1;
                     $error_logs[$key] = 'Cột level không được khác CD hoặc DH';
                     break;
-                } elseif ($row['school_year'] < 2000 || $row['school_year'] > ((int)date("Y"))) {
+                }
+                if ($row['school_year'] < 2000 || $row['school_year'] > ((int)date("Y"))) {
                     $row_error += 1;
                     $error_logs[$key] = 'Cột school_year sai dữ liệu';
+                    break;
+                }
+                $status = Status::all()->pluck('ids')->toArray();
+                if(in_array($row['status'], $status ) == false){
+                    $row_error += 1;
+                    $error_logs[$key] = 'Trạng thái không có trong CSDL';
                     break;
                 }
                 $studentUser->id_class = $idClass;
@@ -77,7 +87,7 @@ class ImportStudentController extends Controller
                 $studentUser->email = $row['email'];
                 $studentUser->school_year = $row['school_year'];
                 $studentUser->level = $row['level'];
-                $studentUser->id_status = 1;
+                $studentUser->id_status = $row['status'];
                 $codeNumber = StudentUser::orderBy('code_number', 'DESC')->where('level', $row['level'])->where('school_year', $row['school_year'])
                     ->pluck('code_number')->first();
                 if (!$codeNumber) {
