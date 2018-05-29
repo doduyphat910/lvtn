@@ -70,6 +70,9 @@ Route::group([
 
     //subject_before_after
     $router->resource('subject_before_after', SubjectBeforeAfterController::class);
+
+    //subjects_parallel
+    $router->resource('subjects_parallel', SubjectParallelController::class);
 }
 
 );

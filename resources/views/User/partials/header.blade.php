@@ -103,20 +103,26 @@
             <li class="active"><a href="#">Trang chủ <span class="sr-only">(current)</span></a></li>
                     <li><a href="#">Đăng ký môn học</a></li>
                     <li><a href="#">Xem điểm</a></li>
-                    <li><a href="#">Xem môn song song</a></li>
-                    <li><a href="#">Xem môn tiên quyết</a></li>
-                    <li><a href="#">Góp ý kiến</a></li>
-          </ul>
-          <ul class="nav navbar-nav navbar-right" style="margin-right: 0px;">
+                    <li><a href="{{ url('user/subjectparallel') }}">Xem môn song song</a></li>
+                    <li><a href="{{ url('user/subjectbeforeafter') }}">Xem môn tiên quyết</a></li>
+                    <li><a href="{{ url('user/comments') }}">Góp ý kiến</a></li>
 
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><img src="" class="user-image" alt="User Image"> <span class="caret"></span></a>
-                 <ul class="dropdown-menu">
-                        <li><a href="#">Thông tin cá nhân</a></li>
-                       <li><a href="{{ url('logout') }}">Đăng xuất</a></li>
-                </ul>
-             </li>
-          </ul>
+                    @if(Auth::check())
+                    
+                    
+                    </ul>
+
+                      <ul class="nav navbar-nav navbar-right" style="margin-right: 0px;">
+
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Xin chào {{Auth::User()->last_name}}<img src="" class="user-image"><span class="caret"></span></a>
+                             <ul class="dropdown-menu">
+                                    <li><a href="{{ url('user/information') }}">Thông tin cá nhân</a></li>
+                                   <li><a href="{{ url('logout') }}">Đăng xuất</a></li>
+                            </ul>
+                         </li>
+                      </ul>
+                    @endif
         </div><!--/.nav-collapse -->
       </div>
     </nav>
