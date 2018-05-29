@@ -38,7 +38,7 @@ class UserController extends Controller
             $grid->updated_at();
         });
     }
-
+    
     public function postlogin(Request $request)
    {
     $this->validate($request,[
