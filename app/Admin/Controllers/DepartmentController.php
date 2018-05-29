@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Extensions\ModelFormCustom;
 use App\Models\ClassSTU;
 use App\Models\Department;
 
@@ -10,11 +11,11 @@ use Encore\Admin\Grid;
 use Encore\Admin\Facades\Admin;
 use Encore\Admin\Layout\Content;
 use App\Http\Controllers\Controller;
-use Encore\Admin\Controllers\ModelForm;
+//use Encore\Admin\Controllers\ModelForm;
 
 class DepartmentController extends Controller
 {
-    use ModelForm;
+    use ModelFormCustom;
 
     /**
      * Index interface.
@@ -79,12 +80,16 @@ class DepartmentController extends Controller
                 return '<a href="/admin/department/' . $this->id . '/details">'.$name.'</a>';
             });
             $grid->actions(function ($actions) {
+//                $actions->disableDelete();
+//                $flag = 1;
+//                $actions->append('<a href="/admin/department/' . $actions->getKey().'/'.$flag .'"><i class="fa fa-eye"></i></a>');
                 $actions->append('<a href="/admin/department/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
             });
             $grid->created_at();
             $grid->updated_at();
         });
     }
+
 
     protected function gridClass($idClass)
     {

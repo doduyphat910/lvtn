@@ -20,13 +20,16 @@ class Subjects extends Model
         return $this->hasMany(SubjectBeforeAfter::class);
     }
     public function subject_group() {
-        return $this->belongsTo(SubjectGroup::class);
+        return $this->belongsToMany(SubjectGroup::class, 'subject-groups_subjects', 'id_subject', 'id_subject_group' );
     }
     public function semester() {
-        return $this->belongsTo(Semester::class);
+        return $this->belongsToMany(Semester::class, 'semester_subjects', 'subjects_id', 'semester_id');
     }
     public function rate() {
         return $this->belongsTo(Rate::class);
     }
+//    public function semester_subjects() {
+//        return $this->hasMany(SemesterSubjects::class);
+//    }
 
 }

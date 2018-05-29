@@ -11,6 +11,6 @@ class SubjectGroup extends Model
 
     protected $table = 'subject_group';
     public function subject() {
-        return $this->hasMany(Subjects::class);
+        return $this->belongsToMany(Subjects::class, 'subject-groups_subjects', 'id_subject_group', 'id_subject');
     }
 }

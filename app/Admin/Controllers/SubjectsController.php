@@ -78,7 +78,8 @@ class SubjectsController extends Controller
     protected function grid()
     {
         return Admin::grid(Subjects::class, function (Grid $grid) {
-
+//            debug($this->id);
+//            $grid->model()->where();
             $grid->id('ID')->sortable();
             $grid->subject_code('Mã môn học');
             $grid->name('Tên môn học')->display(function ($name){
@@ -86,11 +87,28 @@ class SubjectsController extends Controller
             });
             $grid->credits('Số tín chỉ');
             $grid->credits_fee('Số tín chỉ học phí');
-            $grid->id_semester('Học kỳ')->display(function ($id) {
-                return Semester::find($id)->name;
-            });
-            $grid->id_subject_group('Nhóm môn')->display(function ($id) {
-                return SubjectGroup::find($id)->name;
+            $grid->column('Học kỳ - Năm')->display(function () {
+                $id = $this->id;
+                $subject = Subjects::find($id);
+                $arraySemester = $subject->semester()->pluck('id')->toArray();
+                $name = array_map( function ($arraySemester){
+                    $nameSemester = Semester::find($arraySemester)->name;
+                    $year = Semester::find($arraySemester)->year()->get();
+                    $nameYear = $year['0']->name;
+                    return "<span class='label label-info'>{$nameSemester} - {$nameYear}</span>"  ;
+                }, $arraySemester);
+                return join('&nbsp;', $name);});
+            $grid->column('Nhóm môn')->display(function () {
+                $subject = Subjects::find($this->id);
+                $nameGroup = $subject->subject_group()->pluck('name')->toArray();
+                $groupSubject = array_map(function ($nameGroup){
+                    if($nameGroup) {
+                        return "<span class='label label-primary'>{$nameGroup}</span>"  ;
+                    } else {
+                        return '';
+                    }
+                },$nameGroup);
+                return join('&nbsp;', $groupSubject);
             });
             $grid->id_rate('Tỷ lệ chuyên cần')->display(function ($rate){
                 if($rate){
@@ -132,17 +150,15 @@ class SubjectsController extends Controller
         return Admin::form(Subjects::class, function (Form $form) {
 
             $form->display('id', 'ID');
-            $form->text('subject_code', 'Mã môn học')->rules(function ($form) {
-                if (!$id = $form->model()->id) {
-                    return 'unique:subject_code';//todo not completed unique code
-                }
-
+//            $form->text('subject_code', 'Mã môn học')->rules('required|unique:subjects,subject_code');
+            $form->text('subject_code', 'Mã môn học')->rules(function ($form){
+                return 'required|unique:subjects,subject_code,'.$form->model()->id.',id';
             });
             $form->text('name','Tên môn học');
             $form->number('credits','Tín chỉ');
             $form->number('credits_fee', 'Tín chỉ học phí');
-            $form->select('id_semester', 'Học kỳ')->options(Semester::all()->pluck('name', 'id'));
-            $form->select('id_subject_group', 'Nhóm môn')->options(SubjectGroup::all()->pluck('name', 'id'));
+//            $form->select('id_semester', 'Học kỳ')->options(Semester::all()->pluck('name', 'id'));
+            $form->multipleSelect('subject_group', 'Nhóm môn')->options(SubjectGroup::all()->pluck('name', 'id'));
             $rates = Rate::all();
             $arrayRate = [];
             foreach($rates as $rate) {

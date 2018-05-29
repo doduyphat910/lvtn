@@ -71,4 +71,9 @@
 <script src="{{ admin_asset ("/vendor/laravel-admin/laravel-admin/laravel-admin.js") }}"></script>
 
 </body>
+<style>
+    body {
+        font-family: "Times New Roman";
+    }
+</style>
 </html>

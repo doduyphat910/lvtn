@@ -84,7 +84,8 @@ class SubjectRegisterController extends Controller
             });
             $grid->id_subjects('Môn học')->display(function ($idSubject){
                 if($idSubject){
-                    return Subjects::find($idSubject)->name;
+                    $name = Subjects::find($idSubject)->name;
+                    return "<span class='label label-info'>{$name}</span>";
                 } else {
                     return '';
                 }
@@ -186,7 +187,7 @@ class SubjectRegisterController extends Controller
 EOT;
             Admin::script($script);
             $form->display('id', 'ID');
-            $form->text('code_subject_register', 'Mã học phần')->rules('required');
+            $form->text('code_subject_register', 'Mã học phần')->rules('required|unique:subject_register');
             $form->select('id_subjects', 'Môn học')->options(Subjects::all()->pluck('name', 'id'));
             $form->select('id_classroom', 'Phòng học')->options(Classroom::all()->pluck('name', 'id'));
             $form->select('id_user_teacher', 'Giảng viên')->options(UserAdmin::where('type_user', '0')->pluck('name', 'id'));
