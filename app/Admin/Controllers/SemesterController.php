@@ -246,7 +246,7 @@ class SemesterController extends Controller
         return Admin::form(Semester::class, function (Form $form) {
 
             $form->display('id', 'ID');
-            $form->text('name', 'Tên học kì')->rules('required');
+            $form->select('name', 'Tên học kì')->options(['0'=>' Học kỳ hè', '1' => 'Học kì 1', '2' => 'Học kì 2'])->rules('required');
             $form->select('id_year', 'Năm')->options(Year::all()->pluck('name', 'id'));
             $form->number('credits_max', 'Số tín chỉ lớn nhất');
             $form->number('credits_min', 'Số tín chỉ nhỏ nhất');
