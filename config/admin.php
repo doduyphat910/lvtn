@@ -162,11 +162,13 @@ return [
     ],
 
     'student_user_fields' => [
-        'name',
+        'mssv',
+        'ho',
+        'ten',
         'email',
-        'class',
-        'school_year',
-        'level',
-        'status'
+        'lop',
+        'nam_nhap_hoc',
+        'trinh_do',
+        'trang_thai'
     ],
 ];

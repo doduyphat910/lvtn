@@ -20,7 +20,7 @@
                 </div>
             <div class="box-body" style="background-color: black">
                 @foreach($error_logs as $key=> $error_log)
-                    Dòng {{$key+1}} :  {{$error_log}}
+                    Dòng {{$key+1}} : Có MSSV {{$error_log}}
                     <br>
                 @endforeach
             </div>
