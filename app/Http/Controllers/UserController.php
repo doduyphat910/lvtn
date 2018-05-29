@@ -25,7 +25,7 @@ class UserController extends Controller
             $content->header('header');
             $content->description('description');
 
-            // $content->body($this->grid());
+            $content->body($this->grid());
         });
     }
     public function edit($id)

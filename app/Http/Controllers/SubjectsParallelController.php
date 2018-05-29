@@ -48,4 +48,5 @@ class SubjectsParallelController extends Controller
         });
     }
     
+    
 }
