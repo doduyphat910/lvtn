@@ -43,7 +43,7 @@ class StudentUserController extends Controller
      * @param $id
      * @return Content
      */
-    public function edit($id)
+    public function edit2($id)
     {
         return Admin::content(function (Content $content) use ($id) {
 

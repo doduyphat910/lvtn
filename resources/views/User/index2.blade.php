@@ -43,7 +43,8 @@
 </style>
 </head>
 
-<body class="hold-transition {{config('admin.skin')}} {{join(' ', config('admin.layout'))}}">
+<body class="hold-transition {{config('admin.skin')}} {{join(' ', config('admin.layout'))}}" style="margin-left: 150px;
+    margin-right: 150px;">
 {{--<div class="wrapper ">--}}
 
     @include('User.partials.header')

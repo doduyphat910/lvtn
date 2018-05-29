@@ -12,5 +12,14 @@ Route::post('postLogin','UserController@postlogin');
 Route::get('logout', 'UserController@logout');
 Route::group(['prefix'=>'user', 'middleware'=>'studentLogin'], function(Router $router){
     $router->resource('student', UserController::class);
+
+    // $router->get('information', 'StudentInformationController@edit2');
+    $router->resource('information', StudentInformationController::class);
+
+    $router->resource('subjectparallel', SubjectsParallelController::class);
+
+    $router->resource('subjectbeforeafter', SubjectBeforeAfterController::class);
+
+    $router->resource('comments', CommentsController::class);
 });
 
