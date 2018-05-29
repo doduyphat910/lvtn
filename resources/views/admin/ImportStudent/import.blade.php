@@ -54,7 +54,7 @@
                             </div>
                         </div>
                     </form>
-                    <a href="../admin/list_student/download" download src="file" target="_blank">
+                    <a href="{{asset('storage/Danh sách SV.xlsx')}}" download src="file" target="_blank">
                         Tải mẫu danh sách
                     </a>
                 </div>
