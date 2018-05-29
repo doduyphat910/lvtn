@@ -41,16 +41,16 @@ class UserController extends Controller
 
     public function postlogin(Request $request)
    {
-    // $this->validate($request,[
-    //     'email'=>'required',
-    //     'password'=>'required|min:3|max:32'
-    // ], 
-    // [
-    //     'email.required'=>'Bạn chưa nhập email', 
-    //     'password.required'=>'Bạn chưa nhập password',
-    //     'password.min'=>'Password không được nhỏ hơn 3 ký tự',
-    //     'password.max'=>'Password không được lớn hơn 5 ký tự'
-    //    ]);
+    $this->validate($request,[
+        'username'=>'required',
+        'password'=>'required|min:3|max:32'
+    ], 
+    [
+        'username.required'=>'Bạn chưa nhập mã số sinh viên', 
+        'password.required'=>'Bạn chưa nhập mật khẩu',
+        'password.min'=>'Password không được nhỏ hơn 3 ký tự',
+        'password.max'=>'Password không được lớn hơn 5 ký tự'
+       ]);
 
     if(Auth::attempt(['username'=>$request->username,'password'=>$request->password]))
         {
@@ -61,8 +61,8 @@ class UserController extends Controller
             return redirect('getLogin')->with('notification','Đăng nhập không thành công');
         }
    }
-   public function logout() {
-        Auth::logout();
-        return redirect('admin/getLogin');
-   }
+       public function logout() {
+            Auth::logout();
+            return redirect('getLogin');
+       }
 }
