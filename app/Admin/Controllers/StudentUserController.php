@@ -15,6 +15,7 @@ use Encore\Admin\Facades\Admin;
 use Encore\Admin\Layout\Content;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\ModelForm;
+use Illuminate\Support\Facades\Route;
 
 class StudentUserController extends Controller
 {
@@ -49,7 +50,7 @@ class StudentUserController extends Controller
             $content->header('header');
             $content->description('description');
 
-            $content->body($this->form()->edit($id));
+            $content->body($this->formEdit()->edit($id));
         });
     }
 
@@ -80,7 +81,8 @@ class StudentUserController extends Controller
 
             $grid->id('ID')->sortable();
             $grid->avatar('Avatar')->image();
-            $grid->name('Tên')->display(function ($name){
+            $grid->first_name('Họ');
+            $grid->last_name('Tên')->display(function ($name){
                 return  '<a href="/admin/student_user/' . $this->id . '/details">'.$name.'</a>';
             });
             $grid->code_number('Mã số sinh viên');
@@ -115,44 +117,46 @@ class StudentUserController extends Controller
         return Admin::form(StudentUser::class, function (Form $form) {
 
             $form->display('id', 'ID');
-            $form->text('name', 'Tên');
-//            $form->text('username', 'Tên đăng nhập');
+            $form->text('first_name', 'Họ')->rules('required');
+            $form->text('last_name', 'Tên')->rules('required');
+            $form->text('code_number', 'Mã số SV')->rules(function ($form){
+                return 'required|min:10|unique:student_user,code_number,'.$form->model()->id.',id';
+            });
             $form->email('email', 'Email');
-//            $form->password('password','Mật khẩu')->rules('required|confirmed');
-//            $form->password('password_confirmation', 'Nhập lại mật khẩu')->rules('required')
-//                ->default(function ($form) {
-//                    return $form->model()->password;
-//                });
-            $form->hidden('username');
             $form->hidden('password');
-//            $form->ignore(['password_confirmation']);
+            $form->saving(function (Form $form) {
+                $form->password = $form->code_number;
+            });
             $form->image('avatar', 'Avatar');
             $form->select('id_class', 'Lớp')->options(ClassSTU::all()->pluck('name', 'id'));
             $form->select('id_status', 'Trạng thái')->options(Status::all()->pluck('status', 'ids'));
             $form->year('school_year', 'Năm nhập học');
-
             $form->select('level', 'Trình độ')->options(['CD'=>'Cao đẳng', 'DH'=>'Đại học']);
-            $form->hidden('code_number');
-            $form->saving(function (Form $form) {
-                $codeNumber = StudentUser::orderBy('code_number', 'DESC')->where('level', $form->level)->where('school_year', $form->school_year)
-                    ->pluck('code_number');
-                if(count($codeNumber) == 0) {
-                    $count = 0;
-                } else {
-                    $count = substr($codeNumber['0'], strlen($codeNumber['0'])-1, 1);
-                }
-                $year = $form->school_year;
-                $year = substr($year, 2, 2);
-                $form->code_number = $form->level . '5'. $year. '00'. ((int)$count + 1);
-                $form->username = $form->code_number;
-                $form->password = $form->code_number;
-            });
-//            $form->saving(function (Form $form) {
-//                if ($form->password && $form->model()->password != $form->password) {
-//                    $form->password = bcrypt($form->password);
-//                }
-//            });
+            $form->display('created_at', 'Thêm vào lúc');
+            $form->display('updated_at', 'Cập nhật vào lúc');
+        });
+    }
 
+    public function formEdit()
+    {
+        return Admin::form(StudentUser::class, function (Form $form) {
+
+            $form->display('id', 'ID');
+            $form->display('code_number', 'Mã số SV');
+            $form->text('first_name', 'Họ')->rules('required');
+            $form->text('last_name', 'Tên')->rules('required');
+            $form->email('email', 'Email');
+            $form->password('password', 'Password')->rules('required|confirmed');
+            $form->password('password_confirmation', 'Xác nhận password')->rules('required')
+                    ->default(function ($form) {
+                        return $form->model()->password;
+                    });
+            $form->ignore(['password_confirmation']);
+            $form->image('avatar', 'Avatar');
+            $form->select('id_class', 'Lớp')->options(ClassSTU::all()->pluck('name', 'id'));
+            $form->select('id_status', 'Trạng thái')->options(Status::all()->pluck('status', 'ids'));
+            $form->year('school_year', 'Năm nhập học');
+            $form->select('level', 'Trình độ')->options(['CD'=>'Cao đẳng', 'DH'=>'Đại học']);
             $form->display('created_at', 'Thêm vào lúc');
             $form->display('updated_at', 'Cập nhật vào lúc');
         });
