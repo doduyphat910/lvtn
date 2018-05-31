@@ -66,17 +66,17 @@ class UserController extends Controller
     public function postlogin(Request $request)
    {
     $this->validate($request,[
-        'username'=>'required',
+        'code_number'=>'required',
         'password'=>'required|min:3|max:32'
     ], 
     [
-        'username.required'=>'Bạn chưa nhập mã số sinh viên', 
+        'code_number.required'=>'Bạn chưa nhập mã số sinh viên',
         'password.required'=>'Bạn chưa nhập mật khẩu',
         'password.min'=>'Password không được nhỏ hơn 3 ký tự',
         'password.max'=>'Password không được lớn hơn 5 ký tự'
        ]);
 
-    if(Auth::attempt(['username'=>$request->username,'password'=>$request->password]))
+    if(Auth::attempt(['code_number'=>$request->code_number,'password'=>$request->password]))
         {
             return redirect('user/student');
         }

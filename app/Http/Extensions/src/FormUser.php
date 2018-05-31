@@ -3,11 +3,14 @@
 namespace App\Http\Extensions\src;
 use Closure;
 use Encore\Admin\Exception\Handler;
-use Encore\Admin\Form\Builder;
-use Encore\Admin\Form\Field;
+//use Encore\Admin\Form\Builder;
+//use Encore\Admin\Form\Field;
+use App\Http\Extensions\src\FormUser\Builder;
+use app\Http\Extensions\src\FormUser\Field;
 use Encore\Admin\Form\Field\File;
 use Encore\Admin\Form\Row;
-use Encore\Admin\Form\Tab;
+//use Encore\Admin\Form\Tab;
+use App\Http\Extensions\src\FormUser\Tab;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
@@ -75,7 +78,6 @@ class FormUser
      * @var Model
      */
     protected $model;
-
     /**
      * @var \Illuminate\Validation\Validator
      */
@@ -175,9 +177,7 @@ class FormUser
     public function __construct($model, Closure $callback)
     {
         $this->model = $model;
-
         $this->builder = new Builder($this);
-
         $callback($this);
     }
 
@@ -1266,7 +1266,7 @@ class FormUser
             'select'         => \Encore\Admin\Form\Field\Select::class,
             'slider'         => \Encore\Admin\Form\Field\Slider::class,
             'switch'         => \Encore\Admin\Form\Field\SwitchField::class,
-            'text'           => \Encore\Admin\Form\Field\Text::class,
+            'text'           => \App\Http\Extensions\src\FormUser\Field\Text::class,
             'textarea'       => \Encore\Admin\Form\Field\Textarea::class,
             'time'           => \Encore\Admin\Form\Field\Time::class,
             'timeRange'      => \Encore\Admin\Form\Field\TimeRange::class,

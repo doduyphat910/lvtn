@@ -22,4 +22,11 @@ class User extends Admin
     {
         return new ContentUser($callable);
     }
+
+    public function formUser($model, Closure $callable)
+    {
+        return new FormUser($this->getModel($model), $callable);
+    }
+
+
 }

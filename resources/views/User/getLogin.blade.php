@@ -40,7 +40,7 @@
                                     <input type="hidden" name="_token" value="{{csrf_token()}}">
                                     <div class="form-group">
                                         <label>Tài khoản</label>
-                                        <input type="text" name="username" class="form-control" placeholder="Mã số sinh viên">
+                                        <input type="text" name="code_number" class="form-control" placeholder="Mã số sinh viên">
                                     </div>
                                     <div class="form-group">
                                         <label>Mật khẩu</label>

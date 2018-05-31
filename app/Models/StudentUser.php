@@ -11,7 +11,7 @@ class StudentUser  extends Model
     use SoftDeletes;
 
     protected $table = 'student_user';
-    protected $fillable = ['email', 'id_class','code_number' , 'username', 'password', 'name', 'avatar', 'id_status'];
+    protected $fillable = ['email', 'id_class','code_number' , 'first_name', 'password', 'last_name', 'avatar', 'id_status'];
 
     public function studentStatus() {
         return $this->belongsTo(Status::class, 'id_status', 'ids');
