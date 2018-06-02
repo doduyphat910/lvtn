@@ -101,7 +101,7 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li class="active"><a href="#">Trang chủ <span class="sr-only">(current)</span></a></li>
-                    <li><a href="#">Đăng ký môn học</a></li>
+                    <li><a href="{{ url('user/subjectregister') }}">Đăng ký môn học</a></li>
                     <li><a href="#">Xem điểm</a></li>
                     <li><a href="{{ url('user/subjectparallel') }}">Xem môn song song</a></li>
                     <li><a href="{{ url('user/subjectbeforeafter') }}">Xem môn tiên quyết</a></li>

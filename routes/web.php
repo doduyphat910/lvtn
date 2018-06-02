@@ -21,5 +21,7 @@ Route::group(['prefix'=>'user', 'middleware'=>'studentLogin'], function(Router $
     $router->resource('subjectbeforeafter', SubjectBeforeAfterController::class);
 
     $router->resource('comments', CommentsController::class);
+
+    $router->resource('subjectregister', SubjectRegisterController::class);
 });
 
