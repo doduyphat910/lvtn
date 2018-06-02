@@ -38,10 +38,10 @@
 
     <section class="content">
 
-        @include('admin::partials.error')
-        @include('admin::partials.success')
-        @include('admin::partials.exception')
-        @include('admin::partials.toastr')
+        @include('User.partials.error')
+        @include('User.partials.success')
+        @include('User.partials.exception')
+        @include('User.partials.toastr')
 
         {!! $content !!}
 

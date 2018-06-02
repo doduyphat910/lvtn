@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\Facade;
  * Class Admin.
  *
  * @method static \Encore\Admin\Grid grid($model, \Closure $callable)
- * @method static \App\Http\Extensions\src\FormUser formUser($model, \Closure $callable)
-// * @method static \Encore\Admin\Form form($model, \Closure $callable)
+// * @method static \App\Http\Extensions\src\FormUser formUser($model, \Closure $callable)
+ * @method static \Encore\Admin\Form form($model, \Closure $callable)
  * @method static \Encore\Admin\Tree tree($model, \Closure $callable = null)
  * @method static \app\Http\Extensions\LayoutUser\ContentUser content(\Closure $callable = null)
  * @method static \Illuminate\Contracts\View\Factory|\Illuminate\View\View|void css($css = null)

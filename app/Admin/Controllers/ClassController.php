@@ -102,7 +102,6 @@ class ClassController extends Controller
     {
         return Admin::form(ClassSTU::class, function (Form $form) {
             $form->display('id', 'ID');
-            dd($form);
             $form->text('name', 'Tên lớp')->rules('required');
             $form->select('id_department', 'Tên khoa')->options(Department::all()->pluck('name', 'id'))->rules('required');
             $form->display('created_at', 'Created At');
