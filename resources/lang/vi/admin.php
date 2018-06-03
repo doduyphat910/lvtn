@@ -15,7 +15,7 @@ return [
 
     'list'         => 'Danh sách',
     'new'          => 'Tạo mới',
-    'create'       => 'Tạo',
+    'create'       => 'Tạo mới',
     'delete'       => 'Xóa',
     'remove'       => 'Hủy bỏ',
     'edit'         => 'Chỉnh sửa',

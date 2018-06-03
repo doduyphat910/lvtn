@@ -89,7 +89,7 @@ class StatusController extends Controller
 
             $form->text('ids', 'ID')->help('Chú ý: Nếu ID lớn hơn 5 thì sinh viên không được phép đăng ký')
                 ->rules('required|unique:status');
-            $form->text('status', 'Tên trạng thái');
+            $form->text('status', 'Tên trạng thái')->rules('required');
             $form->display('created_at', 'Tạo vào lúc');
             $form->display('updated_at', 'Cập nhật vào lúc');
         });

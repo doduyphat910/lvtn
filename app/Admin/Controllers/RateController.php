@@ -15,6 +15,7 @@ use Encore\Admin\Facades\Admin;
 use Encore\Admin\Layout\Content;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\ModelForm;
+use Illuminate\Support\MessageBag;
 
 class RateController extends Controller
 {
@@ -62,8 +63,8 @@ class RateController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('header');
-            $content->description('description');
+            $content->header('Tỷ lệ điểm');
+            $content->description('Thêm tỷ lệ điểm');
 
             $content->body($this->form());
         });
@@ -100,14 +101,23 @@ class RateController extends Controller
      */
     protected function form()
     {
-        return AdminRateFacades::form(Rate::class, function (FormRate $form) {
+        return Admin::form(Rate::class, function (Form $form) {
             $form->display('id', 'ID');
             $form->text('name', 'Tên tỷ lệ')->rules('required');
-            $form->number('attendance', 'Tỉ lệ điểm chuyên cần')->rules('integer|max:20')->rules('integer|min:0');
+            $form->number('attendance', 'Tỉ lệ điểm chuyên cần')->rules('integer|max:30')->rules('integer|min:0');
             $form->number('midterm', 'Tỉ lệ điểm giữa kì')->rules('integer|max:50')->rules('integer|min:0');
             $form->number('end_term', 'Tỉ lệ điểm cuối kì')->rules('integer|max:100')->rules('integer|min:50');
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
+            $form->saving(function (Form $form){
+                if($form->attendance + $form->midterm + $form->end_term != 100){
+                    $error = new MessageBag([
+                        'title'   => 'Lỗi',
+                        'message' => 'Tỷ lệ điểm không đủ 100%',
+                    ]);
+                    return back()->with(compact('error'));
+                }
+            });
         });
     }
 

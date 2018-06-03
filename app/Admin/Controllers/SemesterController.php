@@ -18,6 +18,9 @@ use Encore\Admin\Layout\Content;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\ModelForm;
 use App\Models\Year;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\MessageBag;
+
 class SemesterController extends Controller
 {
     use ModelForm;
@@ -64,8 +67,8 @@ class SemesterController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('header');
-            $content->description('description');
+            $content->header('Năm, học kỳ');
+            $content->description('Thêm học kỳ');
 
             $content->body($this->form());
         });
@@ -82,14 +85,27 @@ class SemesterController extends Controller
 
             $grid->id('ID')->sortable();
             $grid->name('Tên')->display(function ($name){
+                if($name == 0) {
+                    $name = 'Học kỳ hè';
+                } elseif ($name == 1) {
+                    $name = 'Học kỳ 1';
+                } elseif ($name == 2) {
+                    $name = 'Học kỳ 2';
+                }
                 return  '<a href="/admin/semester/' . $this->id . '/details">'.$name.'</a>';
+            });
+            $grid->id_year('Tên năm')->display(function ($idyear) {
+                if ($idyear) {
+                    $name = Year::find($idyear)->name;
+                    return "<span class='label label-info'>{$name}</span>";
+                } else {
+                    return '';
+                }
+
             });
             $grid->credits_max('Số tín chỉ lớn nhất');
             $grid->credits_min('Số tín chỉ nhỏ nhất');
-            $grid->id_year('Tên năm')->display(function ($idyear) {
-                $name = Year::find($idyear)->name;
-                return "<span class='label label-info'>{$name}</span>";
-            });
+
             $grid->time_start('Thời gian bắt đầu');
             $grid->time_end('Thời gian kết thúc');
             $grid->status('Trạng thái đăng ký môn học')->display(function ($status){
@@ -248,20 +264,51 @@ class SemesterController extends Controller
             $form->display('id', 'ID');
             $form->select('name', 'Tên học kì')->options(['0'=>' Học kỳ hè', '1' => 'Học kì 1', '2' => 'Học kì 2'])->rules('required');
             $form->select('id_year', 'Năm')->options(Year::all()->pluck('name', 'id'));
-            $form->number('credits_max', 'Số tín chỉ lớn nhất');
-            $form->number('credits_min', 'Số tín chỉ nhỏ nhất');
-//            $form->dateRange('time_start' , 'time_end', 'Thời gian')->attribute(['data-date-min-date' => date("Y-m-d")])
-//                ->rules('required');
+            $currentPath = Route::getFacadeRoot()->current()->uri();
+            if($currentPath == 'admin/semester/{semester}/edit') {
+                $form->number('credits_max', 'Số tín chỉ lớn nhất')->rules('integer|max:28');
+                $form->number('credits_min', 'Số tín chỉ nhỏ nhất')->rules('integer|min:1');
+            } else {
+                $form->hidden('credits_min')->value(10);
+                $form->hidden('credits_max')->value(28);
+            }
             $form->date('time_start', 'Ngày bắt đầu')->attribute(['data-date-min-date' => date("Y-m-d")])->rules('required');
             $form->date('time_end', 'Ngày kết thúc')->attribute(['data-date-min-date' => date("Y-m-d")])->rules('required');
             $states = [
                 'on'  => ['value' => 1, 'text' => 'Mở', 'color' => 'success'],
                 'off' => ['value' => 0, 'text' => 'Đóng', 'color' => 'danger'],
             ];
-            $form->switch('status', 'Trạng thái đăng ký môn')->states($states)->default('1');
+            $form->switch('status', 'Trạng thái đăng ký môn')->states($states)->default('0');
             $form->listbox('subjects', 'Môn học')->options(Subjects::all()->pluck('name', 'id'));
             $form->display('created_at', 'Tạo vào lúc');
             $form->display('updated_at', 'Cập nhật vào lúc');
+            $form->saving(function (Form $form) use ($currentPath) {
+                if(($form->name == 1 || $form->name == 2) && $form->id_year == null )
+                {
+                    $error = new MessageBag([
+                        'title'   => 'Lỗi',
+                        'message' => 'Học kỳ ' . $form->name.' phải thuộc năm',
+                    ]);
+                    return back()->with(compact('error'));
+                }elseif ($form->name == 0 && $form->id_year != null ) {
+                    $error = new MessageBag([
+                        'title'   => 'Lỗi',
+                        'message' => 'Học kỳ hè không được có năm',
+                    ]);
+                    return back()->with(compact('error'));
+                }
+                    if ($form->name && $form->id_year) {
+                        $count = Semester::where('name', $form->name)->where('id_year', $form->id_year)->where('id', '!=' ,$form->model()->id)->count();
+                        if ($count > 1) {
+                            $nameYear = Year::find($form->id_year)->name;
+                            $error = new MessageBag([
+                                'title' => 'Lỗi',
+                                'message' => 'Đã tồn tại học kỳ ' . $form->name . ' thuộc ' . $nameYear,
+                            ]);
+                            return back()->with(compact('error'));
+                        }
+                    }
+            });
         });
     }
 

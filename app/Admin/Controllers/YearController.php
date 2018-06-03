@@ -58,8 +58,8 @@ class YearController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('header');
-            $content->description('description');
+            $content->header('Năm, học kỳ');
+            $content->description('Thêm năm');
 
             $content->body($this->form());
         });
@@ -139,7 +139,10 @@ class YearController extends Controller
         return Admin::form(Year::class, function (Form $form) {
 
             $form->display('id', 'ID');
-            $form->text('name', 'Tên năm');
+            $options = ['Năm 1'=>'Năm 1', 'Năm 2'=>'Năm 2', 'Năm 3'=>'Năm 3', 'Năm 4'=>'Năm 4', 'Năm 5'=>'Năm 5', 'Năm 6'=>'Năm 6' ];
+            $form->select('name', 'Tên năm')->options($options)->rules(function ($form){
+                return 'required|unique:year,name,'.$form->model()->id.',id';
+            });
             $form->display('created_at', 'Tạo vào lúc');
             $form->display('updated_at', 'Cập nhật vào lúc');
         });

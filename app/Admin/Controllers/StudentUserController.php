@@ -128,10 +128,10 @@ class StudentUserController extends Controller
                 $form->password = $form->code_number;
             });
             $form->image('avatar', 'Avatar');
-            $form->select('id_class', 'Lớp')->options(ClassSTU::all()->pluck('name', 'id'));
-            $form->select('id_status', 'Trạng thái')->options(Status::all()->pluck('status', 'ids'));
-            $form->year('school_year', 'Năm nhập học');
-            $form->select('level', 'Trình độ')->options(['CD'=>'Cao đẳng', 'DH'=>'Đại học']);
+            $form->select('id_class', 'Lớp')->options(ClassSTU::all()->pluck('name', 'id'))->rules('required');
+            $form->select('id_status', 'Trạng thái')->options(Status::all()->pluck('status', 'ids'))->rules('required');
+            $form->year('school_year', 'Năm nhập học')->rules('required');
+            $form->select('level', 'Trình độ')->options(['CD'=>'Cao đẳng', 'DH'=>'Đại học'])->rules('required');
             $form->display('created_at', 'Thêm vào lúc');
             $form->display('updated_at', 'Cập nhật vào lúc');
         });
@@ -140,7 +140,6 @@ class StudentUserController extends Controller
     public function formEdit()
     {
         return Admin::form(StudentUser::class, function (Form $form) {
-
             $form->display('id', 'ID');
             $form->display('code_number', 'Mã số SV');
             $form->text('first_name', 'Họ')->rules('required');

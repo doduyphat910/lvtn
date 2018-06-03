@@ -62,8 +62,8 @@ class SubjectRegisterController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('header');
-            $content->description('description');
+            $content->header('Học phần');
+            $content->description('Tạo học phần');
 
             $content->body($this->form());
         });
@@ -187,16 +187,18 @@ class SubjectRegisterController extends Controller
 EOT;
             Admin::script($script);
             $form->display('id', 'ID');
-            $form->text('code_subject_register', 'Mã học phần')->rules('required|unique:subject_register');
-            $form->select('id_subjects', 'Môn học')->options(Subjects::all()->pluck('name', 'id'));
-            $form->select('id_classroom', 'Phòng học')->options(Classroom::all()->pluck('name', 'id'));
-            $form->select('id_user_teacher', 'Giảng viên')->options(UserAdmin::where('type_user', '0')->pluck('name', 'id'));
+            $form->text('code_subject_register', 'Mã học phần')->rules(function ($form){
+                return 'required|unique:subject_register,code_subject_register,'.$form->model()->id.',id';
+            });
+            $form->select('id_subjects', 'Môn học')->options(Subjects::all()->pluck('name', 'id'))->rules('required');
+            $form->select('id_classroom', 'Phòng học')->options(Classroom::all()->pluck('name', 'id'))->rules('required');
+            $form->select('id_user_teacher', 'Giảng viên')->options(UserAdmin::where('type_user', '0')->pluck('name', 'id'))->rules('required');
             $form->hidden('qty_current', 'Số lượng hiện tại')->value('0');
-            $form->number('qty_min', 'Số lượng tối thiểu');
-            $form->number('qty_max', 'Số lượng tối đa');
-            $form->date('date_start', 'Ngày bắt đầu')->placeholder('Ngày bắt đầu');
-            $form->date('date_end', 'Ngày kết thúc')->placeholder('Ngày kết thúc');
-            $form->select('id_time_register', 'Thời gian đăng ký')->options(TimeRegister::all()->pluck('name', 'id'));
+            $form->number('qty_min', 'Số lượng tối thiểu')->rules('integer|min:5');
+            $form->number('qty_max', 'Số lượng tối đa')->rules('integer|min:10');
+            $form->date('date_start', 'Ngày bắt đầu')->placeholder('Ngày bắt đầu')->rules('required');
+            $form->date('date_end', 'Ngày kết thúc')->placeholder('Ngày kết thúc')->rules('required');
+//            $form->select('id_time_register', 'Thời gian đăng ký')->options(TimeRegister::all()->pluck('name', 'id'));
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
             $form->hasMany('time_study', 'Thời gian học', function (Form\NestedForm $form) {

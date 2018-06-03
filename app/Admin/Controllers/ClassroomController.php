@@ -60,8 +60,8 @@ class ClassroomController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('header');
-            $content->description('description');
+            $content->header('Phòng học');
+            $content->description('Thêm phòng học');
 
             $content->body($this->form());
         });
@@ -155,7 +155,9 @@ class ClassroomController extends Controller
         return Admin::form(Classroom::class, function (Form $form) {
 
             $form->display('id', 'ID');
-            $form->text('name', 'Tên phòng');
+            $form->text('name', 'Tên phòng')->rules(function ($form){
+                return 'required|unique:class_room,name,'.$form->model()->id.',id';
+            });
 
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');

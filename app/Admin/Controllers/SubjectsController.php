@@ -63,8 +63,8 @@ class SubjectsController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('header');
-            $content->description('description');
+            $content->header('Môn học');
+            $content->description('Thêm môn học');
 
             $content->body($this->form());
         });
@@ -83,7 +83,7 @@ class SubjectsController extends Controller
             $grid->id('ID')->sortable();
             $grid->subject_code('Mã môn học');
             $grid->name('Tên môn học')->display(function ($name){
-                return  '<a href="/admin/subject/' . $this->id . '/details">'.$name.'</a>';
+                return  '<a href="/admin/subject/' . $this->id . '/details" >'.$name.'</a>';
             });
             $grid->credits('Số tín chỉ');
             $grid->credits_fee('Số tín chỉ học phí');
@@ -150,21 +150,20 @@ class SubjectsController extends Controller
         return Admin::form(Subjects::class, function (Form $form) {
 
             $form->display('id', 'ID');
-//            $form->text('subject_code', 'Mã môn học')->rules('required|unique:subjects,subject_code');
             $form->text('subject_code', 'Mã môn học')->rules(function ($form){
                 return 'required|unique:subjects,subject_code,'.$form->model()->id.',id';
             });
-            $form->text('name','Tên môn học');
-            $form->number('credits','Tín chỉ');
-            $form->number('credits_fee', 'Tín chỉ học phí');
+            $form->text('name','Tên môn học')->rules('required');
+            $form->number('credits','Tín chỉ')->rules('integer|min:1|max:6');
+            $form->number('credits_fee', 'Tín chỉ học phí')->rules('integer|min:1|max:12');
 //            $form->select('id_semester', 'Học kỳ')->options(Semester::all()->pluck('name', 'id'));
-            $form->multipleSelect('subject_group', 'Nhóm môn')->options(SubjectGroup::all()->pluck('name', 'id'));
+            $form->multipleSelect('subject_group', 'Nhóm môn')->options(SubjectGroup::all()->pluck('name', 'id'))->rules('required');
             $rates = Rate::all();
             $arrayRate = [];
             foreach($rates as $rate) {
                 $arrayRate += [$rate['id'] => $rate['attendance'] . '-'.  $rate['midterm'] .'-' .$rate['end_term']];
             }
-            $form->select('id_rate', 'Tỷ lệ điểm')->options($arrayRate);
+            $form->select('id_rate', 'Tỷ lệ điểm')->options($arrayRate)->rules('required');
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
         });

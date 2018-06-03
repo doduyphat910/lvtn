@@ -28,7 +28,7 @@ class StudentInformationController extends Controller
             $content->header('Thông tin cá nhân');
             $content->description('Cá nhân');
             $id = Auth::User()->id;
-            $content->body($this->form()->edit($id));
+            $content->body($this->edit($id));
         });
     }
 
@@ -49,6 +49,7 @@ class StudentInformationController extends Controller
         return User::form(StudentUser::class, function (Form $form) {
             $form->registerBuiltinFields();
             $id = Auth::User()->id;
+            $form->hidden('id');
             $form->setAction('/user/information/'.$id);
             $form->text('code_number', 'Mã số SV')->readOnly();
             $form->text('first_name', 'Họ')->rules('required')->readOnly();
@@ -70,16 +71,20 @@ class StudentInformationController extends Controller
                 $tools->disableBackButton();
                 $tools->disableListButton();
             });
+//                admin_toastr('update success');
+//                return redirect('/user/information/'.$form->model()->id);//todo error when submit
 
-            $form->saving(function (Form $form) {
-                if($form->password != $form->password_confirmation) {
+
+
+//            $form->saving(function (Form $form) {
+//                if(!($form->model->save())) {
 //                    $error = new MessageBag([
 //                        'title'   => 'Lỗi',
 //                        'message' => 'Mật khẩu và xác nhận mật khẩu khác nhau',
 //                    ]);
-                    return back()->with(compact('error'));
-                }
-            });
+//                    return back()->with(compact('error'));
+//                }
+//            });
         });
     }
 }

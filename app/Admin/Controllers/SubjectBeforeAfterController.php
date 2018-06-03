@@ -59,8 +59,8 @@ class SubjectBeforeAfterController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('header');
-            $content->description('description');
+            $content->header('Môn tiên quyết');
+            $content->description('Thêm môn tiên quyết');
 
             $content->body($this->form());
         });
@@ -109,8 +109,8 @@ class SubjectBeforeAfterController extends Controller
         return Admin::form(SubjectBeforeAfter::class, function (Form $form) {
 
             $form->display('id', 'ID');
-            $form->select('id_subject_before', 'Môn tiên quyết')->options(Subjects::all()->pluck('name', 'id'));
-            $form->select('id_subject_after', 'Môn học sau')->options(Subjects::all()->pluck('name', 'id'));
+            $form->select('id_subject_before', 'Môn tiên quyết')->options(Subjects::all()->pluck('name', 'id'))->rules('required');
+            $form->select('id_subject_after', 'Môn học sau')->options(Subjects::all()->pluck('name', 'id'))->rules('required');
             $form->saving(function (Form $form) {
                 if($form->id_subject_before == $form->id_subject_after) {
                     $error = new MessageBag([

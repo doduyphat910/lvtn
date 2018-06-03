@@ -58,8 +58,8 @@ class ClassController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('header');
-            $content->description('description');
+            $content->header('Lớp');
+            $content->description('Thêm lớp');
 
             $content->body($this->form());
         });
@@ -102,7 +102,9 @@ class ClassController extends Controller
     {
         return Admin::form(ClassSTU::class, function (Form $form) {
             $form->display('id', 'ID');
-            $form->text('name', 'Tên lớp')->rules('required');
+            $form->text('name', 'Tên lớp')->rules(function ($form){
+                return 'required|unique:class,name,'.$form->model()->id.',id';
+            });
             $form->select('id_department', 'Tên khoa')->options(Department::all()->pluck('name', 'id'))->rules('required');
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');

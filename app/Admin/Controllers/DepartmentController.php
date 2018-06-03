@@ -59,8 +59,8 @@ class DepartmentController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('header');
-            $content->description('description');
+            $content->header('Khoa');
+            $content->description('Thêm khoa');
 
             $content->body($this->form());
         });
@@ -134,7 +134,9 @@ class DepartmentController extends Controller
         return Admin::form(Department::class, function (Form $form) {
 
             $form->display('id', 'ID');
-            $form->text('name', 'Tên khoa');
+            $form->text('name', 'Tên khoa')->rules(function ($form){
+                return 'required|unique:department,name,'.$form->model()->id.',id';
+            });
             $form->display('created_at', 'Tạo vào lúc');
             $form->display('updated_at', 'Cập nhật vào lúc');
         });

@@ -41,7 +41,7 @@ class SubjectRegisterController extends Controller
              $subjects_id = SemesterSubjects::whereIn('semester_id',$semester)->orderBy('semester_id', 'DESC')->pluck('subjects_id')->toArray();
              $field = '';
              foreach ($subjects_id as $id) {
-                $field .= $id . ',';
+                $field .= ($id . ',');
              }
              $field = substr( $field , 0, strlen($field)-1);
              $grid->model()->whereIn('id', $subjects_id)->orderBy(DB::raw('FIELD(id, '. $field .')'));

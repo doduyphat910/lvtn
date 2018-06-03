@@ -60,8 +60,8 @@ class SubjectGroupController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('header');
-            $content->description('description');
+            $content->header('Nhóm môn học');
+            $content->description('Thêm nhóm môn học');
 
             $content->body($this->form());
         });
@@ -97,7 +97,7 @@ class SubjectGroupController extends Controller
         return Admin::form(SubjectGroup::class, function (Form $form) {
 
             $form->display('id', 'ID');
-            $form->text('name', 'Nhóm môn học');
+            $form->text('name', 'Nhóm môn học')->rules('required');
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
         });
