@@ -1,75 +1,5 @@
 [
     {
-        "name": "barryvdh/laravel-debugbar",
-        "version": "v3.1.5",
-        "version_normalized": "3.1.5.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/barryvdh/laravel-debugbar.git",
-            "reference": "d3cdca2ad6cc6e67735b4a63e7551c690a497f5f"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/barryvdh/laravel-debugbar/zipball/d3cdca2ad6cc6e67735b4a63e7551c690a497f5f",
-            "reference": "d3cdca2ad6cc6e67735b4a63e7551c690a497f5f",
-            "shasum": ""
-        },
-        "require": {
-            "illuminate/routing": "5.5.x|5.6.x",
-            "illuminate/session": "5.5.x|5.6.x",
-            "illuminate/support": "5.5.x|5.6.x",
-            "maximebf/debugbar": "~1.15.0",
-            "php": ">=7.0",
-            "symfony/debug": "^3|^4",
-            "symfony/finder": "^3|^4"
-        },
-        "require-dev": {
-            "illuminate/framework": "5.5.x"
-        },
-        "time": "2018-05-03T18:27:04+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "3.2-dev"
-            },
-            "laravel": {
-                "providers": [
-                    "Barryvdh\\Debugbar\\ServiceProvider"
-                ],
-                "aliases": {
-                    "Debugbar": "Barryvdh\\Debugbar\\Facade"
-                }
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Barryvdh\\Debugbar\\": "src/"
-            },
-            "files": [
-                "src/helpers.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Barry vd. Heuvel",
-                "email": "barryvdh@gmail.com"
-            }
-        ],
-        "description": "PHP Debugbar integration for Laravel",
-        "keywords": [
-            "debug",
-            "debugbar",
-            "laravel",
-            "profiler",
-            "webprofiler"
-        ]
-    },
-    {
         "name": "dnoegel/php-xdg-base-dir",
         "version": "0.1",
         "version_normalized": "0.1.0.0",
@@ -573,17 +503,17 @@
     },
     {
         "name": "filp/whoops",
-        "version": "2.1.14",
-        "version_normalized": "2.1.14.0",
+        "version": "2.2.0",
+        "version_normalized": "2.2.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/filp/whoops.git",
-            "reference": "c6081b8838686aa04f1e83ba7e91f78b7b2a23e6"
+            "reference": "181c4502d8f34db7aed7bfe88d4f87875b8e947a"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/filp/whoops/zipball/c6081b8838686aa04f1e83ba7e91f78b7b2a23e6",
-            "reference": "c6081b8838686aa04f1e83ba7e91f78b7b2a23e6",
+            "url": "https://api.github.com/repos/filp/whoops/zipball/181c4502d8f34db7aed7bfe88d4f87875b8e947a",
+            "reference": "181c4502d8f34db7aed7bfe88d4f87875b8e947a",
             "shasum": ""
         },
         "require": {
@@ -591,19 +521,19 @@
             "psr/log": "^1.0.1"
         },
         "require-dev": {
-            "mockery/mockery": "0.9.*",
+            "mockery/mockery": "^0.9 || ^1.0",
             "phpunit/phpunit": "^4.8.35 || ^5.7",
-            "symfony/var-dumper": "^2.6 || ^3.0"
+            "symfony/var-dumper": "^2.6 || ^3.0 || ^4.0"
         },
         "suggest": {
             "symfony/var-dumper": "Pretty print complex values better with var-dumper available",
             "whoops/soap": "Formats errors as SOAP responses"
         },
-        "time": "2017-11-23T18:22:44+00:00",
+        "time": "2018-03-03T17:56:25+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "2.0-dev"
+                "dev-master": "2.1-dev"
             }
         },
         "installation-source": "dist",
@@ -828,134 +758,18 @@
         ]
     },
     {
-        "name": "jeremeamia/SuperClosure",
-        "version": "2.4.0",
-        "version_normalized": "2.4.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/jeremeamia/super_closure.git",
-            "reference": "5707d5821b30b9a07acfb4d76949784aaa0e9ce9"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/jeremeamia/super_closure/zipball/5707d5821b30b9a07acfb4d76949784aaa0e9ce9",
-            "reference": "5707d5821b30b9a07acfb4d76949784aaa0e9ce9",
-            "shasum": ""
-        },
-        "require": {
-            "nikic/php-parser": "^1.2|^2.0|^3.0|^4.0",
-            "php": ">=5.4",
-            "symfony/polyfill-php56": "^1.0"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "^4.0|^5.0"
-        },
-        "time": "2018-03-21T22:21:57+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.4-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "SuperClosure\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Jeremy Lindblom",
-                "email": "jeremeamia@gmail.com",
-                "homepage": "https://github.com/jeremeamia",
-                "role": "Developer"
-            }
-        ],
-        "description": "Serialize Closure objects, including their context and binding",
-        "homepage": "https://github.com/jeremeamia/super_closure",
-        "keywords": [
-            "closure",
-            "function",
-            "lambda",
-            "parser",
-            "serializable",
-            "serialize",
-            "tokenizer"
-        ]
-    },
-    {
-        "name": "laravel-admin-ext/helpers",
-        "version": "v1.0.2",
-        "version_normalized": "1.0.2.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/laravel-admin-extensions/helpers.git",
-            "reference": "c670d85e827bf2347d2ff0c26161ab1497f7a5ed"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/laravel-admin-extensions/helpers/zipball/c670d85e827bf2347d2ff0c26161ab1497f7a5ed",
-            "reference": "c670d85e827bf2347d2ff0c26161ab1497f7a5ed",
-            "shasum": ""
-        },
-        "require": {
-            "encore/laravel-admin": "1.5.*",
-            "laravel/framework": "~5.5",
-            "php": ">=7.0.0"
-        },
-        "require-dev": {
-            "laravel/laravel": "~5.5",
-            "phpunit/phpunit": "~6.0"
-        },
-        "time": "2018-04-24T09:35:32+00:00",
-        "type": "library",
-        "extra": {
-            "laravel": {
-                "providers": [
-                    "Encore\\Admin\\Helpers\\HelpersServiceProvider"
-                ]
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Encore\\Admin\\Helpers\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "z-song",
-                "email": "zosong@126.com"
-            }
-        ],
-        "description": "Helpers extension for laravel-admin",
-        "homepage": "https://github.com/laravel-admin-extensions/helpers",
-        "keywords": [
-            "helpers",
-            "laravel-admin"
-        ]
-    },
-    {
         "name": "laravel/framework",
-        "version": "v5.6.23",
-        "version_normalized": "5.6.23.0",
+        "version": "v5.6.24",
+        "version_normalized": "5.6.24.0",
         "source": {
             "type": "git",
             "url": "https://github.com/laravel/framework.git",
-            "reference": "f547f0a71a12763d1adb8493237d541c9e3a5d10"
+            "reference": "56290edeb0d8051826d40b4cbd8ed3c30348b2b5"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/laravel/framework/zipball/f547f0a71a12763d1adb8493237d541c9e3a5d10",
-            "reference": "f547f0a71a12763d1adb8493237d541c9e3a5d10",
+            "url": "https://api.github.com/repos/laravel/framework/zipball/56290edeb0d8051826d40b4cbd8ed3c30348b2b5",
+            "reference": "56290edeb0d8051826d40b4cbd8ed3c30348b2b5",
             "shasum": ""
         },
         "require": {
@@ -1050,7 +864,7 @@
             "symfony/dom-crawler": "Required to use most of the crawler integration testing tools (~4.0).",
             "symfony/psr-http-message-bridge": "Required to psr7 bridging features (~1.0)."
         },
-        "time": "2018-05-22T14:55:57+00:00",
+        "time": "2018-06-04T14:51:03+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1233,149 +1047,6 @@
             "s3",
             "sftp",
             "storage"
-        ]
-    },
-    {
-        "name": "maatwebsite/excel",
-        "version": "2.1.28",
-        "version_normalized": "2.1.28.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/Maatwebsite/Laravel-Excel.git",
-            "reference": "06e397a30595d1082963d6aa5ec0c3a9961d70c8"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/Maatwebsite/Laravel-Excel/zipball/06e397a30595d1082963d6aa5ec0c3a9961d70c8",
-            "reference": "06e397a30595d1082963d6aa5ec0c3a9961d70c8",
-            "shasum": ""
-        },
-        "require": {
-            "illuminate/cache": "5.0.*|5.1.*|5.2.*|5.3.*|5.4.*|5.5.*|5.6.*",
-            "illuminate/config": "5.0.*|5.1.*|5.2.*|5.3.*|5.4.*|5.5.*|5.6.*",
-            "illuminate/filesystem": "5.0.*|5.1.*|5.2.*|5.3.*|5.4.*|5.5.*|5.6.*",
-            "illuminate/support": "5.0.*|5.1.*|5.2.*|5.3.*|5.4.*|5.5.*|5.6.*",
-            "jeremeamia/superclosure": "^2.3",
-            "nesbot/carbon": "~1.0",
-            "php": ">=5.5",
-            "phpoffice/phpexcel": "^1.8.1",
-            "tijsverkoyen/css-to-inline-styles": "~2.0"
-        },
-        "require-dev": {
-            "mockery/mockery": "~1.0",
-            "orchestra/testbench": "3.1.*|3.2.*|3.3.*|3.4.*|3.5.*|3.6.*",
-            "phpseclib/phpseclib": "~1.0",
-            "phpunit/phpunit": "~4.0"
-        },
-        "suggest": {
-            "illuminate/http": "5.0.*|5.1.*|5.2.*|5.3.*|5.4.*|5.5.*|5.6.*",
-            "illuminate/queue": "5.0.*|5.1.*|5.2.*|5.3.*|5.4.*|5.5.*|5.6.*",
-            "illuminate/routing": "5.0.*|5.1.*|5.2.*|5.3.*|5.4.*|5.5.*|5.6.*",
-            "illuminate/view": "5.0.*|5.1.*|5.2.*|5.3.*|5.4.*|5.5.*|5.6.*"
-        },
-        "time": "2018-05-09T14:34:18+00:00",
-        "type": "library",
-        "extra": {
-            "laravel": {
-                "providers": [
-                    "Maatwebsite\\Excel\\ExcelServiceProvider"
-                ],
-                "aliases": {
-                    "Excel": "Maatwebsite\\Excel\\Facades\\Excel"
-                }
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "classmap": [
-                "src/Maatwebsite/Excel"
-            ],
-            "psr-0": {
-                "Maatwebsite\\Excel\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Maatwebsite.nl",
-                "email": "patrick@maatwebsite.nl"
-            }
-        ],
-        "description": "An eloquent way of importing and exporting Excel and CSV in Laravel 4 with the power of PHPExcel",
-        "keywords": [
-            "PHPExcel",
-            "batch",
-            "csv",
-            "excel",
-            "export",
-            "import",
-            "laravel"
-        ]
-    },
-    {
-        "name": "maximebf/debugbar",
-        "version": "v1.15.0",
-        "version_normalized": "1.15.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/maximebf/php-debugbar.git",
-            "reference": "30e7d60937ee5f1320975ca9bc7bcdd44d500f07"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/maximebf/php-debugbar/zipball/30e7d60937ee5f1320975ca9bc7bcdd44d500f07",
-            "reference": "30e7d60937ee5f1320975ca9bc7bcdd44d500f07",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.0",
-            "psr/log": "^1.0",
-            "symfony/var-dumper": "^2.6|^3.0|^4.0"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "^4.0|^5.0"
-        },
-        "suggest": {
-            "kriswallsmith/assetic": "The best way to manage assets",
-            "monolog/monolog": "Log using Monolog",
-            "predis/predis": "Redis storage"
-        },
-        "time": "2017-12-15T11:13:46+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.14-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "DebugBar\\": "src/DebugBar/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Maxime Bouroumeau-Fuseau",
-                "email": "maxime.bouroumeau@gmail.com",
-                "homepage": "http://maximebf.com"
-            },
-            {
-                "name": "Barry vd. Heuvel",
-                "email": "barryvdh@gmail.com"
-            }
-        ],
-        "description": "Debug bar in the browser for php application",
-        "homepage": "https://github.com/maximebf/php-debugbar",
-        "keywords": [
-            "debug",
-            "debugbar"
         ]
     },
     {
@@ -1633,17 +1304,17 @@
     },
     {
         "name": "nikic/php-parser",
-        "version": "v4.0.1",
-        "version_normalized": "4.0.1.0",
+        "version": "v4.0.2",
+        "version_normalized": "4.0.2.0",
         "source": {
             "type": "git",
             "url": "https://github.com/nikic/PHP-Parser.git",
-            "reference": "e4a54fa90a5cd8e8dd3fb4099942681731c5cdd3"
+            "reference": "35b8caf75e791ba1b2d24fec1552168d72692b12"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/e4a54fa90a5cd8e8dd3fb4099942681731c5cdd3",
-            "reference": "e4a54fa90a5cd8e8dd3fb4099942681731c5cdd3",
+            "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/35b8caf75e791ba1b2d24fec1552168d72692b12",
+            "reference": "35b8caf75e791ba1b2d24fec1552168d72692b12",
             "shasum": ""
         },
         "require": {
@@ -1653,7 +1324,7 @@
         "require-dev": {
             "phpunit/phpunit": "^6.5 || ^7.0"
         },
-        "time": "2018-03-25T17:35:16+00:00",
+        "time": "2018-06-03T11:33:10+00:00",
         "bin": [
             "bin/php-parse"
         ],
@@ -2063,66 +1734,6 @@
         ]
     },
     {
-        "name": "phpoffice/phpexcel",
-        "version": "1.8.1",
-        "version_normalized": "1.8.1.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/PHPOffice/PHPExcel.git",
-            "reference": "372c7cbb695a6f6f1e62649381aeaa37e7e70b32"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/PHPOffice/PHPExcel/zipball/372c7cbb695a6f6f1e62649381aeaa37e7e70b32",
-            "reference": "372c7cbb695a6f6f1e62649381aeaa37e7e70b32",
-            "shasum": ""
-        },
-        "require": {
-            "ext-xml": "*",
-            "ext-xmlwriter": "*",
-            "php": ">=5.2.0"
-        },
-        "time": "2015-05-01T07:00:55+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "PHPExcel": "Classes/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "LGPL"
-        ],
-        "authors": [
-            {
-                "name": "Maarten Balliauw",
-                "homepage": "http://blog.maartenballiauw.be"
-            },
-            {
-                "name": "Mark Baker"
-            },
-            {
-                "name": "Franck Lefevre",
-                "homepage": "http://blog.rootslabs.net"
-            },
-            {
-                "name": "Erik Tilt"
-            }
-        ],
-        "description": "PHPExcel - OpenXML - Read, Create and Write Spreadsheet documents in PHP - Spreadsheet engine",
-        "homepage": "http://phpexcel.codeplex.com",
-        "keywords": [
-            "OpenXML",
-            "excel",
-            "php",
-            "spreadsheet",
-            "xls",
-            "xlsx"
-        ],
-        "abandoned": "phpoffice/phpspreadsheet"
-    },
-    {
         "name": "phpspec/prophecy",
         "version": "1.7.6",
         "version_normalized": "1.7.6.0",
@@ -2448,17 +2059,17 @@
     },
     {
         "name": "phpunit/phpunit",
-        "version": "7.2.3",
-        "version_normalized": "7.2.3.0",
+        "version": "7.2.4",
+        "version_normalized": "7.2.4.0",
         "source": {
             "type": "git",
             "url": "https://github.com/sebastianbergmann/phpunit.git",
-            "reference": "42bb8f5b2cb36483907a20f45e4cd1665c24d8a7"
+            "reference": "00bc0b93f0ff4f557e9ea766557fde96da9a03dd"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/42bb8f5b2cb36483907a20f45e4cd1665c24d8a7",
-            "reference": "42bb8f5b2cb36483907a20f45e4cd1665c24d8a7",
+            "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/00bc0b93f0ff4f557e9ea766557fde96da9a03dd",
+            "reference": "00bc0b93f0ff4f557e9ea766557fde96da9a03dd",
             "shasum": ""
         },
         "require": {
@@ -2497,7 +2108,7 @@
             "ext-xdebug": "*",
             "phpunit/php-invoker": "^2.0"
         },
-        "time": "2018-06-03T06:05:05+00:00",
+        "time": "2018-06-05T03:40:05+00:00",
         "bin": [
             "phpunit"
         ],
@@ -4102,64 +3713,6 @@
         ]
     },
     {
-        "name": "symfony/polyfill-php56",
-        "version": "v1.8.0",
-        "version_normalized": "1.8.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/symfony/polyfill-php56.git",
-            "reference": "af98553c84912459db3f636329567809d639a8f6"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/symfony/polyfill-php56/zipball/af98553c84912459db3f636329567809d639a8f6",
-            "reference": "af98553c84912459db3f636329567809d639a8f6",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.3",
-            "symfony/polyfill-util": "~1.0"
-        },
-        "time": "2018-04-26T10:06:28+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.8-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Symfony\\Polyfill\\Php56\\": ""
-            },
-            "files": [
-                "bootstrap.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Nicolas Grekas",
-                "email": "p@tchwork.com"
-            },
-            {
-                "name": "Symfony Community",
-                "homepage": "https://symfony.com/contributors"
-            }
-        ],
-        "description": "Symfony polyfill backporting some PHP 5.6+ features to lower PHP versions",
-        "homepage": "https://symfony.com",
-        "keywords": [
-            "compatibility",
-            "polyfill",
-            "portable",
-            "shim"
-        ]
-    },
-    {
         "name": "symfony/polyfill-php72",
         "version": "v1.8.0",
         "version_normalized": "1.8.0.0",
@@ -4213,60 +3766,6 @@
             "compatibility",
             "polyfill",
             "portable",
-            "shim"
-        ]
-    },
-    {
-        "name": "symfony/polyfill-util",
-        "version": "v1.8.0",
-        "version_normalized": "1.8.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/symfony/polyfill-util.git",
-            "reference": "1a5ad95d9436cbff3296034fe9f8d586dce3fb3a"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/symfony/polyfill-util/zipball/1a5ad95d9436cbff3296034fe9f8d586dce3fb3a",
-            "reference": "1a5ad95d9436cbff3296034fe9f8d586dce3fb3a",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.3"
-        },
-        "time": "2018-04-26T10:06:28+00:00",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.8-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Symfony\\Polyfill\\Util\\": ""
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Nicolas Grekas",
-                "email": "p@tchwork.com"
-            },
-            {
-                "name": "Symfony Community",
-                "homepage": "https://symfony.com/contributors"
-            }
-        ],
-        "description": "Symfony utilities for portability of PHP codes",
-        "homepage": "https://symfony.com",
-        "keywords": [
-            "compat",
-            "compatibility",
-            "polyfill",
             "shim"
         ]
     },
