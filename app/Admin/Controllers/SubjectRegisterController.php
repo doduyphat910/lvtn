@@ -15,6 +15,7 @@ use Encore\Admin\Facades\Admin;
 use Encore\Admin\Layout\Content;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\ModelForm;
+use Illuminate\Support\MessageBag;
 
 class SubjectRegisterController extends Controller
 {
@@ -202,16 +203,51 @@ EOT;
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
             $form->hasMany('time_study', 'Thời gian học', function (Form\NestedForm $form) {
-                $options = ['0'=>'Thứ 2', '1'=>'Thứ 3', '2'=>'Thứ 4', '3'=>'Thứ 5', '4'=>'Thứ 5', '5'=>'Thứ 6', '6'=>'Thứ 7', '7'=>'Chủ nhật'];
+                $options = ['2'=>'Thứ 2', '3'=>'Thứ 3', '4'=>'Thứ 4', '5'=>'Thứ 5', '6'=>'Thứ 6', '7'=>'Thứ 7', '8'=>'Chủ nhật'];
                 $form->select('day', 'Ngày học')->options($options);
                 $form->time('time_study_start', 'Giờ học bắt đầu');
                 $form->time('time_study_end', 'Giờ học kết thúc');
             })->rules('required');
-
-//            $form->time('time_study_start', 'Giờ học bắt đầu');
-//            $form->time('time_study_end', 'Giờ học kết thúc');
-
-
+            $form->hidden('id_semester');
+            $form->saving(function (Form $form){
+                //add more semester
+                $subject = Subjects::find($form->id_subjects);
+                $idSemester = $subject->semester()->pluck('id')->toArray();
+                $form->id_semester = $idSemester['0'] ;
+                //check time study
+                foreach($form->time_study as $timeStudy) {
+                    if($timeStudy['time_study_start'] >= $timeStudy['time_study_end']) {
+                        $error = new MessageBag([
+                            'title'   => 'Lỗi',
+                            'message' => 'Giờ học bắt đầu không được lớn hơn hoặc bằng giờ học kết thúc',
+                        ]);
+                        return back()->with(compact('error'));
+                    }
+                }
+                //check conditions register
+                $idSubjectRegisters = SubjectRegister::where('id_classroom', $form->id_classroom)->pluck('id');
+                $timeStudys = TimeStudy::all()->toArray();
+                if(count($idSubjectRegisters) > 0) {
+                    foreach($form->time_study as $day) {
+                        foreach ($timeStudys as $timeStudy) {
+                            if($day['day'] == $timeStudy['day']) {
+                                if (
+                                    ($day['time_study_end'] <= $timeStudy['time_study_start'] && $day['time_study_end'] >= $timeStudy['time_study_end'] )||
+                                    ($day['time_study_start'] <= $timeStudy['time_study_start'] && $day['time_study_start'] >= $timeStudy['time_study_end'] )||
+                                    ($day['time_study_start'] <= $timeStudy['time_study_start'] && $day['time_study_end'] <= $timeStudy['time_study_end'] )||
+                                    ($day['time_study_start'] <= $timeStudy['time_study_start'] && $day['time_study_end'] >= $timeStudy['time_study_end'] )
+                                ) {
+                                    $error = new MessageBag([
+                                        'title'   => 'Lỗi',
+                                        'message' => 'Giờ học này đã có lớp học ',
+                                    ]);
+                                    return back()->with(compact('error'));
+                                }
+                            }
+                        }
+                    }
+                }
+            });
         });
     }
 

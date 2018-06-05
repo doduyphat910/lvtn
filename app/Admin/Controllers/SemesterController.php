@@ -264,25 +264,26 @@ class SemesterController extends Controller
             $form->display('id', 'ID');
             $form->select('name', 'Tên học kì')->options(['0'=>' Học kỳ hè', '1' => 'Học kì 1', '2' => 'Học kì 2'])->rules('required');
             $form->select('id_year', 'Năm')->options(Year::all()->pluck('name', 'id'));
-            $currentPath = Route::getFacadeRoot()->current()->uri();
-            if($currentPath == 'admin/semester/{semester}/edit') {
-                $form->number('credits_max', 'Số tín chỉ lớn nhất')->rules('integer|max:28');
-                $form->number('credits_min', 'Số tín chỉ nhỏ nhất')->rules('integer|min:1');
-            } else {
-                $form->hidden('credits_min')->value(10);
-                $form->hidden('credits_max')->value(28);
-            }
+//            $currentPath = Route::getFacadeRoot()->current()->uri();
+//            if($currentPath == 'admin/semester/{semester}/edit') {
+//                $form->number('credits_max', 'Số tín chỉ lớn nhất')->rules('integer|max:28');
+//                $form->number('credits_min', 'Số tín chỉ nhỏ nhất')->rules('integer|min:1');
+//            } else {
+//                $form->hidden('credits_min')->value(10);
+//                $form->hidden('credits_max')->value(28);
+//            }
             $form->date('time_start', 'Ngày bắt đầu')->attribute(['data-date-min-date' => date("Y-m-d")])->rules('required');
             $form->date('time_end', 'Ngày kết thúc')->attribute(['data-date-min-date' => date("Y-m-d")])->rules('required');
-            $states = [
-                'on'  => ['value' => 1, 'text' => 'Mở', 'color' => 'success'],
-                'off' => ['value' => 0, 'text' => 'Đóng', 'color' => 'danger'],
-            ];
-            $form->switch('status', 'Trạng thái đăng ký môn')->states($states)->default('0');
+//            $states = [
+//                'on'  => ['value' => 1, 'text' => 'Mở', 'color' => 'success'],
+//                'off' => ['value' => 0, 'text' => 'Đóng', 'color' => 'danger'],
+//            ];
+//            $form->switch('status', 'Trạng thái đăng ký môn')->states($states)->default('0');
             $form->listbox('subjects', 'Môn học')->options(Subjects::all()->pluck('name', 'id'));
             $form->display('created_at', 'Tạo vào lúc');
             $form->display('updated_at', 'Cập nhật vào lúc');
-            $form->saving(function (Form $form) use ($currentPath) {
+//            $form->saving(function (Form $form) use ($currentPath) {
+            $form->saving(function (Form $form)  {
                 if(($form->name == 1 || $form->name == 2) && $form->id_year == null )
                 {
                     $error = new MessageBag([
