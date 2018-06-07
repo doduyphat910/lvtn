@@ -31,7 +31,7 @@ class SubjectsParallelController extends Controller
     {
         return User::grid(SubjectParallel::class, function (Grid $grid) {
 
-            // $grid->id('ID')->sortable();
+            $grid->id('ID')->sortable();
             $grid->id_subject1('Môn học trước')->display(function ($idSubject1){
                 $name = Subjects::find($idSubject1)->name;
                 return $name;
