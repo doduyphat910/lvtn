@@ -16,7 +16,7 @@ class Point extends Model
     }
 
     public function user_subject_user() {
-        return $this->belongsTo(UserSubjectRegister::class);
+        return $this->belongsTo(ResultRegister::class);
     }
 
 }

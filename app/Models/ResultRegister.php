@@ -4,17 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UserSubjectRegister extends Model
+class ResultRegister extends Model
 {
-    protected $table = 'user_subject_register';
+    protected $table = 'result_register';
 
     public function point() {
-        return $this->hasOne(Point::class);
+        return $this->hasMany(Point::class);
     }
     public function student_user() {
         return $this->belongsTo(UserAdmin::class);
     }
     public function subject_register() {
         return $this->belongsTo(SubjectRegister::class);
+    }
+    public function time_register() {
+        return $this->belongsTo(TimeRegister::class);
     }
 }

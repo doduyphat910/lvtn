@@ -19,7 +19,7 @@ return [
     'delete'       => 'Xóa',
     'remove'       => 'Hủy bỏ',
     'edit'         => 'Chỉnh sửa',
-    'view'         => 'Xem',
+    'view'         => 'Chi tiết',
     'browse'       => 'Trình duyệt',
     'reset'        => 'Tạo lại',
     'export'       => 'Xuất',

@@ -108,8 +108,6 @@
                     <li><a href="{{ url('user/comments') }}">Góp ý kiến</a></li>
 
                     @if(Auth::check())
-                    
-                    
                     </ul>
 
                       <ul class="nav navbar-nav navbar-right" style="margin-right: 0px;">

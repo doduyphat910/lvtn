@@ -23,6 +23,8 @@ Route::group(['prefix'=>'user', 'middleware'=>'studentLogin'], function(Router $
 
     $router->resource('comments', CommentsController::class);
 
+    $router->get('subject-register/{id}/result-register', 'SubjectRegisterController@resultRegister');
+    $router->get('subject-register/{id}/details', 'SubjectRegisterController@details');
     $router->resource('subject-register', SubjectRegisterController::class);
 });
 

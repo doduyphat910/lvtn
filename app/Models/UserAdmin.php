@@ -33,7 +33,7 @@ class UserAdmin extends Model implements AuthenticatableContract
 //        return $this->hasMany(DifferentRegister::class);
 //    }
     public function user_subject_register() {
-        return $this->hasMany(UserSubjectRegister::class);
+        return $this->hasMany(ResultRegister::class);
     }
     public function point() {
         return $this->hasMany(Point::class);

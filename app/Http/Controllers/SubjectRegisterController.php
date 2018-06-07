@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ResultRegister;
 use App\Models\TimeRegister;
 use App\Models\UserSubject;
 use App\Models\Subjects;
@@ -16,6 +17,8 @@ use App\Models\UserAdmin;
 
 use App\Http\Extensions\Facades\User;
 use app\Http\Extensions\LayoutUser\ContentUser;
+use Encore\Admin\Widgets\Alert;
+use Encore\Admin\Widgets\Callout;
 use Illuminate\Http\Request;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -24,6 +27,7 @@ use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\ModelForm;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\MessageBag;
 
 class SubjectRegisterController extends Controller
 {
@@ -54,7 +58,7 @@ class SubjectRegisterController extends Controller
              $grid->subject_code('Mã môn học');
 //             $grid->id('ID')->sortable();
              $grid->name('Tên môn học')->display(function ($name){
-                 return  '<a href="/user/subject-register/' . $this->id . '/details">'.$name.'</a>';
+                 return  '<a href="/user/subject-register/' . $this->id . '/details"  target="_blank" >'.$name.'</a>';
              });
 
              // $grid->credits('Số tín chỉ');
@@ -119,7 +123,7 @@ class SubjectRegisterController extends Controller
     {
         return User::grid(SubjectRegister::class, function (Grid $grid) use ($idSubjects) {
             $grid->model()->where('id_Subjects', $idSubjects);
-            // $grid->id('ID')->sortable();
+             $grid->id('ID')->sortable();
             $grid->code_subject_register('Mã học phần');
             $grid->id_subjects('Môn học')->display(function ($idSubject){
                 if($idSubject){
@@ -161,8 +165,7 @@ class SubjectRegisterController extends Controller
                 $actions->disableEdit();
                 $actions->disableDelete();
                 // $actions->append('<a href="/admin/subject_register/' . $actions->getKey() . '/edit"><i class="fa fa-edit" ></i></a>');
-                $actions->append('<a href="#" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i> &nbsp Đăng ký </a>');
-              
+                $actions->append('<a href="/user/subject-register/'.$actions->getKey(). '/result-register" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i> &nbsp Đăng ký </a>');
             });
         });
     }
@@ -186,7 +189,36 @@ class SubjectRegisterController extends Controller
             ]
         );
     }
-    public function resultRegister($id){
-        
+    public function resultRegister($idSubjecRegister){
+        $user = Auth::user();
+        $idUser = $user->id;
+        $timeRegister = TimeRegister::where('status', 1)->orderBy('id', 'DESC')->first();
+        $idTimeRegister = $timeRegister->id;
+
+        $resultRegister = new ResultRegister();
+        $resultRegister->id_user_student = $idUser;
+        $resultRegister->id_subject_register = $idSubjecRegister;
+        $resultRegister->is_learned = 0;
+        $resultRegister->time_register = $idTimeRegister;
+        if($resultRegister->save()) {
+            $subjecRegister = SubjectRegister::find($idSubjecRegister);
+            $qtyCurrent = $subjecRegister->qty_current;
+            $subjecRegister->qty_current = $qtyCurrent + 1;
+            if($subjecRegister->save()) {
+                $success = new MessageBag([
+                    'title'   => 'Thành công',
+                    'message' => 'Bạn đã đăng ký thành công môn học này',
+                ]);
+                return back()->with(compact('success'));
+            }else {
+                $error = new MessageBag([
+                    'title'   => 'Thất bại',
+                    'message' => 'Đăng ký thất bại',
+                ]);
+                return back()->with(compact('error'));
+
+            }
+        }
+
     }
 }

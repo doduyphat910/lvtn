@@ -12,7 +12,7 @@ class SubjectRegister extends Model
     protected $table = 'subject_register';
 
     public function user_subject_register() {
-        return $this->hasMany(UserSubjectRegister::class);
+        return $this->hasMany(ResultRegister::class);
     }
 
 //    public function different_register() {
