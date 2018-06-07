@@ -14,16 +14,15 @@ Route::group(['prefix'=>'user', 'middleware'=>'studentLogin'], function(Router $
     $router->resource('student', UserController::class);
 
     // $router->get('information', 'StudentInformationController@edit2');
+    $router->get('information/{id}/update', 'StudentInformationController@update');
     $router->resource('information', StudentInformationController::class);
 
-    $router->resource('subjectparallel', SubjectsParallelController::class);
+    $router->resource('subject-parallel', SubjectsParallelController::class);
 
-    $router->resource('subjectbeforeafter', SubjectBeforeAfterController::class);
+    $router->resource('subject-before-after', SubjectBeforeAfterController::class);
 
     $router->resource('comments', CommentsController::class);
 
-    $router->get('subject-register/{id}/details', 'SubjectRegisterController@details');
     $router->resource('subject-register', SubjectRegisterController::class);
-
 });
 

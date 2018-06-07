@@ -42,7 +42,10 @@ class StudentInformationController extends Controller
             $content->body($this->form()->edit($id));
         });
     }
-
+    public function update($id)
+    {
+        return $this->form($id)->update($id);
+    }
 
     protected function form()
     {

@@ -94,23 +94,27 @@ class YearController extends Controller
 
             $grid->id('ID')->sortable();
             $grid->name('Tên')->display(function ($name){
+                switch ($name){
+                    case 0:
+                        $name = 'Học kỳ hè';
+                        break;
+                    case 1:
+                        $name = 'Học kỳ 1';
+                        break;
+                    case 2:
+                        $name = 'Học kỳ 2';
+                        break;
+                    default:
+                        $name = '';
+                        break;
+                }
                 return  '<a href="/admin/semester/' . $this->id . '/details">'.$name.'</a>';
             });
-            $grid->credits_max('Số tín chỉ lớn nhất');
-            $grid->credits_min('Số tín chỉ nhỏ nhất');
             $grid->id_year('Tên năm')->display(function ($idyear) {
                 return Year::find($idyear)->name;
             });
             $grid->time_start('Thời gian bắt đầu');
             $grid->time_end('Thời gian kết thúc');
-            $grid->status('Trạng thái mở đăng ký môn học')->display(function ($status){
-                if($status == 1){
-                    return "<span class='label label-success'>Đang mở</span>";
-                } else {
-                    return "<span class='label label-danger'>Đang đóng</span>";
-
-                }
-            });
             $grid->actions(function ($actions) {
                 $actions->disableEdit();
                 $actions->disableDelete();

@@ -103,8 +103,8 @@
             <li class="active"><a href="#">Trang chủ <span class="sr-only">(current)</span></a></li>
                     <li><a href="{{ url('user/subject-register') }}">Đăng ký môn học</a></li>
                     <li><a href="#">Xem điểm</a></li>
-                    <li><a href="{{ url('user/subjectparallel') }}">Xem môn song song</a></li>
-                    <li><a href="{{ url('user/subjectbeforeafter') }}">Xem môn tiên quyết</a></li>
+                    <li><a href="{{ url('user/subject-parallel') }}">Xem môn song song</a></li>
+                    <li><a href="{{ url('user/subject-before-after') }}">Xem môn tiên quyết</a></li>
                     <li><a href="{{ url('user/comments') }}">Góp ý kiến</a></li>
 
                     @if(Auth::check())
@@ -118,7 +118,7 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Xin chào {{Auth::User()->last_name}}<img src="" class="user-image"><span class="caret"></span></a>
                              <ul class="dropdown-menu">
                                  @php $id = Auth::User()->id @endphp
-                                    <li><a href="{{ url('user/information/'.$id . '/edit') }}">Thông tin cá nhân</a></li>
+                                    <li><a href="{{ url('user/information/'. $id.'/update') }}">Thông tin cá nhân</a></li>
                                    <li><a href="{{ url('logout') }}">Đăng xuất</a></li>
                             </ul>
                          </li>

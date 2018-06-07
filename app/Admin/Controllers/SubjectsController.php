@@ -93,6 +93,20 @@ class SubjectsController extends Controller
                 $arraySemester = $subject->semester()->pluck('id')->toArray();
                 $name = array_map( function ($arraySemester){
                     $nameSemester = Semester::find($arraySemester)->name;
+                    switch ($nameSemester) {
+                        case 0:
+                            $nameSemester = 'Học kỳ hè';
+                            break;
+                        case 1:
+                            $nameSemester = 'Học kỳ 1';
+                            break;
+                        case 2:
+                            $nameSemester = 'Học kỳ 2';
+                            break;
+                        default:
+                            $nameSemester = '';
+                            break;
+                    }
                     $year = Semester::find($arraySemester)->year()->get();
                     $nameYear = $year['0']->name;
                     return "<span class='label label-info'>{$nameSemester} - {$nameYear}</span>"  ;
