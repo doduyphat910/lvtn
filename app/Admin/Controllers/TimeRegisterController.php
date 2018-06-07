@@ -27,8 +27,8 @@ class TimeRegisterController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('header');
-            $content->description('description');
+            $content->header('TG Đăng ký');
+            $content->description('DS TG Đăng ký');
 
             $content->body($this->grid());
         });
@@ -60,8 +60,8 @@ class TimeRegisterController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('header');
-            $content->description('description');
+            $content->header('TG Đăng ký');
+            $content->description('Thêm TG Đăng ký');
 
             $content->body($this->form());
         });
@@ -77,20 +77,31 @@ class TimeRegisterController extends Controller
         return Admin::grid(TimeRegister::class, function (Grid $grid) {
 
             $grid->id('ID')->sortable();
-            $grid->name('Mô tả');
+            $grid->name('Tên');
             $grid->time_register_start('Thời gian bắt đầu');
             $grid->time_register_end('Thời gian kết thúc');
-            $grid->semester('Học kỳ');
+            $grid->semester('Học kỳ')->display(function ($semester) {
+                switch ($semester) {
+                    case 0: return "<span class='label label-info'>Học kỳ hè</span>";
+                    break;
+                    case 1: return "<span class='label label-info'>Học kỳ 1</span>";
+                    break;
+                    case 2: return "<span class='label label-info'>Học kỳ 2</span>";
+                    break;
+                    default:
+                        return '';
+                }
+            });
             $grid->credits_max('Số TC tối đa');
             $grid->credits_min('Số TC tối thiểu');
             $grid->school_year('Khóa được ĐK')->display(function ($schoolYears){
                 $schoolYears = array_map(function ($schoolYears){
                     if($schoolYears == 'All') {
-                        return "<span class='label label-info'>Tất cả</span>";
+                        return "<span class='label label-primary'>Tất cả</span>";
                     } elseif ($schoolYears ) {
                         $arraySchoolYear = StudentUser::distinct('school_year')->orderBy('school_year', 'DESC')->limit(6)->pluck('school_year')->toArray();
                         array_unshift($arraySchoolYear, 'Tất cả');
-                        return "<span class='label label-info'>{$arraySchoolYear[$schoolYears]}</span>";
+                        return "<span class='label label-primary'>{$arraySchoolYear[$schoolYears]}</span>";
                     }
                     else {
                         return '';
@@ -109,6 +120,9 @@ class TimeRegisterController extends Controller
             });
             $grid->created_at('Tạo vào lúc');
             $grid->updated_at('Cập nhật vào lúc');
+            $grid->actions(function ($actions) {
+                $actions->append('<a href="/admin/time-register/'.$actions->getKey().'/details"><i class="fa fa-eye"></i></a>');
+            });
         });
     }
 
@@ -121,7 +135,7 @@ class TimeRegisterController extends Controller
     {
         return Admin::form(TimeRegister::class, function (Form $form) {
             $form->display('id', 'ID');
-            $form->text('name', 'Mô tả')->rules('required');
+            $form->text('name', 'Tên')->rules('required');
             $form->datetimeRange('time_register_start', 'time_register_end', 'Thời gian đăng ký')
                 ->rules('required');
             $options = [0 => 'Học kỳ hè', 1 => 'Học kỳ 1', 2 => 'Học kỳ 2'];
@@ -151,4 +165,25 @@ class TimeRegisterController extends Controller
             });
         });
     }
+
+    protected function details($id){
+        return Admin::content(function (Content $content) use ($id) {
+            $time = TimeRegister::findOrFail($id);
+            $content->header('TG Đăng ký');
+            $content->description($time->name);
+            $content->body($this->detailsView($id));
+        });
+    }
+
+    protected function detailsView($id)
+    {
+        $form = $this->form()->view($id);
+        return view('vendor.details',
+            [
+                'template_body_name' => 'admin.TimeRegister.info',
+                'form' => $form,
+            ]
+        );
+    }
+
 }

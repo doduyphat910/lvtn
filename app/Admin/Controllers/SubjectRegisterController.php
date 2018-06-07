@@ -50,7 +50,7 @@ class SubjectRegisterController extends Controller
             $content->header('header');
             $content->description('description');
 
-            $content->body($this->form()->edit($id));
+            $content->body($this->formUpdate($id)->edit($id));
         });
     }
 

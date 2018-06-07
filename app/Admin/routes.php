@@ -25,6 +25,7 @@ Route::group([
     $router->resource('subject_register', SubjectRegisterController::class);
 
     //time_register
+    $router->get('time-register/{id}/details', 'TimeRegisterController@details');
     $router->resource('time-register', TimeRegisterController::class);
 
     //subject

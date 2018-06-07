@@ -57,64 +57,74 @@ class ImportStudentController extends Controller
                 if (empty($row ['mssv']) || empty($row ['ho']) || empty($row ['ten']) || empty($row ['lop'])
                     || empty($row ['nam_nhap_hoc']) || empty($row ['trinh_do']) || empty($row ['trang_thai']) ) {
                     $row_error += 1;
-                    $error_logs[$key] = $row['mssv'] . ' không có dữ liệu';
-                    break;
+                    $error_logs[$key] = $row['mssv'] . ', không có dữ liệu';
                 } else {
-                    $studentUser = new StudentUser();
                     $idClass = ClassSTU::where('name', $row['lop'])->pluck('id')->first();
                     if ($idClass == null) {
                         $row_error += 1;
-                        $error_logs[$key] = 'Cột lớp không có trong cơ sở dữ liệu';
-                        break;
+                        $error_logs[$key] = $row['mssv'] .', cột lớp không có trong cơ sở dữ liệu';
                     }
                     if ($row['trinh_do'] != 'CD' && $row['trinh_do'] != 'DH') {
                         $row_error += 1;
-                        $error_logs[$key] = 'Cột trình độ không được khác CD hoặc DH';
-                        break;
+                        $error_logs[$key] = $row['mssv'] .', cột trình độ không được khác CD hoặc DH';
                     }
                     if ($row['nam_nhap_hoc'] < 2000 || $row['nam_nhap_hoc'] > ((int)date("Y"))) {
                         $row_error += 1;
-                        $error_logs[$key] = 'Cột năm nhập học sai dữ liệu';
-                        break;
+                        $error_logs[$key] = $row['mssv'] .', cột năm nhập học sai dữ liệu';
                     }
                     $status = Status::all()->pluck('ids')->toArray();
                     if (in_array($row['trang_thai'], $status) == false) {
                         $row_error += 1;
-                        $error_logs[$key] = 'Trạng thái không có trong CSDL';
-                        break;
+                        $error_logs[$key] = $row['mssv'] .', trạng thái không có trong CSDL';
                     }
                     $arrayCodeNumber = StudentUser::all()->pluck('code_number')->toArray();
                     if (in_array($row['mssv'], $arrayCodeNumber) == true) {
                         $row_error += 1;
-                        $error_logs[$key] = $row['mssv'] . ' đã tồn tại';
-                        break;
+                        $error_logs[$key] = $row['mssv'] . ', đã tồn tại';
                     }
-                    $studentUser->id_class = $idClass;
-                    $studentUser->code_number = $row['mssv'];
-                    $studentUser->first_name = $row['ho'];
-                    $studentUser->last_name = $row['ten'];
-                    $studentUser->email = $row['email'];
-                    $studentUser->school_year = $row['nam_nhap_hoc'];
-                    $studentUser->level = $row['trinh_do'];
-                    $studentUser->id_status = $row['trang_thai'];
-//                    $codeNumber = StudentUser::orderBy('code_number', 'DESC')->where('level', $row['level'])->where('school_year', $row['school_year'])
-//                        ->pluck('code_number')->first();
-//                    if (!$codeNumber) {
-//                        $count = 0;
+//                    $studentUser->id_class = $idClass;
+//                    $studentUser->code_number = $row['mssv'];
+//                    $studentUser->first_name = $row['ho'];
+//                    $studentUser->last_name = $row['ten'];
+//                    if(isset($row['email'])) {
+//                        $studentUser->email = $row['email'];
 //                    } else {
-//                        $count = substr($codeNumber, strlen($codeNumber) - 1, 1);
+//                        $studentUser->email = null;
 //                    }
-//                    $year = substr($row['school_year'], 2, 2);
-//                    $codeNumber = $row['level'] . '5' . $year . '00' . ((int)$count + 1);
-//                    $studentUser->code_number = $codeNumber;
-                    $studentUser->password = $studentUser->code_number;
-                    if ($row_error == 0) {
-                        $studentUser->save();
-                        $row_add_successs += 1;
-                    } else {
-                        $row_error += 1;
-                    }
+//                    $studentUser->school_year = $row['nam_nhap_hoc'];
+//                    $studentUser->level = $row['trinh_do'];
+//                    $studentUser->id_status = $row['trang_thai'];
+//                    $studentUser->password = $studentUser->code_number;
+//                    if ($row_error == 0) {
+//                        $studentUser->save();
+//                        $row_add_successs += 1;
+//                    } else {
+//                        $row_error += 1;
+//                    }
                 }
+        }
+        foreach($data as $key => $row) {
+            $studentUser = new StudentUser();
+            $studentUser->id_class = $idClass;
+            $studentUser->code_number = $row['mssv'];
+            $studentUser->first_name = $row['ho'];
+            $studentUser->last_name = $row['ten'];
+            if(isset($row['email'])) {
+                $studentUser->email = $row['email'];
+            } else {
+                $studentUser->email = null;
+            }
+            $studentUser->school_year = $row['nam_nhap_hoc'];
+            $studentUser->level = $row['trinh_do'];
+            $studentUser->id_status = $row['trang_thai'];
+            $studentUser->password = $studentUser->code_number;
+            if ($row_error == 0) {
+                if($studentUser->save()) {
+                    $row_add_successs += 1;
+                }
+            } else {
+                $row_error += 1;
+            }
         }
             return Admin::content(function (Content $content) use ($row_error, $error_logs, $row_add_successs) {
                 $content->header('Sinh viên');

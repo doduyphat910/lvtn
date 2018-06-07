@@ -156,11 +156,19 @@ class RateController extends Controller
             });
             $grid->credits('Số tín chỉ');
             $grid->credits_fee('Số tín chỉ học phí');
-            $grid->id_semester('Học kỳ')->display(function ($id) {
-                return Semester::find($id)->name;
+            $grid->id_semester('Học kỳ')->display(function ($idSemester) {
+                if($idSemester) {
+                    return Semester::find($idSemester)->name;
+                } else {
+                    return '';
+                }
             });
             $grid->id_subject_group('Nhóm môn')->display(function ($id) {
-                return SubjectGroup::find($id)->name;
+                if($id) {
+                    return SubjectGroup::find($id)->name;
+                } else {
+                    return '';
+                }
             });
             $grid->id_rate('Tỷ lệ chuyên cần')->display(function ($rate){
                 if($rate){

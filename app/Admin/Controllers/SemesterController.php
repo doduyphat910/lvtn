@@ -103,19 +103,9 @@ class SemesterController extends Controller
                 }
 
             });
-            $grid->credits_max('Số tín chỉ lớn nhất');
-            $grid->credits_min('Số tín chỉ nhỏ nhất');
 
             $grid->time_start('Thời gian bắt đầu');
             $grid->time_end('Thời gian kết thúc');
-            $grid->status('Trạng thái đăng ký môn học')->display(function ($status){
-                if($status == 1){
-                    return "<span class='label label-success'>Đang mở</span>";
-                } else {
-                    return "<span class='label label-danger'>Đang đóng</span>";
-
-                }
-            });
             $grid->actions(function ($actions) {
                 $actions->append('<a href="/admin/semester/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
             });
