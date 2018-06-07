@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TimeRegister;
 use App\Models\UserSubject;
 use App\Models\Subjects;
 use App\Models\SubjectsRegister;
@@ -37,8 +38,10 @@ class SubjectRegisterController extends Controller
     protected function grid()
     {
         return User::grid(Subjects::class, function (Grid $grid) {
-             $semester = Semester::where('status', 1)->pluck('id');
-             $subjects_id = SemesterSubjects::whereIn('semester_id',$semester)->orderBy('semester_id', 'DESC')->pluck('subjects_id')->toArray();
+             $timeRegister = TimeRegister::where('status', 1)->orderBy('id', 'DESC')->first();
+             $nameSemester = $timeRegister->semester;
+             $idSemester = Semester::where('name', $nameSemester)->pluck('id');
+             $subjects_id = SemesterSubjects::whereIn('semester_id', $idSemester)->orderBy('semester_id', 'DESC')->pluck('subjects_id')->toArray();
              $field = '';
              foreach ($subjects_id as $id) {
                 $field .= ($id . ',');
@@ -48,7 +51,7 @@ class SubjectRegisterController extends Controller
              $grid->subject_code('Mã môn học');
 //             $grid->id('ID')->sortable();
              $grid->name('Tên môn học')->display(function ($name){
-                 return  '<a href="/user/subjectregister/' . $this->id . '/details">'.$name.'</a>';
+                 return  '<a href="/user/subject-register/' . $this->id . '/details">'.$name.'</a>';
              });
 
              $grid->credits('Số tín chỉ');

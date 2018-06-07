@@ -17,12 +17,12 @@ Route::group(['prefix'=>'user', 'middleware'=>'studentLogin'], function(Router $
     $router->get('information/{id}/update', 'StudentInformationController@update');
     $router->resource('information', StudentInformationController::class);
 
-    $router->resource('subjectparallel', SubjectsParallelController::class);
+    $router->resource('subject-parallel', SubjectsParallelController::class);
 
-    $router->resource('subjectbeforeafter', SubjectBeforeAfterController::class);
+    $router->resource('subject-before-after', SubjectBeforeAfterController::class);
 
     $router->resource('comments', CommentsController::class);
 
-    $router->resource('subjectregister', SubjectRegisterController::class);
+    $router->resource('subject-register', SubjectRegisterController::class);
 });
 

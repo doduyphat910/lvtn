@@ -5,6 +5,7 @@ namespace App\Admin\Controllers;
 use App\Models\ClassSTU;
 
 use App\Models\Department;
+use App\Models\StudentUser;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Facades\Admin;
@@ -93,6 +94,39 @@ class ClassController extends Controller
         });
     }
 
+    protected function gridStudent($idClass)
+    {
+        return Admin::grid(StudentUser::class, function (Grid $grid) use ($idClass) {
+            $grid->model()->where('id_class', $idClass);
+            $grid->id('ID')->sortable();
+            $grid->avatar('Avatar')->image();
+            $grid->first_name('Họ');
+            $grid->last_name('Tên')->display(function ($name){
+                return  '<a href="/admin/student_user/' . $this->id . '/details">'.$name.'</a>';
+            });
+            $grid->code_number('Mã số sinh viên');
+            $grid->username('Tên đăng nhập');
+            $grid->email('Email');
+            $grid->id_class('Lớp')->display(function ($idClass){
+                if($idClass){
+                    return ClassSTU::find($idClass)->name;
+                } else {
+                    return 'Không có';
+                }
+            });
+            $grid->school_year('Năm nhập học');
+            $grid->level('Trình độ');
+            $grid->created_at('Thêm vào lúc');
+            $grid->updated_at('Cập nhật vào lúc');
+            //import student
+            $grid->tools(function ($tools) {
+                $tools->append("<a href='/admin/import_student' class='btn btn-info btn-sm '><i class='fa fa-sign-in'></i> Import DS sinh viên</a>");
+            });
+            $grid->disableCreateButton();
+            $grid->disableExport();
+            $grid->disableRowSelector();
+        });
+    }
     /**
      * Make a form builder.
      *
@@ -123,10 +157,12 @@ class ClassController extends Controller
 
     public function detailsView($id) {
         $form = $this->form()->view($id);
+        $gridStudent = $this->gridStudent($id);
         return view('vendor.details',
             [
                 'template_body_name' => 'admin.Class.info',
                 'form' => $form,
+                'gridStudent' => $gridStudent
             ]
         );
 

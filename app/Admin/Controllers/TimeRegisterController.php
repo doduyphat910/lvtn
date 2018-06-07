@@ -142,12 +142,17 @@ class TimeRegisterController extends Controller
             $form->select('semester', 'Học kỳ')->options($options);
             $schoolYear = StudentUser::distinct('school_year')->orderBy('school_year', 'DESC')->limit(6)->pluck('school_year')->toArray();
             array_unshift($schoolYear, 'Tất cả');
-            $form->multipleSelect('school_year','Khóa đăng ký')->options($schoolYear)->rules('required');
+            $form->multipleSelect('school_year','Khóa đăng ký')->options($schoolYear);
             $states = [
                 'on'  => ['value' => 1, 'text' => 'Mở', 'color' => 'success'],
                 'off' => ['value' => 0, 'text' => 'Đóng', 'color' => 'danger'],
             ];
             $form->switch('status', 'Trạng thái')->states($states)->default('0');
+            $form->saving(function (Form $form) {
+                if($form->school_year['0'] == "0" || $form->school_year['0'] == null  ) {
+                    $form->school_year = 'All';
+                }
+            });
             $currentPath = Route::getFacadeRoot()->current()->uri();
             if($currentPath == "admin/time-register/{time_register}/edit") {
                 $form->number('credits_max', 'Số tín chỉ lớn nhất')->rules('integer|max:28');
@@ -158,11 +163,7 @@ class TimeRegisterController extends Controller
             }
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
-            $form->saving(function (Form $form) {
-                if($form->school_year['0'] == "0" ) {
-                    $form->school_year = 'All';
-                }
-            });
+
         });
     }
 

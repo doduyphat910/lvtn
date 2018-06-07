@@ -299,6 +299,13 @@ class SemesterController extends Controller
                             return back()->with(compact('error'));
                         }
                     }
+                //check subject in semester
+//                if($form->subjects != null) {
+//                    $semesterSummer = Semester::where('name', 0)->pluck('id')->toArray();
+//                    $count = SemesterSubjects::where('subjects_id', $form->subjects)->whereNotIn('semester_id', $semesterSummer)->pluck('semester_id');
+//                    dd($count);
+//                }
+
             });
         });
     }
