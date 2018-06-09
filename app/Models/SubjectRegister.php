@@ -10,6 +10,7 @@ class SubjectRegister extends Model
     use SoftDeletes;
 
     protected $table = 'subject_register';
+    protected $fillable = ['qty_current'];
 
     public function user_subject_register() {
         return $this->hasMany(ResultRegister::class);

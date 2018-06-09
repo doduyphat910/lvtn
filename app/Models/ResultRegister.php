@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ResultRegister extends Model
 {
     protected $table = 'result_register';
+    protected $fillable = ['id_subject_register'];
 
     public function point() {
         return $this->hasMany(Point::class);
