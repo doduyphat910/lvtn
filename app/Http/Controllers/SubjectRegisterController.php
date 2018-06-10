@@ -200,6 +200,7 @@ class SubjectRegisterController extends Controller
         $resultRegister->id_subject_register = $idSubjecRegister;
         $resultRegister->is_learned = 0;
         $resultRegister->time_register = $idTimeRegister;
+        //dd($resultRegister);
         if($resultRegister->save()) {
             $subjecRegister = SubjectRegister::find($idSubjecRegister);
             $qtyCurrent = $subjecRegister->qty_current;
