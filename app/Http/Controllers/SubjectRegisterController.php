@@ -27,6 +27,7 @@ use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\ModelForm;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Input;
 use Illuminate\Support\MessageBag;
 
 class SubjectRegisterController extends Controller
@@ -164,9 +165,51 @@ class SubjectRegisterController extends Controller
             $grid->actions(function ($actions) {
                 $actions->disableEdit();
                 $actions->disableDelete();
-                // $actions->append('<a href="/admin/subject_register/' . $actions->getKey() . '/edit"><i class="fa fa-edit" ></i></a>');
-                $actions->append('<a href="/user/subject-register/'.$actions->getKey(). '/result-register" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i> &nbsp Đăng ký </a>');
+                $actions->append('<a href="javascript:void(0);" data-id="'.$this->getKey().'"  class="btn btn-primary btnRegister"><i class="glyphicon glyphicon-pencil"></i> &nbsp Đăng ký </a>');
             });
+            $registerConfirm = trans('Bạn có muốn đăng ký không?');
+            $confirm = trans('Đăng ký');
+            $cancel = trans('Hủy bỏ');
+            $script = <<<SCRIPT
+$('.btnRegister').unbind('click').click(function() {
+    var id = $(this).data('id');
+    swal({
+      title: "$registerConfirm",
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3c8dbc",
+      confirmButtonText: "$confirm",
+      closeOnConfirm: false,
+      cancelButtonText: "$cancel"
+    },
+    function(){
+        $.ajax({
+            method: 'get',
+            url: '/user/subject-register/' + id + '/result-register',
+            data: {
+                _method:'resultRegister',
+                _token:LA.token,
+            },
+            success: function (data) {
+                if (typeof data === 'object') {
+                    if (data.status) {
+//                        swal(data.message, '', 'success');
+                         swal({
+                              title: "Đăng ký thành công", 
+                              type: "success"
+                             },function() {
+                              location.reload();
+                         });
+                    } else {
+                        swal(data.message, '', 'error');
+                    }
+                }
+            }
+        });
+    });
+});
+SCRIPT;
+            Admin::script($script);
         });
     }
     public function details($id){
@@ -189,37 +232,34 @@ class SubjectRegisterController extends Controller
             ]
         );
     }
-    public function resultRegister($idSubjecRegister){
+    public function resultRegister(Request $request){
+        $idSubjecRegister = $request->id;
         $user = Auth::user();
         $idUser = $user->id;
         $timeRegister = TimeRegister::where('status', 1)->orderBy('id', 'DESC')->first();
         $idTimeRegister = $timeRegister->id;
 
-        $resultRegister = new ResultRegister();
+        $resultRegister = new ResultRegister;
         $resultRegister->id_user_student = $idUser;
         $resultRegister->id_subject_register = $idSubjecRegister;
         $resultRegister->is_learned = 0;
         $resultRegister->time_register = $idTimeRegister;
-        //dd($resultRegister);
+        $resultRegister->save();
         if($resultRegister->save()) {
             $subjecRegister = SubjectRegister::find($idSubjecRegister);
             $qtyCurrent = $subjecRegister->qty_current;
             $subjecRegister->qty_current = $qtyCurrent + 1;
             if($subjecRegister->save()) {
-                $success = new MessageBag([
-                    'title'   => 'Thành công',
-                    'message' => 'Bạn đã đăng ký thành công môn học này',
+                return response()->json([
+                    'status'  => true,
+                    'message' => trans('Đăng ký thành công'),
                 ]);
-                return back()->with(compact('success'));
             }else {
-                $error = new MessageBag([
-                    'title'   => 'Thất bại',
-                    'message' => 'Đăng ký thất bại',
+                return response()->json([
+                    'status'  => false,
+                    'message' => trans('Đăng ký không thành công'),
                 ]);
-                return back()->with(compact('error'));
-
             }
         }
-
     }
 }
