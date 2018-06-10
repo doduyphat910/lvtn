@@ -14,7 +14,7 @@ Route::group(['prefix'=>'user', 'middleware'=>'studentLogin'], function(Router $
     $router->resource('student', UserController::class);
 
     // $router->get('information', 'StudentInformationController@edit2');
-    $router->get('information/{id}/update', 'StudentInformationController@update');
+//    $router->get('information/{id}/update', 'StudentInformationController@update');
     $router->resource('information', StudentInformationController::class);
 
     $router->resource('subject-parallel', SubjectsParallelController::class);

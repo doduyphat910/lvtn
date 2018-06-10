@@ -111,6 +111,7 @@ class SubjectRegisterController extends Controller
             $form->tools(function (Form\Tools $tools) {
 			    // Disable list btn
 			    $tools->disableListButton();
+			    $tools->disableBackButton();
 			});
             // $rates = Rate::all();
             // $arrayRate = [];
@@ -124,7 +125,7 @@ class SubjectRegisterController extends Controller
     {
         return User::grid(SubjectRegister::class, function (Grid $grid) use ($idSubjects) {
             $grid->model()->where('id_Subjects', $idSubjects);
-             $grid->id('ID')->sortable();
+//             $grid->id('ID')->sortable();
             $grid->code_subject_register('Mã học phần');
             $grid->id_subjects('Môn học')->display(function ($idSubject){
                 if($idSubject){
@@ -153,7 +154,7 @@ class SubjectRegisterController extends Controller
                 }
             });
             $grid->qty_current('Số lượng hiện tại');
-
+            $grid->qty_max('Số lượng tối đa');
             $grid->date_start('Ngày bắt đầu');
             $grid->date_end('Ngày kết thúc');
 
@@ -167,10 +168,11 @@ class SubjectRegisterController extends Controller
                 $actions->disableDelete();
                 $actions->append('<a href="javascript:void(0);" data-id="'.$this->getKey().'"  class="btn btn-primary btnRegister"><i class="glyphicon glyphicon-pencil"></i> &nbsp Đăng ký </a>');
             });
-            $registerConfirm = trans('Bạn có muốn đăng ký không?');
+            $registerConfirm = trans('Bạn có chắc chắn muốn đăng ký không?');
             $confirm = trans('Đăng ký');
             $cancel = trans('Hủy bỏ');
             $script = <<<SCRIPT
+//            $('.grid-refresh').css('display','none');
 $('.btnRegister').unbind('click').click(function() {
     var id = $(this).data('id');
     swal({
@@ -239,27 +241,36 @@ SCRIPT;
         $timeRegister = TimeRegister::where('status', 1)->orderBy('id', 'DESC')->first();
         $idTimeRegister = $timeRegister->id;
 
-        $resultRegister = new ResultRegister;
-        $resultRegister->id_user_student = $idUser;
-        $resultRegister->id_subject_register = $idSubjecRegister;
-        $resultRegister->is_learned = 0;
-        $resultRegister->time_register = $idTimeRegister;
-        $resultRegister->save();
-        if($resultRegister->save()) {
-            $subjecRegister = SubjectRegister::find($idSubjecRegister);
-            $qtyCurrent = $subjecRegister->qty_current;
-            $subjecRegister->qty_current = $qtyCurrent + 1;
-            if($subjecRegister->save()) {
-                return response()->json([
-                    'status'  => true,
-                    'message' => trans('Đăng ký thành công'),
-                ]);
-            }else {
-                return response()->json([
-                    'status'  => false,
-                    'message' => trans('Đăng ký không thành công'),
-                ]);
+        //get qty current
+        $subjecRegister = SubjectRegister::find($idSubjecRegister);
+        $qtyCurrent = $subjecRegister->qty_current;
+        $qtyMax = $subjecRegister->qty_max;
+        if($qtyCurrent >= $qtyMax) {
+            return response()->json([
+                'status'  => false,
+                'message' => trans('Đăng ký không thành công'),
+            ]);
+        } else {
+            $resultRegister = new ResultRegister;
+            $resultRegister->id_user_student = $idUser;
+            $resultRegister->id_subject_register = $idSubjecRegister;
+            $resultRegister->is_learned = 0;
+            $resultRegister->time_register = $idTimeRegister;
+            if($resultRegister->save()) {
+                $subjecRegister->qty_current = $qtyCurrent + 1;
+                if($subjecRegister->save()) {
+                    return response()->json([
+                        'status'  => true,
+                        'message' => trans('Đăng ký thành công'),
+                    ]);
+                }else {
+                    return response()->json([
+                        'status'  => false,
+                        'message' => trans('Đăng ký không thành công'),
+                    ]);
+                }
             }
         }
+
     }
 }

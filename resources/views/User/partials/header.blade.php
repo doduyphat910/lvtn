@@ -116,7 +116,7 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Xin chào {{Auth::User()->last_name}}<img src="" class="user-image"><span class="caret"></span></a>
                              <ul class="dropdown-menu">
                                  @php $id = Auth::User()->id @endphp
-                                    <li><a href="{{ url('user/information/'. $id.'/update') }}">Thông tin cá nhân</a></li>
+                                    <li><a href="{{ url('user/information/'. $id.'/edit') }}">Thông tin cá nhân</a></li>
                                    <li><a href="{{ url('logout') }}">Đăng xuất</a></li>
                             </ul>
                          </li>
