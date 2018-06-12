@@ -112,18 +112,13 @@ class SubjectRegisterController extends Controller
 //                return SubjectRegister::where('id_subjects', $this->id)->pluck('code_subject_register', 'id')->toArray();
 //            });
 
-//            $grid->options()->select(SubjectRegister::all()->pluck('code_subject_register', 'id')->toArray());
-            $grid->actions(function ($actions) {
-                $actions->disableEdit();
-                $actions->disableDelete();
-                
-                $actions->select(SubjectRegister::where('id_subjects', $this->getKey())->pluck('code_subject_register', 'id')->toArray());
-            });
+            $grid->options()->select(SubjectRegister::all()->pluck('code_subject_register', 'id')->toArray());
+
 //            $grid->title()->editable(SubjectRegister::where('id_subjects', $this->grid()->id)->pluck('code_subject_register', 'id'));
             $grid->disableCreateButton();
             $grid->disableExport();
             $grid->disableRowSelector();
-//            $grid->disableActions();
+            $grid->disableActions();
         });
     }
     protected function form()
