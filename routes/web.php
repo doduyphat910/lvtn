@@ -14,7 +14,7 @@ Route::group(['prefix'=>'user', 'middleware'=>'studentLogin'], function(Router $
     $router->resource('student', UserController::class);
 
     // $router->get('information', 'StudentInformationController@edit2');
-    $router->get('information/{id}/update', 'StudentInformationController@update');
+//    $router->get('information/{id}/update', 'StudentInformationController@update');
     $router->resource('information', StudentInformationController::class);
 
     $router->resource('subject-parallel', SubjectsParallelController::class);
@@ -23,8 +23,10 @@ Route::group(['prefix'=>'user', 'middleware'=>'studentLogin'], function(Router $
 
     $router->resource('comments', CommentsController::class);
 
-    $router->get('subject-register/{id}/result-register', 'SubjectRegisterController@resultRegister');
-    $router->get('subject-register/{id}/details', 'SubjectRegisterController@details');
-    $router->resource('subject-register', SubjectRegisterController::class);
+    Route::group(['middleware' => ['subjectRegister']], function (Router $router) {
+        $router->get('subject-register/{id}/result-register', 'SubjectRegisterController@resultRegister');
+        $router->get('subject-register/{id}/details', 'SubjectRegisterController@details');
+        $router->resource('subject-register', SubjectRegisterController::class);
+    });
 });
 

@@ -15,6 +15,7 @@ use Encore\Admin\Facades\Admin;
 use Encore\Admin\Layout\Content;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\ModelForm;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\MessageBag;
 
 class SubjectRegisterController extends Controller
@@ -50,7 +51,7 @@ class SubjectRegisterController extends Controller
             $content->header('header');
             $content->description('description');
 
-            $content->body($this->formUpdate($id)->edit($id));
+            $content->body($this->form()->edit($id));
         });
     }
 
@@ -176,7 +177,7 @@ class SubjectRegisterController extends Controller
             }
             if(action=="edit")
             {
-                $('.remove')[0].remove();
+//                $('.remove')[0].remove();
             }
             if(action=="details")
             {
@@ -192,19 +193,18 @@ EOT;
                 return 'required|unique:subject_register,code_subject_register,'.$form->model()->id.',id';
             });
             $form->select('id_subjects', 'Môn học')->options(Subjects::all()->pluck('name', 'id'))->rules('required');
-            $form->select('id_classroom', 'Phòng học')->options(Classroom::all()->pluck('name', 'id'))->rules('required');
             $form->select('id_user_teacher', 'Giảng viên')->options(UserAdmin::where('type_user', '0')->pluck('name', 'id'))->rules('required');
             $form->hidden('qty_current', 'Số lượng hiện tại')->value('0');
             $form->number('qty_min', 'Số lượng tối thiểu')->rules('integer|min:5');
             $form->number('qty_max', 'Số lượng tối đa')->rules('integer|min:10');
             $form->date('date_start', 'Ngày bắt đầu')->placeholder('Ngày bắt đầu')->rules('required');
             $form->date('date_end', 'Ngày kết thúc')->placeholder('Ngày kết thúc')->rules('required');
-//            $form->select('id_time_register', 'Thời gian đăng ký')->options(TimeRegister::all()->pluck('name', 'id'));
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
             $form->hasMany('time_study', 'Thời gian học', function (Form\NestedForm $form) {
                 $options = ['2'=>'Thứ 2', '3'=>'Thứ 3', '4'=>'Thứ 4', '5'=>'Thứ 5', '6'=>'Thứ 6', '7'=>'Thứ 7', '8'=>'Chủ nhật'];
                 $form->select('day', 'Ngày học')->options($options);
+                $form->select('id_classroom', 'Phòng học')->options(Classroom::all()->pluck('name', 'id'))->rules('required');
                 $form->time('time_study_start', 'Giờ học bắt đầu');
                 $form->time('time_study_end', 'Giờ học kết thúc');
             })->rules('required');
@@ -215,38 +215,46 @@ EOT;
                 $idSemester = $subject->semester()->pluck('id')->toArray();
                 $form->id_semester = $idSemester['0'] ;
                 //check time study
-                foreach($form->time_study as $timeStudy) {
-                    if($timeStudy['time_study_start'] >= $timeStudy['time_study_end']) {
-                        $error = new MessageBag([
-                            'title'   => 'Lỗi',
-                            'message' => 'Giờ học bắt đầu không được lớn hơn hoặc bằng giờ học kết thúc',
-                        ]);
-                        return back()->with(compact('error'));
+                if($form->time_study) {
+                    foreach($form->time_study as $timeStudy) {
+                        if($timeStudy['time_study_start'] >= $timeStudy['time_study_end']) {
+                            $error = new MessageBag([
+                                'title'   => 'Lỗi',
+                                'message' => 'Giờ học bắt đầu không được lớn hơn hoặc bằng giờ học kết thúc',
+                            ]);
+                            return back()->with(compact('error'));
+                        }
                     }
                 }
+
                 //check conditions register
-                $idSubjectRegisters = SubjectRegister::where('id_classroom', $form->id_classroom)->pluck('id');
-                $timeStudys = TimeStudy::all()->toArray();
-                if(count($idSubjectRegisters) > 0) {
-                    foreach($form->time_study as $day) {
-                        foreach ($timeStudys as $timeStudy) {
-                            if($day['day'] == $timeStudy['day']) {
-                                if (
-                                    ($day['time_study_end'] <= $timeStudy['time_study_start'] && $day['time_study_end'] >= $timeStudy['time_study_end'] )||
-                                    ($day['time_study_start'] <= $timeStudy['time_study_start'] && $day['time_study_start'] >= $timeStudy['time_study_end'] )||
-                                    ($day['time_study_start'] <= $timeStudy['time_study_start'] && $day['time_study_end'] <= $timeStudy['time_study_end'] )||
-                                    ($day['time_study_start'] <= $timeStudy['time_study_start'] && $day['time_study_end'] >= $timeStudy['time_study_end'] )
-                                ) {
-                                    $error = new MessageBag([
-                                        'title'   => 'Lỗi',
-                                        'message' => 'Giờ học này đã có lớp học ',
-                                    ]);
-                                    return back()->with(compact('error'));
+//                $idSubjectRegisters = SubjectRegister::where('id_classroom', $form->id_classroom)->pluck('id');
+                $currentPath = Route::getFacadeRoot()->current()->uri();
+                if($currentPath == "admin/subject_register/{subject_register}") {
+                    $timeStudys = TimeStudy::where('id_subject_register', '!=',$form->model()->id)->get()->toArray();
+                } else {
+                    $timeStudys = TimeStudy::all()->toArray();
+                }
+                    if($form->time_study) {
+                        foreach ($form->time_study as $day) {
+                            foreach ($timeStudys as $timeStudy) {
+                                if ($day['day'] == $timeStudy['day'] && $day['id_classroom'] == $timeStudy['id_classroom']) {
+                                    if (
+                                        ($day['time_study_end'] > $timeStudy['time_study_start'] && $day['time_study_end'] <= $timeStudy['time_study_end']) ||
+                                        ($day['time_study_start'] >= $timeStudy['time_study_start'] && $day['time_study_start'] < $timeStudy['time_study_end']) ||
+                                        ($day['time_study_start'] >= $timeStudy['time_study_start'] && $day['time_study_end'] <= $timeStudy['time_study_end'])  ||
+                                        ($day['time_study_start'] <= $timeStudy['time_study_start'] && $day['time_study_end'] >= $timeStudy['time_study_end'])
+                                    ) {
+                                        $error = new MessageBag([
+                                            'title' => 'Lỗi',
+                                            'message' => 'Giờ học này đã có lớp học ',
+                                        ]);
+                                        return back()->with(compact('error'));
+                                    }
                                 }
                             }
                         }
                     }
-                }
             });
         });
     }

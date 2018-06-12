@@ -99,9 +99,9 @@ class TimeRegisterController extends Controller
                     if($schoolYears == 'All') {
                         return "<span class='label label-primary'>Tất cả</span>";
                     } elseif ($schoolYears ) {
-                        $arraySchoolYear = StudentUser::distinct('school_year')->orderBy('school_year', 'DESC')->limit(6)->pluck('school_year')->toArray();
-                        array_unshift($arraySchoolYear, 'Tất cả');
-                        return "<span class='label label-primary'>{$arraySchoolYear[$schoolYears]}</span>";
+//                        $arraySchoolYear = StudentUser::distinct('school_year')->orderBy('school_year', 'DESC')->limit(6)->pluck('school_year')->toArray();
+//                        array_unshift($arraySchoolYear, 'Tất cả');
+                        return "<span class='label label-primary'>{$schoolYears}</span>";
                     }
                     else {
                         return '';
@@ -140,8 +140,10 @@ class TimeRegisterController extends Controller
                 ->rules('required');
             $options = [0 => 'Học kỳ hè', 1 => 'Học kỳ 1', 2 => 'Học kỳ 2'];
             $form->select('semester', 'Học kỳ')->options($options);
-            $schoolYear = StudentUser::distinct('school_year')->orderBy('school_year', 'DESC')->limit(6)->pluck('school_year')->toArray();
-            array_unshift($schoolYear, 'Tất cả');
+            $schoolYear = StudentUser::distinct('school_year')->orderBy('school_year', 'DESC')->limit(6)->pluck('school_year', 'school_year')->toArray();
+            $schoolYear['0'] = "Tất cả";
+            ksort($schoolYear);
+//            dd($schoolYear);
             $form->multipleSelect('school_year','Khóa đăng ký')->options($schoolYear);
             $states = [
                 'on'  => ['value' => 1, 'text' => 'Mở', 'color' => 'success'],

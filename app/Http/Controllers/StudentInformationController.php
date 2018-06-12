@@ -42,10 +42,10 @@ class StudentInformationController extends Controller
             $content->body($this->form()->edit($id));
         });
     }
-    public function update($id)
-    {
-        return $this->form($id)->update($id);
-    }
+//    public function update($id)
+//    {
+//        return $this->form($id)->update($id);
+//    }
 
     protected function form()
     {
@@ -54,30 +54,40 @@ class StudentInformationController extends Controller
             $id = Auth::User()->id;
             $form->hidden('id');
             $form->setAction('/user/information/'.$id);
-            $form->text('code_number', 'Mã số SV')->readOnly();
-            $form->text('first_name', 'Họ')->rules('required')->readOnly();
-            $form->text('last_name', 'Tên')->rules('required')->readOnly();
+            $form->text('code_number', 'Mã số SV')->default(function ($form) {
+                return $form->model()->code_number;
+            })->readOnly();
+            $form->text('first_name', 'Họ')->rules('required')->default(function ($form) {
+                return $form->model()->first_name;
+            })->readOnly();
+            $form->text('last_name', 'Tên')->rules('required')->default(function ($form) {
+                return $form->model()->last_name;
+            })->readOnly();
             $form->email('email', 'Email');
             $form->password('password', 'Mật khẩu')->rules('required|confirmed');
             $form->password('password_confirmation', 'Xác nhận mật khẩu')->rules('required')
                 ->default(function ($form) {
                     return $form->model()->password;
                 });
-            $form->ignore(['password_confirmation', 'id_class', 'school_year', 'level', 'code_number', 'first_name', 'last_name']);
             $form->image('avatar', 'Ảnh đại diện');
-
-            $form->select('id_class', 'Lớp')->options(ClassSTU::all()->pluck('name', 'id'))->readOnly();
-            $form->year('school_year', 'Năm nhập học')->readOnly();
-            $form->select('level', 'Trình độ')->options(['CD'=>'Cao đẳng', 'DH'=>'Đại học'])->readOnly();
+            $form->ignore(['password_confirmation', 'id_class', 'school_year', 'level', 'code_number', 'first_name', 'last_name']);
+            $form->select('id_class', 'Lớp')->options(ClassSTU::all()->pluck('name', 'id'))->default(function ($form) {
+                return $form->model()->id_class;
+            })->readOnly();
+            $form->year('school_year', 'Năm nhập học')->default(function ($form) {
+                return $form->model()->school_year;
+            })->readOnly();
+            $form->select('level', 'Trình độ')->options(['CD'=>'Cao đẳng', 'DH'=>'Đại học'])->default(function ($form) {
+                return $form->model()->level;
+            })->readOnly();
             $form->disableReset();
             $form->tools(function (Form\Tools $tools) {
                 $tools->disableBackButton();
                 $tools->disableListButton();
             });
+
 //                admin_toastr('update success');
 //                return redirect('/user/information/'.$form->model()->id);//todo error when submit
-
-
 
 //            $form->saving(function (Form $form) {
 //                if(!($form->model->save())) {

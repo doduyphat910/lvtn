@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class TimeStudy extends Model
 {
     protected $table = 'time_study';
-    protected $fillable = ['day', 'time_study_start', 'time_study_end'];
+    protected $fillable = ['day','id_classroom' ,'time_study_start', 'time_study_end'];
 
     public function subject_registers()
     {
