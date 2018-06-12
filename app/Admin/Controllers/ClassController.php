@@ -74,7 +74,12 @@ class ClassController extends Controller
     protected function grid()
     {
         return Admin::grid(ClassSTU::class, function (Grid $grid) {
-
+//            $grid->options()->select([
+//                1 => 'Sed ut perspiciatis unde omni',
+//                2 => 'voluptatem accusantium doloremque',
+//                3 => 'dicta sunt explicabo',
+//                4 => 'laudantium, totam rem aperiam',
+//            ]);
             $grid->id('ID')->sortable();
             $grid->name('Tên lớp')->display(function ($name){
                 return '<a href="/admin/class/' . $this->id . '/details">'.$name.'</a>';
