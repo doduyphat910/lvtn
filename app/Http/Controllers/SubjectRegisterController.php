@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Encore\Admin\Grid\Displayers;
 use App\Models\ResultRegister;
 use App\Models\StudentUser;
 use App\Models\TimeRegister;
@@ -48,7 +49,7 @@ class SubjectRegisterController extends Controller
     {
         return User::grid(Subjects::class, function (Grid $grid) {
             $grid->registerColumnDisplayer();
-             $user = Auth::user();
+            $user = Auth::user();
              $schoolYearUser = $user->school_year;
              //check school year
              $timeRegister = TimeRegister::where('status', 1)->orderBy('id', 'DESC')->first();
@@ -85,7 +86,7 @@ class SubjectRegisterController extends Controller
               $grid->credits('Số tín chỉ');
               $grid->credits_fee('Số tín chỉ học phí');
              $grid->column('Học kỳ - Năm')->display(function () {
-                $id = $this->id;
+                  $id = $this->id;
                 $subject = Subjects::find($id);
                 $arraySemester = $subject->semester()->pluck('id')->toArray();
                 $name = array_map( function ($arraySemester){
@@ -106,24 +107,25 @@ class SubjectRegisterController extends Controller
                 }, $arraySemester);
                 return join('&nbsp;', $name);
              });
+//            $(this).append("<option>M</option><option>M</option><option>M</option><option>M</option>");
 
-//            $grid->column('Chọn lớp')->display(function (){
-//            })->editable('select', function (){
-//                return SubjectRegister::where('id_subjects', $this->id)->pluck('code_subject_register', 'id')->toArray();
-//            });
+            $grid->column('Chọn lớp')->display(function (){
+                $script = <<<EOT
+        $(function () {
+             $("select[data-key]").each(function(item){
+                var key = $(this).data("key");
+                $(this).append("1111");
+             });
+        });
+EOT;
+                User::script($script);
+            })->select();
 
-//            $grid->options()->select(SubjectRegister::all()->pluck('code_subject_register', 'id')->toArray());
-            $grid->actions(function ($actions) {
-                $actions->disableEdit();
-                $actions->disableDelete();
-                
-                $actions->select(SubjectRegister::where('id_subjects', $this->getKey())->pluck('code_subject_register', 'id')->toArray());
-            });
-//            $grid->title()->editable(SubjectRegister::where('id_subjects', $this->grid()->id)->pluck('code_subject_register', 'id'));
             $grid->disableCreateButton();
             $grid->disableExport();
             $grid->disableRowSelector();
-//            $grid->disableActions();
+
+            $grid->disableActions();
         });
     }
     protected function form()
