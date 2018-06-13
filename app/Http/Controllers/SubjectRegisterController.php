@@ -119,7 +119,7 @@ class SubjectRegisterController extends Controller
         });
 EOT;
                 User::script($script);
-            })->select();
+            })->select(SubjectRegister::all()->pluck('code_subject_register', 'id'));
 
             $grid->disableCreateButton();
             $grid->disableExport();

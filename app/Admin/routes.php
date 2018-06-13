@@ -74,6 +74,9 @@ Route::group([
 
     //subjects_parallel
     $router->resource('subjects_parallel', SubjectParallelController::class);
+
+    //notifications
+    $router->resource('notifications',NotificationsController::class);
 }
 
 );

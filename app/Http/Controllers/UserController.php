@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Extensions\Facades\User;
 use app\Http\Extensions\LayoutUser\ContentUser;
 use App\Models\ClassSTU;
+use App\Models\Notifications;
 use App\Models\StudentUser;
 use Illuminate\Http\Request;
-use App\Models\Department;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Facades\Admin;
@@ -22,8 +22,8 @@ class UserController extends Controller
     {
         return User::content(function (ContentUser $content) {
 
-            $content->header('header');
-            $content->description('description');
+            $content->header('Thông báo');
+            $content->description('Thông báo cho sinh viên');
 
             $content->body($this->grid());
         });
@@ -40,14 +40,21 @@ class UserController extends Controller
     }
     protected function grid()
     {
-        return User::grid(ClassSTU::class, function (Grid $grid) {
+        return User::grid(Notifications::class, function (Grid $grid) {
 
-            $grid->id('ID')->sortable();
-
-            $grid->created_at();
-            $grid->updated_at();
-            
+            //$grid->id('ID')->sortable();
+            $grid->name('Tên thông báo');
+            $grid->description('Mô tả')->display(function ($name){
+                return  '<a href="' . $this->URL . '" target="_blank" >'.$name.'</a>';
+            });
+            //$grid->URL('Đường dẫn');
+//            $grid->URL('Đường dẫn')->display(function ($name){
+//                return  '<a href="' . $this->URL . '" target="_blank" >'.$name.'</a>';
+//            });
+            $grid->created_at('Tạo vào lúc');
             $grid->disableCreateButton();
+            //$grid->disableCreateButton();
+            $grid->disableActions();
             $grid->disableExport();
             $grid->disableRowSelector();
             $grid->disableFilter();
