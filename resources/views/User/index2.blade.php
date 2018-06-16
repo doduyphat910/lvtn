@@ -24,16 +24,16 @@
     <link rel="stylesheet" href="{{ admin_asset("/vendor/laravel-admin/google-fonts/fonts.css") }}">
     <link rel="stylesheet" href="{{ admin_asset("/vendor/laravel-admin/AdminLTE/dist/css/AdminLTE.min.css") }}">
 
-    <link rel="stylesheet" href="{{ admin_asset("/vendor/laravel-admin/AdminLTE/plugins/iCheck/all.css") }}">
-    <link rel="stylesheet" href="{{ admin_asset("/vendor/laravel-admin/AdminLTE/plugins/colorpicker/bootstrap-colorpicker.min.css") }}">
-    <link rel="stylesheet" href="{{ admin_asset("/vendor/laravel-admin/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css") }}">
-    <link rel="stylesheet" href="{{ admin_asset("/vendor/laravel-admin/bootstrap-fileinput/css/fileinput.min.css?v=4.3.7") }}">
-    <link rel="stylesheet" href="{{ admin_asset("/vendor/laravel-admin/AdminLTE/plugins/select2/select2.min.css") }}">
-    <link rel="stylesheet" href="{{ admin_asset("/vendor/laravel-admin/AdminLTE/plugins/ionslider/ion.rangeSlider.css") }}">
-    <link rel="stylesheet" href="{{ admin_asset("/vendor/laravel-admin/AdminLTE/plugins/ionslider/ion.rangeSlider.skinNice.css") }}">
-    <link rel="stylesheet" href="{{ admin_asset("/vendor/laravel-admin/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.min.css") }}">
-    <link rel="stylesheet" href="{{ admin_asset("/vendor/laravel-admin/fontawesome-iconpicker/dist/css/fontawesome-iconpicker.min.css") }}">
-    <link rel="stylesheet" href="{{ admin_asset("/vendor/laravel-admin/bootstrap-duallistbox/dist/bootstrap-duallistbox.min.css") }}">
+    {{--<link rel="stylesheet" href="{{ admin_asset("/vendor/laravel-admin/AdminLTE/plugins/iCheck/all.css") }}">--}}
+    {{--<link rel="stylesheet" href="{{ admin_asset("/vendor/laravel-admin/AdminLTE/plugins/colorpicker/bootstrap-colorpicker.min.css") }}">--}}
+    {{--<link rel="stylesheet" href="{{ admin_asset("/vendor/laravel-admin/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css") }}">--}}
+    {{--<link rel="stylesheet" href="{{ admin_asset("/vendor/laravel-admin/bootstrap-fileinput/css/fileinput.min.css?v=4.3.7") }}">--}}
+    {{--<link rel="stylesheet" href="{{ admin_asset("/vendor/laravel-admin/AdminLTE/plugins/select2/select2.min.css") }}">--}}
+    {{--<link rel="stylesheet" href="{{ admin_asset("/vendor/laravel-admin/AdminLTE/plugins/ionslider/ion.rangeSlider.css") }}">--}}
+    {{--<link rel="stylesheet" href="{{ admin_asset("/vendor/laravel-admin/AdminLTE/plugins/ionslider/ion.rangeSlider.skinNice.css") }}">--}}
+    {{--<link rel="stylesheet" href="{{ admin_asset("/vendor/laravel-admin/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.min.css") }}">--}}
+    {{--<link rel="stylesheet" href="{{ admin_asset("/vendor/laravel-admin/fontawesome-iconpicker/dist/css/fontawesome-iconpicker.min.css") }}">--}}
+    {{--<link rel="stylesheet" href="{{ admin_asset("/vendor/laravel-admin/bootstrap-duallistbox/dist/bootstrap-duallistbox.min.css") }}">--}}
 
 
 

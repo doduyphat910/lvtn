@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TimeStudy;
 use Encore\Admin\Grid\Displayers;
 use App\Models\ResultRegister;
 use App\Models\StudentUser;
@@ -77,7 +78,7 @@ class SubjectRegisterController extends Controller
                  //show subject not learned and subjects in semester in time register (hiển thị các môn chưa học & trong đợt đăng kí đang mở)
                  $grid->model()->whereIn('id', $subjects_id)->whereNotIn('id', $idSubjectLearned)->orderBy(DB::raw('FIELD(id, '. $field .')'));
              }
-             $grid->id('id');
+//             $grid->id('id');
             $grid->subject_code('Mã môn học');
              $grid->name('Tên môn học')->display(function ($name){
                  return  '<a href="/user/subject-register/' . $this->id . '/details"  target="_blank" >'.$name.'</a>';
@@ -85,6 +86,18 @@ class SubjectRegisterController extends Controller
 
               $grid->credits('Số tín chỉ');
               $grid->credits_fee('Số tín chỉ học phí');
+              $grid->column('Nhóm môn')->display(function (){
+                  if($this->id_subject_group) {
+                      if(SubjectGroup::find($this->id_subject_group)){
+                          $nameGroup = SubjectGroup::find($this->id_subject_group)->name;
+                          return $nameGroup;
+                      } else {
+                          return '';
+                      }
+                  } else {
+                      return '';
+                  }
+              });
              $grid->column('Học kỳ - Năm')->display(function () {
                   $id = $this->id;
                 $subject = Subjects::find($id);
@@ -107,19 +120,9 @@ class SubjectRegisterController extends Controller
                 }, $arraySemester);
                 return join('&nbsp;', $name);
              });
-//            $(this).append("<option>M</option><option>M</option><option>M</option><option>M</option>");
-
-            $grid->column('Chọn lớp')->display(function (){
-                $script = <<<EOT
-        $(function () {
-             $("select[data-key]").each(function(item){
-                var key = $(this).data("key");
-                $(this).append("1111");
+             $grid->column('Đăng ký')->display(function (){
+                 return  '<a href="/user/subject-register/' . $this->id . '/details"  target="_blank" class="btn btn-md" ><i class="glyphicon glyphicon-pencil"></i></a>';
              });
-        });
-EOT;
-                User::script($script);
-            })->select(SubjectRegister::all()->pluck('code_subject_register', 'id'));
 
             $grid->disableCreateButton();
             $grid->disableExport();
@@ -132,36 +135,22 @@ EOT;
     {
         return User::form(Subjects::class, function (Form $form) {
         	$form->registerBuiltinFields();
-            // $form->text('subject_code', 'Mã môn học')->readOnly()->rules(function ($form){
-            //     return 'required|unique:subjects,subject_code,'.$form->model()->id.',id';
-            // });
             $form->text('name','Tên môn học')->rules('required')->readOnly();
             $form->number('credits','Tín chỉ')->rules('integer|min:1|max:6')->readOnly();
-            // $form->number('credits_fee', 'Tín chỉ học phí')->rules('integer|min:1|max:12');
-			//$form->select('id_semester', 'Học kỳ')->options(Semester::all()->pluck('name', 'id'));
             $form->multipleSelect('subject_group', 'Nhóm môn')->readOnly()->options(SubjectGroup::all()->pluck('name', 'id'))->rules('required');
             $form->disableReset();
 
             $form->tools(function (Form\Tools $tools) {
-			    // Disable list btn
 			    $tools->disableListButton();
 			    $tools->disableBackButton();
 			});
-            // $rates = Rate::all();
-            // $arrayRate = [];
-            // foreach($rates as $rate) {
-            //     $arrayRate += [$rate['id'] => $rate['attendance'] . '-'.  $rate['midterm'] .'-' .$rate['end_term']];
-            // }
-            // $form->select('id_rate', 'Tỷ lệ điểm')->options($arrayRate)->rules('required');
         });
     }
     protected function gridSubjectRegister($idSubjects)
     {
-
-
         return User::grid(SubjectRegister::class, function (Grid $grid) use ($idSubjects) {
             $grid->model()->where('id_Subjects', $idSubjects);
-             $grid->id('ID')->sortable();
+//             $grid->id('ID')->sortable();
             $grid->code_subject_register('Mã học phần');
             $grid->id_subjects('Môn học')->display(function ($idSubject){
                 if($idSubject){
@@ -170,12 +159,45 @@ EOT;
                     return '';
                 }
             });
-            $grid->id_classroom('Phòng học')->display(function ($id_classroom){
-                if($id_classroom){
-                    return Classroom::find($id_classroom)->name;
-                } else {
-                    return '';
-                }
+            $grid->column('Phòng')->display(function (){
+                 $idClassroom= TimeStudy::where('id_subject_register', $this->id)->pluck('id_classroom')->toArray();
+                $classRoom = Classroom::whereIn('id', $idClassroom)->pluck('name')->toArray();
+                $classRoom = array_map(function ($classRoom){
+                    return "<span class='label label-success'>{$classRoom}</span>"  ;
+                }, $classRoom);
+                return join('&nbsp;', $classRoom);
+            });
+            $grid->column('Buổi học')->display(function (){
+                $day= TimeStudy::where('id_subject_register', $this->id)->pluck('day')->toArray();
+                $day = array_map(function ($day){
+                    switch ($day) {
+                        case 2: $day = 'Thứ 2';
+                        break;
+                        case 3: $day = 'Thứ 3';
+                            break;
+                        case 4: $day = 'Thứ 4';
+                            break;
+                        case 5: $day = 'Thứ 5';
+                            break;
+                        case 6: $day = 'Thứ 6';
+                            break;
+                        case 7: $day = 'Thứ 7';
+                            break;
+                        case 8: $day = 'Chủ nhật';
+                            break;
+                    }
+
+                    return "<span class='label label-success'>{$day}</span>"  ;
+                }, $day);
+                return join('&nbsp;', $day);
+            });
+            $grid->column('Thời gian học')->display(function (){
+                $timeStart= TimeStudy::where('id_subject_register', $this->id)->pluck('time_study_start')->toArray();
+                $timeEnd= TimeStudy::where('id_subject_register', $this->id)->pluck('time_study_end')->toArray();
+                $time = array_map(function ($timeStart,$timeEnd ){
+                    return "<span class='label label-success'>{$timeStart} - {$timeEnd}</span>"  ;
+                }, $timeStart, $timeEnd);
+                return join('&nbsp;', $time);
             });
             $grid->id_user_teacher('Giảng viên')->display(function ($id_user_teacher){
                 if($id_user_teacher){
@@ -209,7 +231,6 @@ EOT;
             $confirm = trans('Đăng ký');
             $cancel = trans('Hủy bỏ');
             $script = <<<SCRIPT
-//            $('.grid-refresh').css('display','none');
 $('.btnRegister').unbind('click').click(function() {
     var id = $(this).data('id');
     swal({
@@ -232,7 +253,6 @@ $('.btnRegister').unbind('click').click(function() {
             success: function (data) {
                 if (typeof data === 'object') {
                     if (data.status) {
-//                        swal(data.message, '', 'success');
                          swal({
                               title: "Đăng ký thành công", 
                               type: "success"
@@ -265,7 +285,7 @@ SCRIPT;
         return view('vendor.details',
             [
                 'template_body_name' => 'User.SubjectRegister.info',
-                'form' => $form,
+//                'form' => $form,
                 'gridSubjectRegister' => $gridSubject_Register
 
             ]
@@ -287,7 +307,6 @@ SCRIPT;
         //nếu đã đăng kí rồi thì không được đăng kí nữa
         $idSubjects = SubjectRegister::where('id',$idSubjecRegister)->pluck('id_subjects')->toArray();
         $countSubject = ResultRegister::where('id_subject', $idSubjects['0'])->where('time_register', $idTimeRegister)->get()->count();
-
         if($countSubject >= 1) {
                 return response()->json([
                     'status'  => false,
@@ -297,10 +316,19 @@ SCRIPT;
         }
 
 
-        //lấy số lượng chỉ được đăng kí tối đa
+        //lấy số lượng tín chỉ được đăng kí tối đa
         $creditsMax = $timeRegister->credits_max;
-        $id_subject_register = ResultRegister::where('time_register', $idTimeRegister)->where('is_learned', 0)->pluck('id_subject_register')->toArray();
-//        dd($id_subject_register);
+        $idSubject = ResultRegister::where('id_user_student', $idUser)->where('time_register', $idTimeRegister)->where('is_learned', 0)->pluck('id_subject');
+        $creditCurrentUser = Subjects::find($idSubject)->pluck('credits')->sum();
+        if($creditCurrentUser > $creditsMax) {
+            if($countSubject >= 1) {
+                return response()->json([
+                    'status'  => false,
+                    'message' => trans('Bạn đã đăng kí tối đa số tín chỉ'),
+                ]);
+
+            }
+        }
 
         //nếu số lượng hiện tại lớn hơn số lượng max thì không được đăng kí
         if($qtyCurrent >= $qtyMax) {
@@ -331,7 +359,11 @@ SCRIPT;
                 }
             }
         }
+    }
+    public function timetable(){
+        
+        return view('User.SubjectRegister.timetable');
+    }
 
 
     }
-}
