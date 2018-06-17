@@ -21,7 +21,7 @@ class UserAdmin extends Model implements AuthenticatableContract
 //    protected $table = 'student_user';
 
     public function classSTU() {
-        return $this->hasOne(ClassSTU::class);
+        return $this->hasMany(ClassSTU::class);
     }
 //    public function user_subject() {
 //        return $this->hasMany(UserSubject::class);
@@ -38,7 +38,12 @@ class UserAdmin extends Model implements AuthenticatableContract
     public function point() {
         return $this->hasMany(Point::class);
     }
-
+    public function setPasswordAttribute($password)
+    {
+        if($password && $password != $this->password) {
+            $this->attributes['password'] = bcrypt($password);
+        }
+    }
     public function __construct(array $attributes = [])
     {
         $connection = config('admin.database.connection') ?: config('database.default');
@@ -47,10 +52,5 @@ class UserAdmin extends Model implements AuthenticatableContract
         $this->setTable(config('admin.database.users_table'));
         parent::__construct($attributes);
     }
-    public function setPasswordAttribute($password)
-    {
-        if($password && $password != $this->password) {
-            $this->attributes['password'] = bcrypt($password);
-        }
-    }
+
 }

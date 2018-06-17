@@ -28,6 +28,8 @@ Route::group(['prefix'=>'user', 'middleware'=>'studentLogin'], function(Router $
         $router->get('subject-timetable', 'SubjectRegisterController@timetable');
         //get list subject register from API
         $router->get('subject-register/{id}/list', 'APIController@getListSubjectRegister');
+        $router->get('timetable', 'APIController@getTimetable');
+
         $router->get('subject-register/{id}/result-register', 'SubjectRegisterController@resultRegister');
         $router->get('subject-register/{id}/details', 'SubjectRegisterController@details');
         $router->resource('subject-register', SubjectRegisterController::class);

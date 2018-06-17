@@ -258,6 +258,7 @@ $('.btnRegister').unbind('click').click(function() {
                               type: "success"
                              },function() {
                               location.reload();
+                             
                          });
                     } else {
                         swal(data.message, '', 'error');
@@ -320,14 +321,13 @@ SCRIPT;
         $creditsMax = $timeRegister->credits_max;
         $idSubject = ResultRegister::where('id_user_student', $idUser)->where('time_register', $idTimeRegister)->where('is_learned', 0)->pluck('id_subject');
         $creditCurrentUser = Subjects::find($idSubject)->pluck('credits')->sum();
-        if($creditCurrentUser > $creditsMax) {
-            if($countSubject >= 1) {
+        $idSubjects = SubjectRegister::where('id',$idSubjecRegister)->pluck('id_subjects');
+        $creditSubject = Subjects::find($idSubjects)->pluck('credits')->toArray();
+        if(($creditCurrentUser + $creditSubject['0']) > $creditsMax) {
                 return response()->json([
                     'status'  => false,
                     'message' => trans('Bạn đã đăng kí tối đa số tín chỉ'),
                 ]);
-
-            }
         }
 
         //nếu số lượng hiện tại lớn hơn số lượng max thì không được đăng kí
