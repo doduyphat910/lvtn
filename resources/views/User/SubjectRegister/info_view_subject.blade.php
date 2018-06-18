@@ -1,17 +1,17 @@
 {{--@php--}}
-    {{--echo $form;--}}
+{{--echo $form;--}}
 {{--@endphp--}}
 {{--<script>--}}
-    {{--$.ajax({--}}
-        {{--type:'get',--}}
-        {{--url:'/user/timetable',--}}
-        {{--data:{_token: "{{ csrf_token() }}"--}}
-        {{--},--}}
-        {{--success: function( msg ) {--}}
-            {{--var timeRegister = JSON.parse(msg);--}}
+{{--$.ajax({--}}
+{{--type:'get',--}}
+{{--url:'/user/timetable',--}}
+{{--data:{_token: "{{ csrf_token() }}"--}}
+{{--},--}}
+{{--success: function( msg ) {--}}
+{{--var timeRegister = JSON.parse(msg);--}}
 
-        {{--}--}}
-    {{--});--}}
+{{--}--}}
+{{--});--}}
 
 {{--</script>--}}
 <?php
@@ -19,10 +19,10 @@ use App\Models\ResultRegister;use App\Models\SubjectRegister;use App\Models\Subj
 $timeRegister = TimeRegister::where('status', 1)->orderBy('id', 'DESC')->first();
 $idTimeRegister = $timeRegister->id;
 $idSubjectRegister = ResultRegister::where('id_user_student', $idUser)->where('time_register', $idTimeRegister)->pluck('id_subject_register');
-$timeStudys = TimeStudy::whereIn('id_subject_register',$idSubjectRegister)->get()->toArray();
+$timeStudys = TimeStudy::whereIn('id_subject_register', $idSubjectRegister)->get()->toArray();
 
-$arrDay = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ nhật"];
-$arrPeriod = [
+$arrDays = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ nhật"];
+$arrPeriods = [
     ["start" => '6:30', 'end' => '7:15'],
     ["start" => '7:20', 'end' => '8:05'],
     ["start" => '08:15', 'end' => '09:00'],
@@ -49,12 +49,12 @@ $monhoc = [
 ]
 
 ?>
-<table >
-    <thead   >
+<table>
+    <thead>
     <tr>
         <th></th>
         <?php
-        foreach ($arrDay as $item) {
+        foreach ($arrDays as $item) {
             echo "<th style='text-align: center'>" . $item . "</th>";
         }
         ?>
@@ -62,32 +62,50 @@ $monhoc = [
     </thead>
     <tbody>
     <?php
-
-    foreach ($arrPeriod as $key => $item) {
-        $start = strtotime($item["start"]);
-        $end = strtotime($item["end"]);
-        echo "<tr>";
-        echo "<td>Tiết " . ($key + 1) . "</td>";
-        $timeStart =  strtotime("9:00");
-        $timeEnd = strtotime("11:00");
-
-        foreach ($arrDay as $days => $day) {
-        ?>
-        <td  style='border-color:Gray;border-width:1px;border-style:solid;height:22px;width:110px;'>
-        <?php
+    $arrayTable = [];
+    foreach ($arrPeriods as $periodKey => $arrPeriod) {
+        $start = strtotime($arrPeriod["start"]);
+        $end = strtotime($arrPeriod["end"]);
+        foreach ($arrDays as $key => $day) {
             foreach ($timeStudys as $timeStudy) {
                 $startTime = strtotime($timeStudy['time_study_start']);
                 $endTime = strtotime($timeStudy['time_study_end']);
-                if($timeStudy['day'] == ($days + 2)  && $start >= $startTime && $end <= $endTime){
-                    $idSubject = SubjectRegister::where('id',$timeStudy['id_subject_register'])->pluck('id_subjects');
-                    $nameSubject = Subjects::find($idSubject)->pluck('name')->toArray();
-                    echo "<span style='background-color:red'>". $nameSubject['0']."</span>";
+                if ($timeStudy['day'] == ($key + 2) && $start >= $startTime && $end <= $endTime) {
+                    $idSubject = SubjectRegister::where('id', $timeStudy['id_subject_register'])->first();
+                    if (!empty($idSubject)) {
+                        $idSubject = $idSubject->id_subjects;
+                        $isExisted = false;
+                        foreach ($arrayTable[$key] as $pSubKey => $item) {
+                            if (isset($item[$idSubject])) {
+                                $arrayTable[$key][$pSubKey][$idSubject] = $arrayTable[$key][$pSubKey][$idSubject] + 1;
+                                $isExisted = true;
+                            }
+                        }
+                        if (!$isExisted) {
+                            $arrayTable[$key][$periodKey][$idSubject] = 1;
+                        } else {
+                            $arrayTable[$key][$periodKey] = false;
+                        }
+                    }
+                } else if (!isset($arrayTable[$key][$periodKey])) $arrayTable[$key][$periodKey] = array();
 
-                }
             }
-//            $rowSpan = 0;<?= ($rowSpan !== false ? "rowSpan='".$rowSpan."'" : "")
-
-            echo "</td>";
+        }
+    }
+//    dd($arrayTable);
+    foreach ($arrPeriods as $periodKey => $item) {
+        echo "<tr>";
+        echo "<td>Tiết " . ($periodKey + 1) . "</td>";
+        foreach ($arrDays as $dayKey => $day) {
+            if ($arrayTable[$dayKey][$periodKey] && count($arrayTable[$dayKey][$periodKey]) > 0) {
+                $count = 1;
+                $subjectId = array_keys($arrayTable[$dayKey][$periodKey])[0];
+                $count = array_values($arrayTable[$dayKey][$periodKey])[0];
+                $nameSubject = Subjects::where("id", $subjectId)->first();
+                echo "<td rowspan='$count' style='background-color:red;border-color:Gray;border-width:1px;border-style:solid;height:22px;width:110px;'>$nameSubject->name</td>";
+            } else if(is_array($arrayTable[$dayKey][$periodKey])){// nếu như là array thì render
+                echo "<td rowspan='1' style='border-color:Gray;border-width:1px;border-style:solid;height:22px;width:110px;'></td>";
+            }
         }
         echo "</tr>";
     }
@@ -96,163 +114,3 @@ $monhoc = [
 </table>
 <br>
 
-<?php
-$times = array('00:00','00:30', '01:00', '01:30','02:00','02:30','03:00');
-$days = array('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'); // 0 = Sun ... 6 = Sat
-
-
-$shows = array();
-
-$shows[] =   array(
-    "day"=>0,
-    "time_start"=>'00:00',
-    "time_end"=>'00:30',
-    "name"=>"Show A"
-);
-
-$shows[] = array(
-    "day"=>1,
-    "time_start"=>'00:00',
-    "time_end"=>'00:30',
-    "name"=>"Show B"
-);
-
-$shows[] = array(
-    "day"=>3,
-    "time_start"=>'00:00',
-    "time_end"=>'00:30',
-    "name"=>"Show C"
-);
-
-$shows[] = array(
-    "day"=>4,
-    "time_start"=>'00:00',
-    "time_end"=>'00:30',
-    "name"=>"Show D"
-);
-
-$shows[] = array(
-    "day"=>5,
-    "time_start"=>'00:00',
-    "time_end"=>'00:30',
-    "name"=>"Show E"
-);
-
-$shows[] = array(
-    "day"=>6,
-    "time_start"=>'00:00',
-    "time_end"=>'00:30',
-    "name"=>"Show F"
-);
-
-$shows[] = array(
-    "day"=>1,
-    "time_start"=>'00:30',
-    "time_end"=>'01:30',
-    "name"=>"Show G"
-);
-
-$shows[] = array(
-    "day"=>2,
-    "time_start"=>'00:30',
-    "time_end"=>'01:00',
-    "name"=>"Show H"
-);
-$shows[] = array(
-    "day"=>3,
-    "time_start"=>'00:30',
-    "time_end"=>'01:00',
-    "name"=>"Show I"
-);
-$shows[] = array(
-    "day"=>4,
-    "time_start"=>'00:30',
-    "time_end"=>'01:00',
-    "name"=>"Show J"
-);
-$shows[] = array(
-    "day"=>1,
-    "time_start"=>'01:00',
-    "time_end"=>'01:30',
-    "name"=>"Show K"
-);
-
-$shows[] = array(
-    "day"=>2,
-    "time_start"=>'01:00',
-    "time_end"=>'02:00',
-    "name"=>"Show L"
-);
-
-$shows[] = array(
-    "day"=>1,
-    "time_start"=>'01:30',
-    "time_end"=>'02:00',
-    "name"=>"Show M"
-);
-
-$shows[] = array(
-    "day"=>2,
-    "time_start"=>'01:30',
-    "time_end"=>'02:00',
-    "name"=>"Show N"
-);
-
-$parsedShow = array();
-
-foreach ($shows as  $show) {
-
-    $start_index =  array_search($show['time_start'], $times); // $key = 2;
-    $end_index =  array_search($show['time_end'], $times); // $key = 1;
-    if($end_index - $start_index > 1){
-        //NEED SPAN
-        $show['span'] = (($end_index - $start_index));
-    }else{
-        $show['span'] = false;
-    }
-    $parsedShow[$show['time_start']][] = $show;
-}
-
-
-?>
-<html>
-<table border="1">
-    <tr>
-        <td>
-            Time
-        </td>
-        <?php
-        foreach ($days as $day) {
-            echo "<td>$day</td>";
-        }
-        ?>
-
-    </tr>
-    <?php
-    foreach ($times as $time) {
-    ?>
-    <tr>
-        <?php
-        if(!isset($parsedShow[$time])){
-            continue;
-        }
-        echo "<td>$time</td>";
-
-        foreach ($parsedShow[$time] as $show) {
-        ?>
-        <td <?= ($show['span'] !== false ? "rowSpan='".$show['span']."'" : "")?>><?= $show['name'] ?></td>
-        <?php }
-        ?>
-    </tr>
-    <?php }
-
-    ?>
-</table>
-</html>
-<?php
-//                    echo "<table cellpadding='0' border='0' cellspacing='0' style='text-align:left;width:90px;cursor:pointer'
-//                     class='textTable'><tbody><tr><td width='90px'>
-//                        <span style='color:Teal'>". $nameSubject['0']."</span>
-//                        </td></tr><tr><td width='90px'>
-//                        </td></tr></tbody></table>";
-?>
