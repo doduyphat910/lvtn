@@ -1,19 +1,3 @@
-{{--@php--}}
-{{--echo $form;--}}
-{{--@endphp--}}
-{{--<script>--}}
-{{--$.ajax({--}}
-{{--type:'get',--}}
-{{--url:'/user/timetable',--}}
-{{--data:{_token: "{{ csrf_token() }}"--}}
-{{--},--}}
-{{--success: function( msg ) {--}}
-{{--var timeRegister = JSON.parse(msg);--}}
-
-{{--}--}}
-{{--});--}}
-
-{{--</script>--}}
 <?php
 use App\Models\ResultRegister;use App\Models\SubjectRegister;use App\Models\Subjects;use App\Models\TimeRegister;use App\Models\TimeStudy;$idUser = Auth::user()->id;
 $timeRegister = TimeRegister::where('status', 1)->orderBy('id', 'DESC')->first();

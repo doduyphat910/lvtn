@@ -11,9 +11,9 @@ class Point extends Model
 
     protected $table = 'point';
 
-    public function student_user() {
-        return $this->belongsTo(UserAdmin::class);
-    }
+//    public function student_user() {
+//        return $this->belongsTo(UserAdmin::class);
+//    }
 
     public function user_subject_user() {
         return $this->belongsTo(ResultRegister::class);

@@ -359,6 +359,9 @@ EOT;
             $grid->disableCreateButton();
             $grid->disableExport();
             $grid->disableRowSelector();
+            $grid->tools(function ($tools){
+                $tools->append("<a href='/admin/import_student' class='btn btn-info btn-sm '><i class='fa fa-sign-in'></i> Import điểm SV</a>");
+            });
 
         });
     }
