@@ -150,9 +150,29 @@ class TimeRegisterController extends Controller
                 'off' => ['value' => 0, 'text' => 'Đóng', 'color' => 'danger'],
             ];
             $form->switch('status', 'Trạng thái')->states($states)->default('0');
+            $options = ['All'=>'Tất cả', '1'=>'Chuyên cần', '2'=>'Giữa kì', '3'=>'Cuối kì' ];
+            $form->checkbox('status_import', 'Trạng thái import')->options($options);
+            $script = <<<EOT
+            $(function () {
+                $('input[value="All"] input').iCheck({
+                  alert('123');
+                });
+
+                $('input[value="All"]').on('ifChecked', function(event){
+                  $('input[name="status_import[]"]').iCheck('check');
+                });
+                $('input[value="All"]').on('ifUnchecked', function(event){
+                  $('input[name="status_import[]"]').iCheck('uncheck');
+                });
+            });
+EOT;
+            Admin::script($script);
             $form->saving(function (Form $form) {
                 if($form->school_year['0'] == "0" || $form->school_year['0'] == null  ) {
                     $form->school_year = 'All';
+                }
+                if($form->status_import['0'] == 'All' || $form->status_import['0'] == '1' && $form->status_import['1'] == '2' && $form->status_import['2'] == '3'){
+                    $form->status_import = 'All';
                 }
             });
             $currentPath = Route::getFacadeRoot()->current()->uri();

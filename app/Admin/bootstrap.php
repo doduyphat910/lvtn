@@ -18,8 +18,6 @@
  *
  */
 
-use App\Admin\Extensions\SelectGrid;
-use Encore\Admin\Grid;
 
 Encore\Admin\Form::forget(['map', 'editor']);
 

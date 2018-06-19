@@ -52,6 +52,10 @@ class APIController extends Controller {
             ]);
         }
 
+        //kiểm tra giờ học
+
+
+
         //nếu số lượng hiện tại lớn hơn số lượng max thì không được đăng kí
         if($qtyCurrent >= $qtyMax) {
             return response()->json([
@@ -65,10 +69,10 @@ class APIController extends Controller {
             $idSubjects = SubjectRegister::find($idSubjecRegister)->id_subjects;
             $resultRegister->id_subject = $idSubjects;
             $resultRegister->is_learned = 2;// lưu bằng 2 để không show ra bảng điểm
-            $resultRegister->attendance = -1;
-            $resultRegister->mid_term = -1;
-            $resultRegister->end_term = -1;
-            $resultRegister->final = -1;
+            $resultRegister->attendance = null;
+            $resultRegister->mid_term = null;
+            $resultRegister->end_term = null;
+            $resultRegister->final = null;
             //get rate now
             $subjectRegister = SubjectRegister::find($idSubjecRegister);
             $subjectId = $subjectRegister->id_subjects;
