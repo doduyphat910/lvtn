@@ -33,6 +33,7 @@ $monhoc = [
 ]
 
 ?>
+<h1>TKB</h1>
 <table>
     <thead>
     <tr>
@@ -76,18 +77,22 @@ $monhoc = [
             }
         }
     }
-//    dd($arrayTable);
     foreach ($arrPeriods as $periodKey => $item) {
         echo "<tr>";
         echo "<td>Tiết " . ($periodKey + 1) . "</td>";
+
         foreach ($arrDays as $dayKey => $day) {
-            if ($arrayTable[$dayKey][$periodKey] && count($arrayTable[$dayKey][$periodKey]) > 0) {
-                $count = 1;
-                $subjectId = array_keys($arrayTable[$dayKey][$periodKey])[0];
-                $count = array_values($arrayTable[$dayKey][$periodKey])[0];
-                $nameSubject = Subjects::where("id", $subjectId)->first();
-                echo "<td rowspan='$count' style='background-color:red;border-color:Gray;border-width:1px;border-style:solid;height:22px;width:110px;'>$nameSubject->name</td>";
-            } else if(is_array($arrayTable[$dayKey][$periodKey])){// nếu như là array thì render
+            if(isset($arrayTable[$dayKey][$periodKey])) {
+                if ($arrayTable[$dayKey][$periodKey] && count($arrayTable[$dayKey][$periodKey]) > 0) {
+                        $count = 1;
+                        $subjectId = array_keys($arrayTable[$dayKey][$periodKey])[0];
+                        $count = array_values($arrayTable[$dayKey][$periodKey])[0];
+                        $nameSubject = Subjects::where("id", $subjectId)->first();
+                        echo "<td rowspan='$count' style='background-color:red;border-color:Gray;border-width:1px;border-style:solid;height:22px;width:110px;'>$nameSubject->name</td>";
+                    } else if(is_array($arrayTable[$dayKey][$periodKey])){// nếu như là array thì render
+                    echo "<td rowspan='1' style='border-color:Gray;border-width:1px;border-style:solid;height:22px;width:110px;'></td>";
+                }
+            } else {
                 echo "<td rowspan='1' style='border-color:Gray;border-width:1px;border-style:solid;height:22px;width:110px;'></td>";
             }
         }
@@ -96,5 +101,4 @@ $monhoc = [
     ?>
     </tbody>
 </table>
-<br>
 
