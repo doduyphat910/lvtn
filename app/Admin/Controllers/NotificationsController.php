@@ -77,9 +77,10 @@ class NotificationsController extends Controller
             $grid->name('Tên thông báo');
             $grid->description('Mô tả');
             //$grid->URL('Đường dẫn');
-            $grid->URL('Đường dẫn')->display(function ($name){
-                return  '<a href="' . $this->URL . '" >'.$name.'</a>';
+            $grid->url('Đường dẫn')->display(function ($name){
+                return  '<a href="' . $this->url . '" >'.$name.'</a>';
             });
+            $grid->disableActions();
             $grid->created_at();
             $grid->updated_at();
         });
@@ -97,7 +98,7 @@ class NotificationsController extends Controller
             $form->display('id', 'ID');
             $form->text('name','Tên thông báo');
             $form->text('description','Mô tả thông báo');
-            $form->text('URL','Đường dẫn thông báo');
+            $form->text('url','Đường dẫn thông báo');
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
         });
