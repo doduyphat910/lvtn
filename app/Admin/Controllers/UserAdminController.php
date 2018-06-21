@@ -79,9 +79,9 @@ class UserAdminController extends UserController
             $grid->id('ID')->sortable();
             $currentPath = Route::getFacadeRoot()->current()->uri();
             if ($currentPath == 'admin/teacher_user') {
-                $grid->model()->where('type_user', '0');
+                $grid->model()->where('type_user', 0);
             } else if($currentPath == 'admin/user_admin') {
-                $grid->model()->where('type_user', '1');
+                $grid->model()->where('type_user', 1);
             }
             $grid->code_number('Mã số');
             $grid->username(trans('admin.username'));
@@ -106,7 +106,7 @@ class UserAdminController extends UserController
             $grid->updated_at(trans('admin.updated_at'));
 
             $grid->actions(function (Grid\Displayers\Actions $actions) {
-                if ($actions->getKey() == 1) {
+                if ($actions->getKey() == 3) {
                     $actions->disableDelete();
                 }
             });
@@ -157,20 +157,20 @@ EOT;
                 });
 
             $form->ignore(['password_confirmation']);
-            $form->radio('type_user', 'Loại tài khoản')->options(['0' => 'Giảng viên', '1'=> 'Quản trị']);
+            $form->radio('type_user', 'Loại tài khoản')->options([0 => 'Giảng viên', 1=> 'Quản trị']);
 
-            $form->select('id_class', 'Lớp')->options(ClassSTU::all()->pluck('name', 'id'))
-                ->setElementClass('id_class');
+//            $form->select('id_class', 'Lớp')->options(ClassSTU::all()->pluck('name', 'id'))
+//                ->setElementClass('id_class');
             $form->multipleSelect('roles', trans('admin.roles'))->options(Role::all()->pluck('name', 'id'));
             $form->multipleSelect('permissions', trans('admin.permissions'))->options(Permission::all()->pluck('name', 'id'));
             $form->hidden('code_number');
             $form->display('created_at', trans('admin.created_at'));
             $form->display('updated_at', trans('admin.updated_at'));
-            $form->saving(function (Form $form) {
-                if ($form->password && $form->model()->password != $form->password) {
-                    $form->password = bcrypt($form->password);
-                }
-            });
+//            $form->saving(function (Form $form) {
+//                if ($form->password && $form->model()->password != $form->password) {
+//                    $form->password = bcrypt($form->password);
+//                }
+//            });
             $form->saving(function (Form $form) {
                 if($form->type_user == 0) {
                     $code = 'GV';

@@ -6,6 +6,7 @@ use App\Models\Classroom;
 
 use App\Models\SubjectRegister;
 use App\Models\Subjects;
+use App\Models\TimeStudy;
 use App\Models\UserAdmin;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -88,10 +89,10 @@ class ClassroomController extends Controller
         });
     }
 
-    protected function gridSubjectRegister($idClassroom)
+    protected function gridSubjectRegister($idSubjectRegister)
     {
-        return Admin::grid(SubjectRegister::class, function (Grid $grid) use ($idClassroom) {
-            $grid->model()->where('id_classroom', $idClassroom);
+        return Admin::grid(SubjectRegister::class, function (Grid $grid) use ($idSubjectRegister) {
+            $grid->model()->whereIn('id', $idSubjectRegister);
             $grid->id('ID')->sortable();
             $grid->code_subject_register('Mã học phần');
             $grid->id_subjects('Môn học')->display(function ($idSubject){
@@ -175,7 +176,8 @@ class ClassroomController extends Controller
 
     public function detailsView($id){
         $form = $this->form()->view($id);
-        $gridSubjectRegister = $this->gridSubjectRegister($id)->render();
+        $idSubjectRegister = TimeStudy::where('id_classroom', $id)->pluck('id_subject_register');
+        $gridSubjectRegister = $this->gridSubjectRegister($idSubjectRegister)->render();
         return view('vendor.details',
             [
                 'template_body_name' => 'admin.ClassRoom.info',

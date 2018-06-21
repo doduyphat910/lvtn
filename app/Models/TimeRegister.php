@@ -30,4 +30,16 @@ class TimeRegister extends Model
     {
         return json_decode($schoolYear, true);
     }
+
+    public function setStatusImportAttribute($statusImport)
+    {
+        if(is_array($statusImport)) {
+            $this->attributes['status_import'] = json_encode($statusImport);
+        }
+    }
+
+    public function getStatusImportAttribute($statusImport)
+    {
+        return json_decode($statusImport, true);
+    }
 }

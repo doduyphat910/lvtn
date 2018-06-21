@@ -6,6 +6,7 @@ use App\Models\ClassSTU;
 
 use App\Models\Department;
 use App\Models\StudentUser;
+use App\Models\UserAdmin;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Facades\Admin;
@@ -145,6 +146,7 @@ class ClassController extends Controller
                 return 'required|unique:class,name,'.$form->model()->id.',id';
             });
             $form->select('id_department', 'Tên khoa')->options(Department::all()->pluck('name', 'id'))->rules('required');
+            $form->select('id_user_teacher', 'GV cố vấn')->options(UserAdmin::where('type_user', 0)->pluck('name', 'id'));
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
         });
