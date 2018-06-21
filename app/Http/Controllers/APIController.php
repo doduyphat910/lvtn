@@ -29,13 +29,12 @@ class APIController extends Controller {
 
         //nếu đã đăng kí rồi thì không được đăng kí nữa
         $idSubjects = SubjectRegister::where('id',$idSubjecRegister)->pluck('id_subjects')->toArray();
-        $countSubject = ResultRegister::where('id_subject', $idSubjects['0'])->where('time_register', $idTimeRegister)->get()->count();
+        $countSubject = ResultRegister::where('id_subject', $idSubjects['0'])->where('id_user_student', $idUser)->where('time_register', $idTimeRegister)->get()->count();
         if($countSubject >= 1) {
             return response()->json([
                 'status'  => false,
                 'message' => trans('Bạn đã đăng kí môn học này'),
             ]);
-
         }
 
 

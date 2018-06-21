@@ -78,12 +78,22 @@ Route::group([
     //notifications
     $router->resource('notifications',NotificationsController::class);
 
+    //router teacher
+    //point
+    $router->resource('teacher/point',PointController::class);
+
     //list class (teacher)
     $router->get('teacher/class/{id}/details','TeacherController@details');
     $router->resource('teacher/class',TeacherController::class);
     ///list subject-register
     $router->get('teacher/subject-register/{id}/details','TeacherController@detailsSubjectRegister');
     $router->get('teacher/subject-register','TeacherController@subjectRegister');
+
+    //import point
+    $router->get('teacher/{id}/import-attendance','ImportPointController@attendance');
+
+    //export point
+    $router->get('teacher/{id}/export-attendance','ImportPointController@exportAttendance');
 
 
 }

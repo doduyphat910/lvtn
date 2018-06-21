@@ -161,6 +161,7 @@ class TeacherController extends Controller
         });
     }
 
+
     public function details($id){
         return Admin::content(
             function (Content $content) use ($id) {
@@ -306,6 +307,7 @@ EOT;
     protected function gridStudentSubject($idSubjectRegister)
     {
         return Admin::grid(ResultRegister::class, function (Grid $grid) use ($idSubjectRegister) {
+            $grid->resource('/admin/teacher/point');
             $user = Admin::user();
             $idUser = $user->id;
             $grid->model()->where('id_subject_register', $idSubjectRegister);
@@ -357,7 +359,7 @@ EOT;
                 $name = ClassSTU::find($idClass)->name;
                 return "<span class='label label-info'>{$name}</span>";
             });
-            $grid->attendance('Điểm chuyên cần');
+            $grid->attendance('Điểm chuyên cần')->editable();
             $grid->mid_term('Điểm giữa kì');
             $grid->end_term('Điểm cuối kì');
             $grid->final('Điểm tổng kết');
@@ -375,19 +377,21 @@ EOT;
 
                 if(in_array('1',$statusImport))
                 {
-                    $tools->append("<a href='/admin/teacher/import-point-attendance' class='btn btn-info btn-sm btn-import-attendance'><i class='fa fa-sign-in'></i> Import điểm chuyên cần</a>");
+                    $tools->append('<a href="/admin/teacher/'.$idSubjectRegister.'/import-attendance" class="btn btn-info btn-sm btn-import-attendance"><i class="fa fa-sign-in"></i> Import điểm chuyên cần</a>');
                 }
                 if (in_array('2',$statusImport)) {
-                    $tools->append("<a href='/admin/teacher/import-point-midterm' class='btn btn-info btn-sm btn-import-midterm'><i class='fa fa-sign-in'></i> Import điểm giữa kì</a>");
+                    $tools->append("<a href='/admin/teacher/import-midterm' class='btn btn-info btn-sm btn-import-midterm'><i class='fa fa-sign-in'></i> Import điểm giữa kì</a>");
                 }
                 if (in_array('3',$statusImport)) {
-                    $tools->append("<a href='/admin/teacher/import-point-endterm' class='btn btn-info btn-sm btn-import-endterm'><i class='fa fa-sign-in'></i> Import điểm cuối kì</a>");
+                    $tools->append("<a href='/admin/teacher/import-endterm' class='btn btn-info btn-sm btn-import-endterm'><i class='fa fa-sign-in'></i> Import điểm cuối kì</a>");
                 }
-                if (in_array('all',$statusImport)) {
-                    $tools->append("<a href='/admin/teacher/import-point-all' class='btn btn-info btn-sm btn-import-all'><i class='fa fa-sign-in'></i> Import điểm SV</a>");
+                if (in_array('All',$statusImport)) {
+                    $tools->append("<a href='/admin/teacher/import-all' class='btn btn-info btn-sm btn-import-all'><i class='fa fa-sign-in'></i> Import điểm SV</a>");
                 }
             });
 
         });
     }
+
+
 }
