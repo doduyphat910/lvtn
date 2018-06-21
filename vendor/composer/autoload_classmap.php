@@ -12,6 +12,7 @@ return array(
     'App\\Admin\\Controllers\\DifferentRegisterController' => $baseDir . '/app/Admin/Controllers/DifferentRegisterController.php',
     'App\\Admin\\Controllers\\ExampleController' => $baseDir . '/app/Admin/Controllers/ExampleController.php',
     'App\\Admin\\Controllers\\HomeController' => $baseDir . '/app/Admin/Controllers/HomeController.php',
+    'App\\Admin\\Controllers\\ImportPointController' => $baseDir . '/app/Admin/Controllers/ImportPointController.php',
     'App\\Admin\\Controllers\\ImportStudentController' => $baseDir . '/app/Admin/Controllers/ImportStudentController.php',
     'App\\Admin\\Controllers\\NotificationsController' => $baseDir . '/app/Admin/Controllers/NotificationsController.php',
     'App\\Admin\\Controllers\\PointController' => $baseDir . '/app/Admin/Controllers/PointController.php',

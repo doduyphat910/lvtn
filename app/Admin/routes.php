@@ -89,9 +89,10 @@ Route::group([
     $router->get('teacher/subject-register/{id}/details','TeacherController@detailsSubjectRegister');
     $router->get('teacher/subject-register','TeacherController@subjectRegister');
 
-    //import point
+    //import point attendance
+    $router->post('teacher/import-attendance/parse','ImportPointController@parseAttendance');
+    $router->post('teacher/import-attendance/review','ImportPointController@reviewAttendance');
     $router->get('teacher/{id}/import-attendance','ImportPointController@attendance');
-
     //export point
     $router->get('teacher/{id}/export-attendance','ImportPointController@exportAttendance');
 

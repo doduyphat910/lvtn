@@ -380,6 +380,7 @@ class ComposerStaticInit4bd9441abc984b3184976b6e36035f67
         'App\\Admin\\Controllers\\DifferentRegisterController' => __DIR__ . '/../..' . '/app/Admin/Controllers/DifferentRegisterController.php',
         'App\\Admin\\Controllers\\ExampleController' => __DIR__ . '/../..' . '/app/Admin/Controllers/ExampleController.php',
         'App\\Admin\\Controllers\\HomeController' => __DIR__ . '/../..' . '/app/Admin/Controllers/HomeController.php',
+        'App\\Admin\\Controllers\\ImportPointController' => __DIR__ . '/../..' . '/app/Admin/Controllers/ImportPointController.php',
         'App\\Admin\\Controllers\\ImportStudentController' => __DIR__ . '/../..' . '/app/Admin/Controllers/ImportStudentController.php',
         'App\\Admin\\Controllers\\NotificationsController' => __DIR__ . '/../..' . '/app/Admin/Controllers/NotificationsController.php',
         'App\\Admin\\Controllers\\PointController' => __DIR__ . '/../..' . '/app/Admin/Controllers/PointController.php',

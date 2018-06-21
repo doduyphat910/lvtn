@@ -3,7 +3,7 @@
         <div class="col-md-12">
             <div class="box box-info">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Import</h3>
+                    <h3 class="box-title">Import </h3>
 
                     <div class="box-tools">
                         <div class="btn-group pull-right" style="margin-right: 10px">
@@ -21,7 +21,8 @@
                     <form class="form-horizontal" method="POST" action="{{$router_target}}"
                           enctype="multipart/form-data">
                         {{ csrf_field() }}
-
+                        {{--<input type="text" value="{{}}">--}}
+                        <input type="hidden" name="idSubjectRegister" value="{{$idSubjectRegister}}">
                         <div class="form-group{{ $errors->has('csv_file') ? ' has-error' : '' }}">
                             <label for="csv_file" class="col-md-4 control-label">Chọn CSV file</label>
 

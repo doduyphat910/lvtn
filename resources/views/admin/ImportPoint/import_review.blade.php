@@ -7,9 +7,10 @@
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body table-responsive no-padding">
-                    <form class="form-horizontal" method="POST" action="/admin/import_student/parse">
+                    <form class="form-horizontal" method="POST" action="/admin/teacher/import-attendance/parse">
                         {{ csrf_field() }}
                         <input type="hidden" name="csv_data_file_id" value="{{ $csv_data_file->id }}"/>
+                        <input type="hidden" name="idSubjectRegister" value="{{$idSubjectRegister}}">
                         <table class="table table-hover">
                             @if (isset($csv_header_fields))
                                 <tr>
@@ -26,10 +27,18 @@
                                 </tr>
                             @endforeach
                             <tr>
-                                @foreach ($csv_data[0] as $key => $value)
+                            @php
+                                $point_attendance = [
+                                'mssv',
+                                'ho',
+                                'ten',
+                                'diem_chuyen_can'
+                                ]
+                            @endphp
+                            @foreach ($csv_data[0] as $key => $value)
                                     <td>
                                         <select name="fields[{{ $key }}]">
-                                            @foreach (config('admin.student_user_fields') as $db_field)
+                                            @foreach ($point_attendance as $db_field)
                                                 <option value="{{ (\Request::has('header')) ? $db_field : $loop->index }}"
                                                         @if ($key === $db_field) selected @endif>{{ $db_field }}</option>
                                             @endforeach

@@ -91,7 +91,7 @@ class PointController extends Controller
         return Admin::form(ResultRegister::class, function (Form $form) {
 
             $form->display('id', 'ID');
-            $form->number('attendance');
+            $form->number('attendance', 'Điểm chuyên cần')->rules('numeric|min:0|max:10');
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
         });
