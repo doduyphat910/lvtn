@@ -27,7 +27,7 @@ $monhoc = [
 ]
 
 ?>
-<table>
+<table >
     <thead>
     <tr>
         <th></th>

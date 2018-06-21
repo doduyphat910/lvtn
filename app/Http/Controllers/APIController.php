@@ -11,9 +11,15 @@ use App\Models\TimeStudy;
 use App\Models\UserAdmin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\MessageBag;
+use PhpParser\Node\Expr\Array_;
 
 class APIController extends Controller {
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function resultRegister(Request $request){
         $idSubjecRegister = $request->id;
         $user = Auth::user();
@@ -51,7 +57,53 @@ class APIController extends Controller {
             ]);
         }
 
-        //kiểm tra giờ học
+        //kiểm tra giờ học trùng
+        $arrIdSubjectRegiter = ResultRegister::where('id_user_student',$idUser)->where('time_register', $idTimeRegister)->pluck('id_subject_register')->toArray();
+        $arrResultRegiter = TimeStudy::whereIn('id_subject_register', $arrIdSubjectRegiter)->get()->toArray();
+        $arrTimeStudyUser = TimeStudy::where('id_subject_register',$idSubjecRegister)->get()->toArray();
+
+                foreach ($arrResultRegiter as $dayAll){
+                    foreach ($arrTimeStudyUser as $dayUser){
+                        if ($dayAll['day'] == $dayUser['day'] ) {
+                            if (
+                                ($dayAll['time_study_end'] > $dayUser['time_study_start'] && $dayAll['time_study_end'] <= $dayUser['time_study_end']) ||
+                                ($dayAll['time_study_start'] >= $dayUser['time_study_start'] && $dayAll['time_study_start'] < $dayUser['time_study_end']) ||
+                                ($dayAll['time_study_start'] >= $dayUser['time_study_start'] && $dayAll['time_study_end'] <= $dayUser['time_study_end'])  ||
+                                ($dayAll['time_study_start'] <= $dayUser['time_study_start'] && $dayAll['time_study_end'] >= $dayUser['time_study_end'])
+                            )
+                            {
+                                return response()->json([
+                                    'status'  => false,
+                                    'message' => trans('Bạn đã đăng kí giờ học này'),
+                                ]);
+                            }
+                        }
+                    }
+                }
+
+//        dd(ResultRegister::all()->toArray());
+
+
+//        $arrayTime = Array();
+//        $timeResultRegister=ResultRegister::all();
+//        foreach ($timeResultRegister as $value){
+//            $arrayTime[]=$value->id_subject_register;
+//        }
+//        $t = TimeStudy::all();
+//        $arrayTime_Day = Array();
+//        $i=0;
+//        foreach ($t as $value){
+//            foreach ($arrayTime as $val){
+//                if($value->id_subject_register ==  $val){
+//                    $arrayTime_Day[$i]['time_study_start']= $value->time_study_start;
+//                    $arrayTime_Day[$i]['time_study_end']= $value->time_study_end;
+//                    $arrayTime_Day[$i]['day']= $value->day;
+//                    $i=$i+1;
+//                }
+//            }
+//        }
+//        //dd($arrayTime_Day);
+
 
 
 

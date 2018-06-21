@@ -45,7 +45,7 @@ class UserController extends Controller
             //$grid->id('ID')->sortable();
             $grid->name('Tên thông báo');
             $grid->description('Mô tả')->display(function ($name){
-                return  '<a href="' . $this->URL . '" target="_blank" >'.$name.'</a>';
+                return  '<a href="' . $this->url . '" target="_blank" >'.$name.'</a>';
             });
             //$grid->URL('Đường dẫn');
 //            $grid->URL('Đường dẫn')->display(function ($name){

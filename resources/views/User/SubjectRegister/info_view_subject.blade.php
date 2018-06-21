@@ -21,7 +21,8 @@ $arrPeriods = [
     ["start" => '16:50', 'end' => '17:35'],
     ["start" => '17:40', 'end' => '18:25'],
     ["start" => '18:25', 'end' => '19:10'],
-    ["start" => '19:15', 'end' => '20:00'],
+    ["start" => '19:15', 'end' => '20:00']
+
 ];
 $monhoc = [
     [
@@ -33,14 +34,17 @@ $monhoc = [
 ]
 
 ?>
-<h1>TKB</h1>
-<table>
+</div>
+<div class="row">
+    <div class="col-sm-8">
+        <h1 class="text-center">TKB</h1>
+<table class="table table-bordered">
     <thead>
     <tr>
-        <th></th>
+        <th style="background-color: transparent; border-top-color: white !important; border-left-color: white; " class="th-object"></th>
         <?php
-        foreach ($arrDays as $item) {
-            echo "<th style='text-align: center'>" . $item . "</th>";
+        foreach ($arrDays as $key => $item) {
+                echo "<th style='text-align: center' class='th-object'>" . $item . "</th>";
         }
         ?>
     </tr>
@@ -79,7 +83,7 @@ $monhoc = [
     }
     foreach ($arrPeriods as $periodKey => $item) {
         echo "<tr>";
-        echo "<td>Tiết " . ($periodKey + 1) . "</td>";
+        echo "<td class='td-object'>Tiết " . ($periodKey + 1) . "</td>";
 
         foreach ($arrDays as $dayKey => $day) {
             if(isset($arrayTable[$dayKey][$periodKey])) {
@@ -88,17 +92,43 @@ $monhoc = [
                         $subjectId = array_keys($arrayTable[$dayKey][$periodKey])[0];
                         $count = array_values($arrayTable[$dayKey][$periodKey])[0];
                         $nameSubject = Subjects::where("id", $subjectId)->first();
-                        echo "<td rowspan='$count' style='background-color:red;border-color:Gray;border-width:1px;border-style:solid;height:22px;width:110px;'>$nameSubject->name</td>";
+                        echo "<td rowspan='$count' style='background-color:#ecf0f1;border-color:Gray;border-width:1px;border-style:solid;height:22px;width:110px;color:Teal;text-align:center'>$nameSubject->name</td>";
                     } else if(is_array($arrayTable[$dayKey][$periodKey])){// nếu như là array thì render
-                    echo "<td rowspan='1' style='border-color:Gray;border-width:1px;border-style:solid;height:22px;width:110px;'></td>";
+                    echo "<td rowspan='1' class='td-object'></td>";
                 }
             } else {
                 echo "<td rowspan='1' style='border-color:Gray;border-width:1px;border-style:solid;height:22px;width:110px;'></td>";
             }
         }
+        echo "<td class='td-object'>Tiết " . ($periodKey + 1) . "</td>";
+
         echo "</tr>";
     }
     ?>
     </tbody>
 </table>
+    </div>
+    <div class="col-sm-4">
+         <h1 class="text-center">Ghi chu</h1>
+        <ul class="list-unstyled text-center">
+            <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint, placeat.</li>
+            <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint, placeat.</li>
+            <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint, placeat.</li>
+            <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint, placeat.</li>
+            <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint, placeat.</li>
+        </ul>
+    </div>
+</div>
+<style type="text/css">
+    th.th-object.th-object, td.td-object:first-child, td.td-object:last-child{
+        text-align: center;
+        background-color: #6699CC;
+        color: #fff;
+    }
+    th.th-object.th-object,.table-bordered>tbody>tr>td.td-object{
+        border: 1px solid #000;
+        border-top: 1px solid #000 !important;
+        width: 200px;
+    }
+</style>
 

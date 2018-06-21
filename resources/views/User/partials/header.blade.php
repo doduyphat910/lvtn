@@ -81,6 +81,9 @@
     </nav> --}}
     <style>
         .navbar-default .navbar-toggle .icon-bar {background-color: white;}
+        /*.active{
+            background-color: blue;*/
+        }
     </style>
     <nav class="navbar navbar-default navbar-fixed-top" style="margin-left: 0px;">
       <div class="container-flud">
@@ -100,7 +103,7 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="{{ url('user/student') }}">Trang chủ <span class="sr-only">(current)</span></a></li>
+            <li class="active"><a href="{{ url('user/student') }}" >Trang chủ <span class="sr-only">(current)</span></a></li>
                     <li><a href="{{ url('user/subject-register') }}">Đăng ký môn học</a></li>
                     <li><a href="#">Xem điểm</a></li>
                     <li><a href="{{ url('user/subject-parallel') }}">Xem môn song song</a></li>
@@ -126,3 +129,24 @@
       </div>
     </nav>
 </header>
+
+<script>
+    $(document).ready(function(){
+        // $('.nav.navbar-nav li').on('click', function(){
+        //      $('#navbar a').removeClass('active');
+        // });
+        
+        var url = window.location.pathname, 
+        urlRegExp = new RegExp(url.replace(/\/$/,'') + "$"); // create regexp to match current url pathname and remove trailing slash if present as it could collide with the link in navigation in case trailing slash wasn't present there
+        // now grab every link from the navigation
+        $('#navbar a').each(function(){
+
+            // and test its normalized href against the url pathname regexp
+            if(urlRegExp.test(this.href.replace(/\/$/,''))){
+                $(this).addClass('active');
+                $(this).parent().previoussibling().find('a').removeClass('active');
+            }
+        });
+
+    });
+</script>
