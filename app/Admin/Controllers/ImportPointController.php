@@ -12,6 +12,7 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ImportPointController extends Controller
 {
+    #region attendance
     public function attendance($idSubjectRegister)
     {
         return Admin::content(function (Content $content) use ($idSubjectRegister) {
@@ -47,12 +48,21 @@ class ImportPointController extends Controller
             $subjectRegister = SubjectRegister::find($idSubjectRegister);
             $codeSubjectRegister = $subjectRegister->code_subject_register;
             $content->description('Import ' . $codeSubjectRegister);
+            $arrFields = [
+                'mssv',
+                'ho',
+                'ten',
+                'diem_chuyen_can'
+            ];
             $content->body(view('admin.ImportPoint.import_review',
                 [
                     'csv_data' => $csv_data,
                     'csv_data_file' => $csv_data_file,
                     'idSubjectRegister' =>$idSubjectRegister,
-                    'code_subject_regiister'=>$codeSubjectRegister
+                    'code_subject_regiister'=>$codeSubjectRegister,
+                    'arrFields' => $arrFields,
+                    'routerTarget' => '/admin/teacher/import-attendance/parse'
+
                 ]
             ));
 
@@ -78,6 +88,10 @@ class ImportPointController extends Controller
                     $error_logs[$key] = $row['mssv'] .', mssv không có trong lớp này';
                 }
                 if($row['diem_chuyen_can'] < 0 || $row['diem_chuyen_can'] > 10) {
+                    $row_error += 1;
+                    $error_logs[$key] = $row['mssv'] .', cột điểm chuyên cần sai';
+                }
+                if(!is_numeric($row['diem_chuyen_can'])){
                     $row_error += 1;
                     $error_logs[$key] = $row['mssv'] .', cột điểm chuyên cần sai';
                 }
@@ -109,7 +123,6 @@ class ImportPointController extends Controller
             ));
 
         });
-
     }
 
     public function exportAttendance($idSubjectRegister) {
@@ -166,4 +179,342 @@ class ImportPointController extends Controller
 
         })->download('xlsx');
     }
+    #endregion
+
+
+    #region midterm
+    public function midTerm($idSubjectRegister)
+    {
+        return Admin::content(function (Content $content) use ($idSubjectRegister) {
+
+            $content->header('Điểm giữa kì');
+            $subjectRegister = SubjectRegister::find($idSubjectRegister);
+            $codeSubjectRegister = $subjectRegister->code_subject_register;
+            $content->description('Import '.$codeSubjectRegister);
+            $content->body(view('admin.ImportPoint.import', ['router_target' => '/admin/teacher/import-midterm/review', 'idSubjectRegister' => $idSubjectRegister]));
+
+        });
+    }
+
+    public function reviewMidterm(Request $request) {
+        $path = $request->file('csv_file')->getRealPath();
+        $data = Excel::load($path, function ($reader) {
+        })->get()->toArray();
+        $idSubjectRegister = $request->idSubjectRegister;
+        if(count($data) > 0 ) {
+            foreach($data as $key => $value) {
+                $csv_data_field[] = $key;
+            }
+            $csv_data = array_slice($data, 0, 2);
+            $csv_data_file = new CSVData();
+            $csv_data_file->file_name = $request->file('csv_file')->getClientOriginalName();
+            $csv_data_file->model = 'attendance_point';
+            $csv_data_file->data = json_encode($data);
+            $csv_data_file->save();
+        }
+        return Admin::content(function (Content $content) use ($csv_data, $csv_data_file, $idSubjectRegister) {
+            $content->header('Điểm giữa kì');
+            $subjectRegister = SubjectRegister::find($idSubjectRegister);
+            $codeSubjectRegister = $subjectRegister->code_subject_register;
+            $content->description('Import ' . $codeSubjectRegister);
+            $arrFields = [
+                'mssv',
+                'ho',
+                'ten',
+                'diem_giua_ki'
+            ];
+            $content->body(view('admin.ImportPoint.import_review',
+                [
+                    'csv_data' => $csv_data,
+                    'csv_data_file' => $csv_data_file,
+                    'idSubjectRegister' =>$idSubjectRegister,
+                    'code_subject_regiister'=>$codeSubjectRegister,
+                    'arrFields' => $arrFields,
+                    'routerTarget' => '/admin/teacher/import-midterm/parse'
+                ]
+            ));
+        });
+    }
+
+    public function parseMidterm (Request $request){
+        $csv_data = CsvData::find($request->csv_data_file_id);
+        $data = json_decode($csv_data->data, true);
+        $idSubjectRegister = $request->idSubjectRegister;
+        $row_error = 0 ;
+        $row_add_successs = 0;
+        $error_logs = [];
+        foreach($data as $key => $row) {
+            if (empty($row ['mssv']) ||  empty($row ['diem_giua_ki']) ) {
+                $row_error += 1;
+                $error_logs[$key] = $row['mssv'] . ' trống dữ liệu';
+            } else {
+                $idUserSubject = ResultRegister::where('id_subject_register', $idSubjectRegister)->pluck('id_user_student');
+                $arrCodeStudent = StudentUser::find($idUserSubject)->pluck('code_number')->toArray();
+                if (!in_array($row['mssv'], $arrCodeStudent)) {
+                    $row_error += 1;
+                    $error_logs[$key] = $row['mssv'] .', mssv không có trong lớp này';
+                }
+                if($row['diem_giua_ki'] < 0 || $row['diem_giua_ki'] > 10) {
+                    $row_error += 1;
+                    $error_logs[$key] = $row['mssv'] .', cột điểm chuyên cần sai';
+                }
+                if(!is_numeric($row['diem_giua_ki'])){
+                    $row_error += 1;
+                    $error_logs[$key] = $row['mssv'] .', cột điểm chuyên cần sai';
+                }
+            }
+        }
+        foreach($data as $key => $row) {
+            if ($row_error == 0) {
+                $idUser = StudentUser::where('code_number', $row['mssv'])->pluck('id');
+                $userSubject = ResultRegister::where('id_user_student', $idUser)->where('id_subject_register',$idSubjectRegister)->first();
+                $userSubject->mid_term = $row['diem_giua_ki'];
+                if($userSubject->save()) {
+                    $row_add_successs += 1;
+                }
+            } else {
+                $row_error += 1;
+            }
+        }
+        $subjectRegister = SubjectRegister::find($idSubjectRegister);
+        $codeSubjectRegister = $subjectRegister->code_subject_register;
+        return Admin::content(function (Content $content) use ($row_error, $error_logs, $row_add_successs, $codeSubjectRegister) {
+            $content->header('Điểm chuyên cần');
+            $content->description('Import '. $codeSubjectRegister);
+            $content->body(view('admin.ImportPoint.import_parse',
+                [
+                    'row_error' => $row_error,
+                    'error_logs' => $error_logs,
+                    'row_add_successs' => $row_add_successs
+                ]
+            ));
+
+        });
+    }
+
+
+
+    public function exportMidterm($idSubjectRegister) {
+
+        $resultRegisters = ResultRegister::where('id_subject_register', $idSubjectRegister)->get()->toArray();
+        $subjectRegister = SubjectRegister::where('id',$idSubjectRegister)->first();
+        $codeSubjectRegister = $subjectRegister->code_subject_register;
+
+        // Generate and return the spreadsheet
+        Excel::create('Lớp_'.$codeSubjectRegister, function($excel) use ($resultRegisters,$codeSubjectRegister)  {
+
+            // Set the spreadsheet title, creator, and description
+            $excel->setTitle('Payments');
+            $excel->setCreator('Laravel')->setCompany('WJ Gilmore, LLC');
+            $excel->setDescription('payments file');
+
+            // Build the spreadsheet, passing in the payments array
+            $excel->sheet('Lớp '.$codeSubjectRegister, function($sheet) use ($resultRegisters, $codeSubjectRegister) {
+                $sheet->rows([
+                    [
+                        'MSSV',
+                        'Họ',
+                        'Tên',
+                        'Điểm giữa kì'
+                    ]
+                ]);
+                foreach($resultRegisters as $resultRegister) {
+                    if(!empty($resultRegister['id_user_student'])){
+                        $student = StudentUser::find($resultRegister['id_user_student']);
+                        if(!empty($student))
+                            $codeNumber = $student->code_number;
+                        $firstName = $student->first_name;
+                        $lastName = $student->last_name;
+                        $midterm = $resultRegister['mid_term'];
+                    } else {
+                        $codeNumber = '';
+                        $firstName = '';
+                        $lastName = '';
+                        $midterm = '';
+                    }
+
+
+
+                    $sheet->rows([
+                        [
+                            $codeNumber,
+                            $firstName,
+                            $lastName,
+                            $midterm
+                        ]
+                    ]);
+                }
+            });
+
+        })->download('xlsx');
+    }
+    #endregion
+
+
+    #region end-term
+    public function endTerm($idSubjectRegister)
+    {
+        return Admin::content(function (Content $content) use ($idSubjectRegister) {
+
+            $content->header('Điểm cuối kì');
+            $subjectRegister = SubjectRegister::find($idSubjectRegister);
+            $codeSubjectRegister = $subjectRegister->code_subject_register;
+            $content->description('Import '.$codeSubjectRegister);
+            $content->body(view('admin.ImportPoint.import', ['router_target' => '/admin/teacher/import-endterm/review', 'idSubjectRegister' => $idSubjectRegister]));
+
+        });
+    }
+
+    public function reviewEndterm(Request $request) {
+        $path = $request->file('csv_file')->getRealPath();
+        $data = Excel::load($path, function ($reader) {
+        })->get()->toArray();
+        $idSubjectRegister = $request->idSubjectRegister;
+        if(count($data) > 0 ) {
+            foreach($data as $key => $value) {
+                $csv_data_field[] = $key;
+            }
+            $csv_data = array_slice($data, 0, 2);
+            $csv_data_file = new CSVData();
+            $csv_data_file->file_name = $request->file('csv_file')->getClientOriginalName();
+            $csv_data_file->model = 'attendance_point';
+            $csv_data_file->data = json_encode($data);
+            $csv_data_file->save();
+        }
+        return Admin::content(function (Content $content) use ($csv_data, $csv_data_file, $idSubjectRegister) {
+            $content->header('Điểm giữa kì');
+            $subjectRegister = SubjectRegister::find($idSubjectRegister);
+            $codeSubjectRegister = $subjectRegister->code_subject_register;
+            $content->description('Import ' . $codeSubjectRegister);
+            $arrFields = [
+                'mssv',
+                'ho',
+                'ten',
+                'diem_cuoi_ki'
+            ];
+            $content->body(view('admin.ImportPoint.import_review',
+                [
+                    'csv_data' => $csv_data,
+                    'csv_data_file' => $csv_data_file,
+                    'idSubjectRegister' =>$idSubjectRegister,
+                    'code_subject_regiister'=>$codeSubjectRegister,
+                    'arrFields' => $arrFields,
+                    'routerTarget' => '/admin/teacher/import-endterm/parse'
+                ]
+            ));
+        });
+    }
+
+    public function parseEndterm (Request $request){
+        $csv_data = CsvData::find($request->csv_data_file_id);
+        $data = json_decode($csv_data->data, true);
+        $idSubjectRegister = $request->idSubjectRegister;
+        $row_error = 0 ;
+        $row_add_successs = 0;
+        $error_logs = [];
+        foreach($data as $key => $row) {
+            if (empty($row ['mssv']) ||  empty($row ['diem_cuoi_ki']) ) {
+                $row_error += 1;
+                $error_logs[$key] = $row['mssv'] . ' trống dữ liệu';
+            } else {
+                $idUserSubject = ResultRegister::where('id_subject_register', $idSubjectRegister)->pluck('id_user_student');
+                $arrCodeStudent = StudentUser::find($idUserSubject)->pluck('code_number')->toArray();
+                if (!in_array($row['mssv'], $arrCodeStudent)) {
+                    $row_error += 1;
+                    $error_logs[$key] = $row['mssv'] .', mssv không có trong lớp này';
+                }
+                if($row['diem_cuoi_ki'] < 0 || $row['diem_cuoi_ki'] > 10) {
+                    $row_error += 1;
+                    $error_logs[$key] = $row['mssv'] .', cột điểm cuối kì sai';
+                }
+                if(!is_numeric($row['diem_cuoi_ki'])){
+                    $row_error += 1;
+                    $error_logs[$key] = $row['mssv'] .', cột điểm cuối kì sai';
+                }
+            }
+        }
+        foreach($data as $key => $row) {
+            if ($row_error == 0) {
+                $idUser = StudentUser::where('code_number', $row['mssv'])->pluck('id');
+                $userSubject = ResultRegister::where('id_user_student', $idUser)->where('id_subject_register',$idSubjectRegister)->first();
+                $userSubject->end_term = $row['diem_cuoi_ki'];
+                if($userSubject->save()) {
+                    $row_add_successs += 1;
+                }
+            } else {
+                $row_error += 1;
+            }
+        }
+        $subjectRegister = SubjectRegister::find($idSubjectRegister);
+        $codeSubjectRegister = $subjectRegister->code_subject_register;
+        return Admin::content(function (Content $content) use ($row_error, $error_logs, $row_add_successs, $codeSubjectRegister) {
+            $content->header('Điểm cuối cần');
+            $content->description('Import '. $codeSubjectRegister);
+            $content->body(view('admin.ImportPoint.import_parse',
+                [
+                    'row_error' => $row_error,
+                    'error_logs' => $error_logs,
+                    'row_add_successs' => $row_add_successs
+                ]
+            ));
+
+        });
+    }
+
+    public function exportEndterm($idSubjectRegister) {
+
+        $resultRegisters = ResultRegister::where('id_subject_register', $idSubjectRegister)->get()->toArray();
+        $subjectRegister = SubjectRegister::where('id',$idSubjectRegister)->first();
+        $codeSubjectRegister = $subjectRegister->code_subject_register;
+
+        // Generate and return the spreadsheet
+        Excel::create('Lớp_'.$codeSubjectRegister, function($excel) use ($resultRegisters,$codeSubjectRegister)  {
+
+            // Set the spreadsheet title, creator, and description
+            $excel->setTitle('Payments');
+            $excel->setCreator('Laravel')->setCompany('WJ Gilmore, LLC');
+            $excel->setDescription('payments file');
+
+            // Build the spreadsheet, passing in the payments array
+            $excel->sheet('Lớp '.$codeSubjectRegister, function($sheet) use ($resultRegisters, $codeSubjectRegister) {
+                $sheet->rows([
+                    [
+                        'MSSV',
+                        'Họ',
+                        'Tên',
+                        'Điểm cuối kì'
+                    ]
+                ]);
+                foreach($resultRegisters as $resultRegister) {
+                    if(!empty($resultRegister['id_user_student'])){
+                        $student = StudentUser::find($resultRegister['id_user_student']);
+                        if(!empty($student))
+                            $codeNumber = $student->code_number;
+                        $firstName = $student->first_name;
+                        $lastName = $student->last_name;
+                        $endterm = $resultRegister['end_term'];
+                    } else {
+                        $codeNumber = '';
+                        $firstName = '';
+                        $lastName = '';
+                        $endterm = '';
+                    }
+
+
+
+                    $sheet->rows([
+                        [
+                            $codeNumber,
+                            $firstName,
+                            $lastName,
+                            $endterm
+                        ]
+                    ]);
+                }
+            });
+
+        })->download('xlsx');
+    }
+    #endregion
+
 }

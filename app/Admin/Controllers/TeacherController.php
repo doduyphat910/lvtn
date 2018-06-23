@@ -360,8 +360,8 @@ EOT;
                 return "<span class='label label-info'>{$name}</span>";
             });
             $grid->attendance('Điểm chuyên cần')->editable();
-            $grid->mid_term('Điểm giữa kì');
-            $grid->end_term('Điểm cuối kì');
+            $grid->mid_term('Điểm giữa kì')->editable();
+            $grid->end_term('Điểm cuối kì')->editable();
             $grid->final('Điểm tổng kết');
 
 //            $grid->created_at('Tạo vào lúc');
@@ -380,10 +380,10 @@ EOT;
                     $tools->append('<a href="/admin/teacher/'.$idSubjectRegister.'/import-attendance" class="btn btn-info btn-sm btn-import-attendance"><i class="fa fa-sign-in"></i> Import điểm chuyên cần</a>');
                 }
                 if (in_array('2',$statusImport)) {
-                    $tools->append("<a href='/admin/teacher/import-midterm' class='btn btn-info btn-sm btn-import-midterm'><i class='fa fa-sign-in'></i> Import điểm giữa kì</a>");
+                    $tools->append('<a href="/admin/teacher/'.$idSubjectRegister.'/import-midterm" class="btn btn-info btn-sm btn-import-midterm"><i class="fa fa-sign-in"    ></i> Import điểm giữa kì</a>');
                 }
                 if (in_array('3',$statusImport)) {
-                    $tools->append("<a href='/admin/teacher/import-endterm' class='btn btn-info btn-sm btn-import-endterm'><i class='fa fa-sign-in'></i> Import điểm cuối kì</a>");
+                    $tools->append('<a href="/admin/teacher/'.$idSubjectRegister.'/import-endterm" class="btn btn-info btn-sm btn-import-endterm"><i class="fa fa-sign-in"></i> Import điểm cuối kì</a>');
                 }
                 if (in_array('All',$statusImport)) {
                     $tools->append("<a href='/admin/teacher/import-all' class='btn btn-info btn-sm btn-import-all'><i class='fa fa-sign-in'></i> Import điểm SV</a>");

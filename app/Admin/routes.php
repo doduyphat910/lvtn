@@ -86,16 +86,28 @@ Route::group([
     $router->get('teacher/class/{id}/details','TeacherController@details');
     $router->resource('teacher/class',TeacherController::class);
     ///list subject-register
-    $router->get('teacher/subject-register/{id}/details','TeacherController@detailsSubjectRegister');
+    $router->get('teacher/subject-register/{id}/details','TeacherController@detailsSubjectRegister')->middleware('teacher');
     $router->get('teacher/subject-register','TeacherController@subjectRegister');
 
     //import point attendance
     $router->post('teacher/import-attendance/parse','ImportPointController@parseAttendance');
     $router->post('teacher/import-attendance/review','ImportPointController@reviewAttendance');
     $router->get('teacher/{id}/import-attendance','ImportPointController@attendance');
+
     //export point
     $router->get('teacher/{id}/export-attendance','ImportPointController@exportAttendance');
+    $router->get('teacher/{id}/export-midterm','ImportPointController@exportMidterm');
+    $router->get('teacher/{id}/export-endterm','ImportPointController@exportEndterm');
 
+    //import point mid-term
+    $router->post('teacher/import-midterm/parse','ImportPointController@parseMidterm');
+    $router->post('teacher/import-midterm/review','ImportPointController@reviewMidterm');
+    $router->get('teacher/{id}/import-midterm','ImportPointController@midTerm');
+
+    //import point end-term
+    $router->post('teacher/import-endterm/parse','ImportPointController@parseEndterm');
+    $router->post('teacher/import-endterm/review','ImportPointController@reviewEndterm');
+    $router->get('teacher/{id}/import-endterm','ImportPointController@endTerm');
 
 }
 
