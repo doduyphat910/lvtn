@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Models\Point;
 
+use App\Models\ResultRegister;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Facades\Admin;
@@ -71,7 +72,7 @@ class PointController extends Controller
      */
     protected function grid()
     {
-        return Admin::grid(Point::class, function (Grid $grid) {
+        return Admin::grid(ResultRegister::class, function (Grid $grid) {
 
             $grid->id('ID')->sortable();
 
@@ -87,10 +88,10 @@ class PointController extends Controller
      */
     protected function form()
     {
-        return Admin::form(Point::class, function (Form $form) {
+        return Admin::form(ResultRegister::class, function (Form $form) {
 
             $form->display('id', 'ID');
-
+            $form->number('attendance', 'Điểm chuyên cần')->rules('numeric|min:0|max:10');
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
         });

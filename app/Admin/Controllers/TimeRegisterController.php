@@ -154,10 +154,6 @@ class TimeRegisterController extends Controller
             $form->checkbox('status_import', 'Trạng thái import')->options($options);
             $script = <<<EOT
             $(function () {
-                $('input[value="All"] input').iCheck({
-                  alert('123');
-                });
-
                 $('input[value="All"]').on('ifChecked', function(event){
                   $('input[name="status_import[]"]').iCheck('check');
                 });
