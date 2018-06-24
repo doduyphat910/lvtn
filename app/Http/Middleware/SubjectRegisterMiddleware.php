@@ -27,9 +27,10 @@ class SubjectRegisterMiddleware
         //lấy năm vào học của user
         $schoolYearUser = $user->school_year;
         $schoolYearUser = (string) $schoolYearUser;
-
-        //xét user có nằm trong đợt đăng kí hay không
-        if(in_array($schoolYearUser, $timeRegister->school_year) || $timeRegister->school_year['0'] == "All") {
+        if($timeRegister){
+            //xét user có nằm trong đợt đăng kí hay không
+        if(in_array($schoolYearUser, $timeRegister->school_year) || $timeRegister->school_year['0'] == "All")
+         {
             //xét trạng thái user
             if($statusUser > 5) {
                 $exception = new MessageBag([
@@ -55,7 +56,14 @@ class SubjectRegisterMiddleware
             ]);
             return redirect('/user/student')->with(compact('exception'));
         }
+    }else {
+        
+             $exception = new MessageBag([
+                'title' => 'Thông báo',
+                'message' => 'Sinh viên không nằm trong khóa được đăng kí',
+            ]);
+            return redirect('/user/student')->with(compact('exception'));
 
-
+    }
     }
 }

@@ -36,13 +36,13 @@ class APIController extends Controller {
         //nếu đã đăng kí rồi thì không được đăng kí nữa
         $idSubjects = SubjectRegister::where('id',$idSubjecRegister)->pluck('id_subjects')->toArray();
         $countSubject = ResultRegister::where('id_subject', $idSubjects['0'])->where('id_user_student', $idUser)->where('time_register', $idTimeRegister)->get()->count();
-        if($countSubject >= 1) {
+            if($countSubject >= 1)
+            {
             return response()->json([
                 'status'  => false,
                 'message' => trans('Bạn đã đăng kí môn học này'),
             ]);
         }
-
 
         //lấy số lượng tín chỉ được đăng kí tối đa
         $creditsMax = $timeRegister->credits_max;
@@ -148,6 +148,28 @@ class APIController extends Controller {
                 }
             }
         }
+    }
+    public function deleteRegister(Request $request){
+            $idSubjectRegister = $request->id;
+            $user = Auth::user();
+            $idUser = $user->id;
+            $deleteSubject = ResultRegister::where('id_user_student',$idUser)->where('id_subject_register', $idSubjectRegister)->first();
+            $subjectRegister = SubjectRegister::find($idSubjectRegister);
+        if($deleteSubject->delete()) {
+            $qtyCurrent = $subjectRegister->qty_current;
+            $subjectRegister->qty_current = $qtyCurrent -1;
+                if($subjectRegister->save()) {
+                    return response()->json([
+                        'status'  => true,
+                        'message' => trans('Hủy đăng ký thành công'),
+                    ]);
+                }else {
+                    return response()->json([
+                        'status'  => false,
+                        'message' => trans('Hủy đăng ký không thành công'),
+                    ]);
+                }
+            }
     }
 
 }

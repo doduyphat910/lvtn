@@ -35,6 +35,9 @@ Route::group(['prefix'=>'user', 'middleware'=>'studentLogin'], function(Router $
 
         //API save result register
         $router->get('subject-register/{id}/result-register', 'APIController@resultRegister');
+        //API delete result register
+        $router->get('subject-register/{id}/delete-register', 'APIController@deleteRegister');
+
     });
 });
 

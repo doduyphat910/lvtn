@@ -5,8 +5,8 @@
     <div class="{{$viewClass['field']}}">
 
         @include('admin::form.error')
-
-        <select class="form-control {{$class}}" style="width: 100%;" name="{{$name}}[]" multiple="multiple" data-placeholder="{{ $placeholder }}" {!! $attributes !!} >
+ 
+        <select class="form-control {{$class}}" style="width: 100%;height: 300px;" name="{{$name}}[]" multiple="multiple" data-placeholder="{{ $placeholder }}" {!! $attributes !!} >
             @foreach($options as $select => $option)
                 <option value="{{$select}}" {{  in_array($select, (array)old($column, $value)) ?'selected':'' }}>{{$option}}</option>
             @endforeach

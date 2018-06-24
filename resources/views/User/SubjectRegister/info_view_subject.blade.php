@@ -1,43 +1,38 @@
 <?php
-use App\Models\ResultRegister;use App\Models\SubjectRegister;use App\Models\Subjects;use App\Models\TimeRegister;use App\Models\TimeStudy;$idUser = Auth::user()->id;
+use App\Models\ResultRegister;use App\Models\SubjectRegister;use App\Models\Subjects;use App\Models\TimeRegister;use App\Models\TimeStudy;use App\Models\TimeTable;$idUser = Auth::user()->id;
 $timeRegister = TimeRegister::where('status', 1)->orderBy('id', 'DESC')->first();
 $idTimeRegister = $timeRegister->id;
 $idSubjectRegister = ResultRegister::where('id_user_student', $idUser)->where('time_register', $idTimeRegister)->pluck('id_subject_register');
 $timeStudys = TimeStudy::whereIn('id_subject_register', $idSubjectRegister)->get()->toArray();
 
 $arrDays = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ nhật"];
-$arrPeriods = [
-    ["start" => '6:30', 'end' => '7:15'],
-    ["start" => '7:20', 'end' => '8:05'],
-    ["start" => '08:15', 'end' => '09:00'],
-    ["start" => '09:05', 'end' => '09:50'],
-    ["start" => '10:00', 'end' => '10:45'],
-    ["start" => '10:50', 'end' => '11:35'],
-    ["start" => '12:30', 'end' => '13:15'],
-    ["start" => '13:20', 'end' => '14:05'],
-    ["start" => '14:15', 'end' => '15:00'],
-    ["start" => '15:05', 'end' => '15:50'],
-    ["start" => '16:00', 'end' => '16:45'],
-    ["start" => '16:50', 'end' => '17:35'],
-    ["start" => '17:40', 'end' => '18:25'],
-    ["start" => '18:25', 'end' => '19:10'],
-    ["start" => '19:15', 'end' => '20:00']
+//$arrPeriods = [
+//    ["start" => '6:30', 'end' => '7:15'],
+//    ["start" => '7:20', 'end' => '8:05'],
+//    ["start" => '08:15', 'end' => '09:00'],
+//    ["start" => '09:05', 'end' => '09:50'],
+//    ["start" => '10:00', 'end' => '10:45'],
+//    ["start" => '10:50', 'end' => '11:35'],
+//    ["start" => '12:30', 'end' => '13:15'],
+//    ["start" => '13:20', 'end' => '14:05'],
+//    ["start" => '14:15', 'end' => '15:00'],
+//    ["start" => '15:05', 'end' => '15:50'],
+//    ["start" => '16:00', 'end' => '16:45'],
+//    ["start" => '16:50', 'end' => '17:35'],
+//    ["start" => '17:40', 'end' => '18:25'],
+//    ["start" => '18:25', 'end' => '19:10'],
+//    ["start" => '19:15', 'end' => '20:00']
+//
+//];
+$arrPeriods =DB::table('time_table')->select('time_start', 'time_end')->get();
+$arrPeriods = collect($arrPeriods)->map(function($x){ return (array) $x; })->toArray();
 
-];
-$monhoc = [
-    [
-        "name" => "toan",
-        "day" => 5,
-        "start_time" => "09:00",
-        "end_time" => "11:00",
-    ]
-]
 
 ?>
 </div>
 <div class="row">
     <div class="col-sm-8">
-        <h1 class="text-center">TKB</h1>
+        <h1 class="text-center">Thời Khóa Biểu</h1>
 <table class="table table-bordered">
     <thead>
     <tr>
@@ -53,8 +48,8 @@ $monhoc = [
     <?php
     $arrayTable = [];
     foreach ($arrPeriods as $periodKey => $arrPeriod) {
-        $start = strtotime($arrPeriod["start"]);
-        $end = strtotime($arrPeriod["end"]);
+        $start = strtotime($arrPeriod["time_start"]);
+        $end = strtotime($arrPeriod["time_end"]);
         foreach ($arrDays as $key => $day) {
             foreach ($timeStudys as $timeStudy) {
                 $startTime = strtotime($timeStudy['time_study_start']);
@@ -109,13 +104,18 @@ $monhoc = [
 </table>
     </div>
     <div class="col-sm-4">
-         <h1 class="text-center">Ghi chu</h1>
+         <h1 class="text-center">Ghi Chú</h1>
         <ul class="list-unstyled text-center">
-            <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint, placeat.</li>
-            <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint, placeat.</li>
-            <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint, placeat.</li>
-            <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint, placeat.</li>
-            <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint, placeat.</li>
+            <?php
+                $i=0;
+                foreach ($arrPeriods as $key => $valuePriods ){
+                    //$valuePriods['time_start']." ".$valuePriods['time_end'];
+            ?>
+            <li style="font-size: 20px;"> <?php echo "Tiết ". ($key + 1) . ": " .$valuePriods['time_start']." - ".$valuePriods['time_end'];?></li>
+            <?php
+                }
+            ?>
+
         </ul>
     </div>
 </div>

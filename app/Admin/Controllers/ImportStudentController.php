@@ -105,6 +105,7 @@ class ImportStudentController extends Controller
         }
         foreach($data as $key => $row) {
             $studentUser = new StudentUser();
+            $idClass = ClassSTU::where('name', $row['lop'])->pluck('id')->first();
             $studentUser->id_class = $idClass;
             $studentUser->code_number = $row['mssv'];
             $studentUser->first_name = $row['ho'];

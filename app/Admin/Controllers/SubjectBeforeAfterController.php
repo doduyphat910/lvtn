@@ -75,7 +75,7 @@ class SubjectBeforeAfterController extends Controller
     {
         return Admin::grid(SubjectBeforeAfter::class, function (Grid $grid) {
 
-//            $grid->id('ID')->sortable();
+           // $grid->id('ID')->sortable();
             $grid->id_subject_before('Môn học trước')->display(function ($idSubjectBefore){
                 if($idSubjectBefore)
                 {
@@ -94,6 +94,9 @@ class SubjectBeforeAfterController extends Controller
                     return '';
                 }
             });
+            // $grid->actions(function($actions){
+            //     $actions->disableEdit();
+            // });
             $grid->created_at('Tạo vào lúc');
             $grid->updated_at('Cập nhật vào lúc');
         });

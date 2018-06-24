@@ -43,7 +43,9 @@ class SubjectRegisterController extends Controller
 
             $content->header('Đăng ký môn học');
             $content->description('Danh sách môn học');
-
+            $content->breadcrumb(
+                ['text' => 'Đăng kí môn học', 'url' => '../user/subject-register']
+            );
             $content->body($this->grid());
         });
     }
@@ -75,12 +77,12 @@ class SubjectRegisterController extends Controller
                 }
                 $field = substr($field, 0, strlen($field) - 1);
                 //get subject user learned
-                $idSubjectRegister = ResultRegister::where('id_user_student', $user->id)->where('is_learned', 1)->pluck('id_subject_register')->toArray();
+                $idSubjectRegister = ResultRegister::where('id_user_student', $user->id)->where('is_learned', 0)->where('is_learned', 1)->pluck('id_subject_register')->toArray();
                 $idSubjectLearned = SubjectRegister::whereIn('id', $idSubjectRegister)->pluck('id_subjects')->toArray();
                 //show subject not learned and subjects in semester in time register (hiển thị các môn chưa học & trong đợt đăng kí đang mở)
                 $grid->model()->whereIn('id', $subjects_id)->whereNotIn('id', $idSubjectLearned)->orderBy(DB::raw('FIELD(id, ' . $field . ')'));
             }
-//             $grid->id('id');
+            //$grid->id('id');
             $grid->subject_code('Mã môn học');
             $grid->name('Tên môn học')->display(function ($name) {
                 return '<a href="/user/subject-register/' . $this->id . '/details"  target="_blank" >' . $name . '</a>';
@@ -89,16 +91,17 @@ class SubjectRegisterController extends Controller
             $grid->credits('Số tín chỉ');
             $grid->credits_fee('Số tín chỉ học phí');
             $grid->column('Nhóm môn')->display(function () {
-                if ($this->id_subject_group) {
-                    if (SubjectGroup::find($this->id_subject_group)) {
-                        $nameGroup = SubjectGroup::find($this->id_subject_group)->name;
-                        return $nameGroup;
+                $subject = Subjects::find($this->id);
+                $nameGroup = $subject->subject_group()->pluck('name')->toArray();
+                $groupSubject = array_map(function ($nameGroup){
+                    if($nameGroup) {
+                        return "<span class='label label-primary'>{$nameGroup}</span>"  ;
                     } else {
                         return '';
                     }
-                } else {
-                    return '';
-                }
+                },$nameGroup);
+                return join('&nbsp;', $groupSubject);
+
             });
             $grid->column('Học kỳ - Năm')->display(function () {
                 $id = $this->id;
@@ -154,7 +157,7 @@ class SubjectRegisterController extends Controller
     {
         return User::grid(SubjectRegister::class, function (Grid $grid) use ($idSubjects) {
             $grid->model()->where('id_Subjects', $idSubjects);
-//             $grid->id('ID')->sortable();
+//            $grid->id('ID');
             $grid->code_subject_register('Mã học phần');
             $grid->id_subjects('Môn học')->display(function ($idSubject) {
                 if ($idSubject) {
@@ -232,16 +235,110 @@ class SubjectRegisterController extends Controller
             $grid->disableExport();
             $grid->disableRowSelector();
             $grid->disableFilter();
-            $grid->actions(function ($actions) {
+            $grid->actions(function ($actions) use ($idSubjects){
                 $actions->disableEdit();
                 $actions->disableDelete();
+                $actions->append('<a href="javascript:void(0);" data-id="' . $this->getKey() . '"  class="btn btn-danger btnCancel" style="display: none;font-size: 1.5rem"><i class="glyphicon glyphicon-trash"></i> &nbsp Hủy bỏ </a>');
+//
+//                $arrIdSubjectsList=SubjectRegister::where('id_subjects',$idSubjects)->pluck('id')->toArray();
+//                $arrIdResultRegister=ResultRegister::get()->pluck('id_subject_register')->toArray();
+                $user = Auth::user();
+                $idUser = $user->id;
+                $timeRegister = TimeRegister::where('status', 1)->orderBy('id', 'DESC')->first();
+                $idTimeRegister = $timeRegister->id;
+                $idSubjectsList=ResultRegister::where('id_subject',$idSubjects)->where('id_user_student', $idUser)->where('time_register', $idTimeRegister)->first();
+
+//                dd($arrIdSubjectsList);
+//                foreach ($arrIdResultRegister as $valueResultRegisters){
+//                    foreach ($arrIdSubjectsList as $valueSubjectRegisters){
+//                        if($valueResultRegisters==$valueSubjectRegisters)
+//                        {
+//                            $valueCK = $valueResultRegisters;
+                if($idSubjectsList) {
+                    $script = <<<SCRIPT
+                             $('.btnRegister').each(function(){
+                                var idRegister =$(this).data('id');
+                                if(idRegister == $idSubjectsList->id_subject_register) {
+//                                    $('[data-id='+idRegister+']').hide();
+                                    $('.btnCancel[data-id='+idRegister+']').css("display", "initial");
+//                                 $('.btnCancel').find('a[data-id='+idRegister+']').css("display", "initial");
+                                }
+                                else {
+                                    $('.btnRegister[data-id='+idRegister+']').css("display", "initial");
+                                }
+                             });
+SCRIPT;
+                    User::script($script);
+                } else {
+                    $script = <<<SCRIPT
+                                    $('.btnRegister').css("display", "initial");
+
+SCRIPT;
+                    User::script($script);
+
+                }
+
+//                        }
+//                    }
+//                }
+
                 //button Register (nút đăng kí)
-                $actions->append('<a href="javascript:void(0);" data-id="' . $this->getKey() . '"  class="btn btn-primary btnRegister"><i class="glyphicon glyphicon-pencil"></i> &nbsp Đăng ký </a>');
+                $actions->append('<a href="javascript:void(0);" data-id="' . $this->getKey() . '"  class="btn btn-primary btnRegister" style="display: none;" ><i class="glyphicon glyphicon-pencil"></i> &nbsp Đăng ký </a>');
+                //$actions->append('<a href="javascript:void(0);" data-id="' . $this->getKey() . '"  class="btn btn-primary btnRegister"><i class="glyphicon glyphicon-pencil"></i> &nbsp Đăng ký </a>');
+
             });
+
             $registerConfirm = trans('Bạn có chắc chắn muốn đăng ký không?');
             $confirm = trans('Đăng ký');
             $cancel = trans('Hủy bỏ');
+            $cancelConfirm = trans('Bạn có chắc chắn muốn hủy không?');
+            $confirmDelete = trans('Hủy đăng ký');
+//            $cancel = trans('Hủy bỏ');
+
             $script = <<<SCRIPT
+$('.btnCancel').unbind('click').click(function() {
+    var id = $(this).data('id');
+    swal({
+      title: "$cancelConfirm",
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#dd4b39",
+      confirmButtonText: "$confirmDelete",
+      closeOnConfirm: false,
+      cancelButtonText: "$cancel"
+    },
+    function(){
+        $.ajax({
+            method: 'get',
+            url: '/user/subject-register/' + id + '/delete-register',
+            data: {
+                _method:'deleteRegister',
+                _token:LA.token,
+            },
+            success: function (data) {
+                if (typeof data === 'object') {
+                    if (data.status) {
+                         swal({
+                              title: "Hủy thành công", 
+                              type: "success"
+                             },function() {
+                              location.reload();
+                             
+                         });
+                    } else {
+                        swal(data.message, '', 'error');
+                    }
+                }
+            }
+        });
+    });
+});
+
+
+
+
+
+
 $('.btnRegister').unbind('click').click(function() {
     var id = $(this).data('id');
     swal({
@@ -279,8 +376,9 @@ $('.btnRegister').unbind('click').click(function() {
         });
     });
 });
+
 SCRIPT;
-            User::script($script);
+                User::script($script);
         });
     }
 
@@ -290,6 +388,10 @@ SCRIPT;
             $subject = Subjects::findOrFail($id);
             $content->header('Môn học');
             $content->description($subject->name);
+            $content->breadcrumb(
+                ['text' => 'Đăng kí môn học', 'url' => '../user/subject-register'],
+                ['text' => $subject->name, 'url' => '../user/subject-register/'.$id.'/deltails']
+            );
             $content->body($this->detailsView($id));
         });
     }
