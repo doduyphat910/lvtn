@@ -3,11 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Timetable extends Model
+class TimeTable extends Model
 {
-    use SoftDeletes;
-
-    protected $table = 'timetable';
+    protected $table = 'time_table';
 }

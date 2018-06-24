@@ -2,7 +2,7 @@
 
 namespace App\Admin\Controllers;
 
-use App\Models\Timetable;
+use App\Models\TimeTable;
 
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -11,7 +11,7 @@ use Encore\Admin\Layout\Content;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\ModelForm;
 
-class TimetableController extends Controller
+class TimeTableController extends Controller
 {
     use ModelForm;
 
@@ -71,7 +71,7 @@ class TimetableController extends Controller
      */
     protected function grid()
     {
-        return Admin::grid(Timetable::class, function (Grid $grid) {
+        return Admin::grid(TimeTable::class, function (Grid $grid) {
 
             $grid->id('ID')->sortable();
 
@@ -87,7 +87,7 @@ class TimetableController extends Controller
      */
     protected function form()
     {
-        return Admin::form(Timetable::class, function (Form $form) {
+        return Admin::form(TimeTable::class, function (Form $form) {
 
             $form->display('id', 'ID');
 

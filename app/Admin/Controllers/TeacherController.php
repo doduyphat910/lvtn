@@ -368,10 +368,25 @@ EOT;
             $grid->mid_term('Điểm giữa kì')->editable();
             $grid->end_term('Điểm cuối kì')->editable();
             $grid->column('Điểm tổng kết')->display(function () {
-                return (($this->attendance * $this->rate_attendance) +
-                        ($this->mid_term * $this->rate_mid_term) +
-                        ($this->end_term * $this->rate_end_term)) / 100;
-            });
+                if(!$this->attendance || !$this->mid_term || !$this->end_term) {
+                    return 'X';
+                } else {
+                    $script = <<<SCRIPT
+                   var interval = setInterval(function() {
+                   var attendance = $('.grid-editable-attendance').text() * $this->rate_attendance ;
+                   var mid_term = $('.grid-editable-mid_term').text() * $this->rate_mid_term;
+                   var end_term = $('.grid-editable-end_term').text() * $this->rate_end_term;
+                      $('.finalPoint').html((attendance + mid_term + end_term)/100);
+                    }, 1500);
+
+SCRIPT;
+                    Admin::script($script);
+                    return (($this->attendance * $this->rate_attendance) +
+                            ($this->mid_term * $this->rate_mid_term) +
+                            ($this->end_term * $this->rate_end_term)) / 100;
+                }
+
+            })->setAttributes(['class'=>'finalPoint']);
 
 
 //            $grid->created_at('Tạo vào lúc');
@@ -398,13 +413,6 @@ EOT;
                     $tools->append('<a href="/admin/teacher/'. $idSubjectRegister .'/import-all" class="btn btn-info btn-sm btn-import-all"><i class="fa fa-sign-in"></i> Import điểm SV</a>');
                 }
             });
-//            $script = <<<SCRIPT
-//                    $(".editable-submit").on("click", function(){
-//                        location.reload();
-//                    });
-//
-//SCRIPT;
-//            Admin::script($script);
         });
     }
 
