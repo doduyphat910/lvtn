@@ -95,6 +95,7 @@ Route::group([
     $router->get('teacher/{id}/import-attendance','ImportPointController@attendance');
 
     //export point
+    $router->get('teacher/{id}/export-all','ImportPointController@exportAll');
     $router->get('teacher/{id}/export-attendance','ImportPointController@exportAttendance');
     $router->get('teacher/{id}/export-midterm','ImportPointController@exportMidterm');
     $router->get('teacher/{id}/export-endterm','ImportPointController@exportEndterm');
@@ -108,6 +109,11 @@ Route::group([
     $router->post('teacher/import-endterm/parse','ImportPointController@parseEndterm');
     $router->post('teacher/import-endterm/review','ImportPointController@reviewEndterm');
     $router->get('teacher/{id}/import-endterm','ImportPointController@endTerm');
+
+    //import point all
+    $router->post('teacher/import-all/parse','ImportPointController@parseAll');
+    $router->post('teacher/import-all/review','ImportPointController@reviewAll');
+    $router->get('teacher/{id}/import-all','ImportPointController@all');
 
 }
 

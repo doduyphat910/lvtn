@@ -60,6 +60,11 @@
                         $currentPath = Route::getFacadeRoot()->current()->uri();
                     @endphp
                         @switch($currentPath)
+                            @case("admin/teacher/{id}/import-all")
+                            <a href="/admin/teacher/{{$idSubjectRegister}}/export-all" download src='file' target='_blank'>
+                                Tải danh sách sinh viên hiện tại
+                            </a>
+                            @break
                             @case("admin/teacher/{id}/import-endterm")
                             <a href="/admin/teacher/{{$idSubjectRegister}}/export-endterm" download src='file' target='_blank'>
                                 Tải danh sách sinh viên hiện tại
