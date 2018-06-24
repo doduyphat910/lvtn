@@ -54,8 +54,14 @@
         font-family: "Times New Roman";
     }
     .bg-aqua, .callout.callout-info, .alert-info, .label-info, .modal-info .modal-body {
-        background-color: #00c0ef !important;
-        font-size: 1.5rem;
+        background-color: #3c8dbc !important;
+        font-size: 1rem;
+
+    }
+    .bg-light-blue, .label-primary, .modal-primary .modal-body {
+        background-color: #3b5998 !important;
+        color: black;
+        font-size: 1rem;
     }
 </style>
 </head>

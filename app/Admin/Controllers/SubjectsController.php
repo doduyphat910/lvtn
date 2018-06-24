@@ -133,7 +133,7 @@ class SubjectsController extends Controller
             });
             $grid->column('Tỷ lệ giữa kì')->display(function (){
                 if($this->id_rate) {
-                    return Rate::find($this->id_rate)->midterm;
+                    return Rate::find($this->id_rate)->mid_term;
                 } else {
                     return '';
                 }
@@ -169,13 +169,13 @@ class SubjectsController extends Controller
             });
             $form->text('name','Tên môn học')->rules('required');
             $form->number('credits','Tín chỉ')->rules('integer|min:1|max:6');
-            $form->number('credits_fee', 'Tín chỉ học phí')->rules('integer|min:1|max:12');
+            $form->number('credits_fee', 'Tín chỉ học phí')->rules('integer|min:1|max:15');
 //            $form->select('id_semester', 'Học kỳ')->options(Semester::all()->pluck('name', 'id'));
             $form->multipleSelect('subject_group', 'Nhóm môn')->options(SubjectGroup::all()->pluck('name', 'id'))->rules('required');
             $rates = Rate::all();
             $arrayRate = [];
             foreach($rates as $rate) {
-                $arrayRate += [$rate['id'] => $rate['attendance'] . '-'.  $rate['midterm'] .'-' .$rate['end_term']];
+                $arrayRate += [$rate['id'] => $rate['attendance'] . '-'.  $rate['mid_term'] .'-' .$rate['end_term']];
             }
             $form->select('id_rate', 'Tỷ lệ điểm')->options($arrayRate)->rules('required');
             $form->display('created_at', 'Created At');

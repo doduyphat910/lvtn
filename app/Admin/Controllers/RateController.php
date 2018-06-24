@@ -84,7 +84,7 @@ class RateController extends Controller
                 return  '<a href="/admin/rate/' . $this->id . '/details">'.$name.'</a>';
             });
             $grid->attendance('Chuyên cần');
-            $grid->midterm('Giữa kì');
+            $grid->mid_term('Giữa kì');
             $grid->end_term('Cuối kì');
             $grid->actions(function ($actions) {
                 $actions->append('<a href="/admin/rate/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
@@ -105,12 +105,12 @@ class RateController extends Controller
             $form->display('id', 'ID');
             $form->text('name', 'Tên tỷ lệ')->rules('required');
             $form->number('attendance', 'Tỉ lệ điểm chuyên cần')->rules('integer|max:30')->rules('integer|min:0');
-            $form->number('midterm', 'Tỉ lệ điểm giữa kì')->rules('integer|max:50')->rules('integer|min:0');
+            $form->number('mid_term', 'Tỉ lệ điểm giữa kì')->rules('integer|max:50')->rules('integer|min:0');
             $form->number('end_term', 'Tỉ lệ điểm cuối kì')->rules('integer|max:100')->rules('integer|min:50');
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
             $form->saving(function (Form $form){
-                if($form->attendance + $form->midterm + $form->end_term != 100){
+                if($form->attendance + $form->mid_term + $form->end_term != 100){
                     $error = new MessageBag([
                         'title'   => 'Lỗi',
                         'message' => 'Tỷ lệ điểm không đủ 100%',

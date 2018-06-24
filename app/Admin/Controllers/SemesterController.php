@@ -104,8 +104,8 @@ class SemesterController extends Controller
 
             });
 
-            $grid->time_start('Thời gian bắt đầu');
-            $grid->time_end('Thời gian kết thúc');
+            // $grid->time_start('Thời gian bắt đầu');
+            // $grid->time_end('Thời gian kết thúc');
             $grid->actions(function ($actions) {
                 $actions->append('<a href="/admin/semester/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
             });
@@ -222,8 +222,8 @@ class SemesterController extends Controller
             });
             $grid->qty_current('Số lượng hiện tại');
 
-            $grid->date_start('Ngày bắt đầu');
-            $grid->date_end('Ngày kết thúc');
+            // $grid->date_start('Ngày bắt đầu');
+            // $grid->date_end('Ngày kết thúc');
 
             $grid->created_at('Tạo vào lúc');
             $grid->updated_at('Cập nhật vào lúc');
@@ -262,8 +262,8 @@ class SemesterController extends Controller
 //                $form->hidden('credits_min')->value(10);
 //                $form->hidden('credits_max')->value(28);
 //            }
-            $form->date('time_start', 'Ngày bắt đầu')->attribute(['data-date-min-date' => date("Y-m-d")])->rules('required');
-            $form->date('time_end', 'Ngày kết thúc')->attribute(['data-date-min-date' => date("Y-m-d")])->rules('required');
+            // $form->date('time_start', 'Ngày bắt đầu')->attribute(['data-date-min-date' => date("Y-m-d")])->rules('required');
+            // $form->date('time_end', 'Ngày kết thúc')->attribute(['data-date-min-date' => date("Y-m-d")])->rules('required');
 //            $states = [
 //                'on'  => ['value' => 1, 'text' => 'Mở', 'color' => 'success'],
 //                'off' => ['value' => 0, 'text' => 'Đóng', 'color' => 'danger'],

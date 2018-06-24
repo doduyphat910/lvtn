@@ -77,7 +77,7 @@ class SubjectRegisterController extends Controller
                 }
                 $field = substr($field, 0, strlen($field) - 1);
                 //get subject user learned
-                $idSubjectRegister = ResultRegister::where('id_user_student', $user->id)->where('is_learned', 1)->pluck('id_subject_register')->toArray();
+                $idSubjectRegister = ResultRegister::where('id_user_student', $user->id)->where('is_learned', 0)->where('is_learned', 1)->pluck('id_subject_register')->toArray();
                 $idSubjectLearned = SubjectRegister::whereIn('id', $idSubjectRegister)->pluck('id_subjects')->toArray();
                 //show subject not learned and subjects in semester in time register (hiển thị các môn chưa học & trong đợt đăng kí đang mở)
                 $grid->model()->whereIn('id', $subjects_id)->whereNotIn('id', $idSubjectLearned)->orderBy(DB::raw('FIELD(id, ' . $field . ')'));
@@ -91,16 +91,17 @@ class SubjectRegisterController extends Controller
             $grid->credits('Số tín chỉ');
             $grid->credits_fee('Số tín chỉ học phí');
             $grid->column('Nhóm môn')->display(function () {
-                if ($this->id_subject_group) {
-                    if (SubjectGroup::find($this->id_subject_group)) {
-                        $nameGroup = SubjectGroup::find($this->id_subject_group)->name;
-                        return $nameGroup;
+                $subject = Subjects::find($this->id);
+                $nameGroup = $subject->subject_group()->pluck('name')->toArray();
+                $groupSubject = array_map(function ($nameGroup){
+                    if($nameGroup) {
+                        return "<span class='label label-primary'>{$nameGroup}</span>"  ;
                     } else {
                         return '';
                     }
-                } else {
-                    return '';
-                }
+                },$nameGroup);
+                return join('&nbsp;', $groupSubject);
+
             });
             $grid->column('Học kỳ - Năm')->display(function () {
                 $id = $this->id;
