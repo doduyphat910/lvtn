@@ -38,6 +38,12 @@ Route::group(['prefix'=>'user', 'middleware'=>'studentLogin'], function(Router $
         //API delete result register
         $router->get('subject-register/{id}/delete-register', 'APIController@deleteRegister');
 
+        //API check subject before-after
+        $router->get('subject-register/{id}/checkBeforeAtfer', 'APIController@checkBeforeAtfer');
+
+        //API check subject parallel
+        $router->get('subject-register/{id}/checkParallel', 'APIController@checkParallel');
+
     });
 });
 
