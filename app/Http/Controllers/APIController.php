@@ -7,6 +7,8 @@ use App\Models\ResultRegister;
 use App\Models\SubjectRegister;
 use App\Models\Subjects;
 use App\Models\TimeRegister;
+use App\Models\SubjectBeforeAfter;
+use App\Models\SubjectParallel;
 use App\Models\TimeStudy;
 use App\Models\UserAdmin;
 use Illuminate\Http\Request;
@@ -170,6 +172,42 @@ class APIController extends Controller {
                     ]);
                 }
             }
+    }
+    public function checkBeforeAtfer(Request $request){
+        $idSubject = $request->id;
+        $user = Auth::user();
+        $idUser = $user->id;
+        $idSubjectBefore=SubjectBeforeAfter::where('id_subject_after',$idSubject)->pluck('id_subject_before')->toArray();
+        if(count($idSubjectBefore) >0) {
+                    $nameSubjectBefore=Subjects::where('id',$idSubjectBefore)->first();
+                   $countSubjectBefore=ResultRegister::where('id_user_student', $idUser)->where('id_subject',$idSubjectBefore)->where('is_learned', 1)->get()->count();
+            if($countSubjectBefore==0){
+             return response()->json([
+                        'status'  => false,
+                        'message' => trans('Bạn phải học '.$nameSubjectBefore->name.' trước'),
+                    ]);
+            } 
+        }
+        
+    }
+    public function checkParallel(Request $request){
+        $idSubject = $request->id;
+        $user = Auth::user();
+        $idUser = $user->id;
+        $idSubject1=SubjectParallel::where('id_subject2',$idSubject)->pluck('id_subject1')->toArray();
+        if(count($idSubject1) >0) {
+            $nameSubjectParallel=Subjects::where('id',$idSubject1)->first();
+            $countIsLearned2 = ResultRegister::where('id_user_student', $idUser)->where('id_subject',$idSubject1)->where('is_learned', 2)->get()->count();
+            $countIsLearned1 = ResultRegister::where('id_user_student', $idUser)->where('id_subject',$idSubject1)->where('is_learned', 1)->get()->count();
+            if($countIsLearned2 > 0 || $countIsLearned1 > 0 ){
+
+            } else {
+                return response()->json([
+                    'status'  => false,
+                    'message' => trans('Bạn phải đăng ký môn '.$nameSubjectParallel->name.' trước'),
+                ]);
+            }
+        }
     }
 
 }

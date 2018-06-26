@@ -130,7 +130,7 @@
     </nav>
 </header>
 
-<script>
+{{-- <script>
     $(document).ready(function(){
         // $('.nav.navbar-nav li').on('click', function(){
         //      $('#navbar a').removeClass('active');
@@ -149,4 +149,4 @@
         });
 
     });
-</script>
+</script> --}}

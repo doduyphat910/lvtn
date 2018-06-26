@@ -77,7 +77,7 @@ class SubjectRegisterController extends Controller
                 }
                 $field = substr($field, 0, strlen($field) - 1);
                 //get subject user learned
-                $idSubjectRegister = ResultRegister::where('id_user_student', $user->id)->where('is_learned', 0)->where('is_learned', 1)->pluck('id_subject_register')->toArray();
+                $idSubjectRegister = ResultRegister::where('id_user_student', $user->id)->where('is_learned', 1)->pluck('id_subject_register')->toArray();
                 $idSubjectLearned = SubjectRegister::whereIn('id', $idSubjectRegister)->pluck('id_subjects')->toArray();
                 //show subject not learned and subjects in semester in time register (hiển thị các môn chưa học & trong đợt đăng kí đang mở)
                 $grid->model()->whereIn('id', $subjects_id)->whereNotIn('id', $idSubjectLearned)->orderBy(DB::raw('FIELD(id, ' . $field . ')'));
@@ -126,8 +126,43 @@ class SubjectRegisterController extends Controller
                 return join('&nbsp;', $name);
             });
             $grid->column('Đăng ký')->display(function () {
-                return '<a href="/user/subject-register/' . $this->id . '/details"  target="_blank" class="btn btn-md" ><i class="glyphicon glyphicon-pencil"></i></a>';
+                return '<a href="/user/subject-register/' . $this->id . '/details" data-id='.$this->id.'  target="_blank" class="btn btn-md btnACV" ><i class="glyphicon glyphicon-pencil"></i></a>';
             });
+//            $script = <<<SCRIPT
+//                 $('.btnACV').click(function(e) {
+//                    var id = $(this).data('id');
+
+//             $.ajax({
+//                 method: 'get',
+//                 url: '/user/subject-register/' + id + '/checkBeforeAtfer',
+//                 data: {
+//                     _method:'checkBeforeAtfer',
+//                     _token:LA.token,
+//                 },
+//                 success: function (data) {
+//                     if (typeof data === 'object') {
+//                         if (data.status == false) {
+//                              swal({
+//                                   type: "error",
+//                                   title:"Thông báo",
+//                                   text: data.message,
+//                                  },function() {
+//                                     var href = $('.btnACV').attr('href');
+//                                   $('.btnACV').attr('href', 'javascript:void(0);');
+//                                   $('.btnACV').attr('target', '_self');
+
+//                              });
+//                         } 
+//                     }
+//                 }
+//             });
+
+//         });
+
+// SCRIPT;
+//                     User::script($script);
+
+
 
             $grid->disableCreateButton();
             $grid->disableExport();
@@ -156,6 +191,58 @@ class SubjectRegisterController extends Controller
     protected function gridSubjectRegister($idSubjects)
     {
         return User::grid(SubjectRegister::class, function (Grid $grid) use ($idSubjects) {
+             $script = <<<SCRIPT
+        
+    // check subject Before After
+
+            $.ajax({
+                method: 'get',
+                url: '/user/subject-register/$idSubjects/checkBeforeAtfer',
+                data: {
+                    _method:'checkBeforeAtfer',
+                    _token:LA.token,
+                },
+                success: function (data) {
+                    if (typeof data === 'object') {
+                        if (data.status == false) {
+                             swal({
+                                  type: 'error',
+                                  title:'Thông báo',
+                                  text: data.message,
+                                 },function() {
+                                    window.location.href= ('../../../user/subject-register');
+                             });
+                        } 
+                    }
+                }
+            });
+
+    //check subject parallel 
+
+            $.ajax({
+                method: 'get',
+                url: '/user/subject-register/$idSubjects/checkParallel',
+                data: {
+                    _method:'checkParallel',
+                    _token:LA.token,
+                },
+                success: function (data) {
+                    if (typeof data === 'object') {
+                        if (data.status == false) {
+                             swal({
+                                  type: 'error',
+                                  title:'Thông báo',
+                                  text: data.message,
+                                 },function() {
+                                    window.location.href= ('../../../user/subject-register');
+                             });
+                        } 
+                    }
+                }
+            });
+
+SCRIPT;
+                    User::script($script);
             $grid->model()->where('id_Subjects', $idSubjects);
 //            $grid->id('ID');
             $grid->code_subject_register('Mã học phần');
@@ -283,8 +370,12 @@ SCRIPT;
 //                }
 
                 //button Register (nút đăng kí)
-                $actions->append('<a href="javascript:void(0);" data-id="' . $this->getKey() . '"  class="btn btn-primary btnRegister" style="display: none;" ><i class="glyphicon glyphicon-pencil"></i> &nbsp Đăng ký </a>');
-                //$actions->append('<a href="javascript:void(0);" data-id="' . $this->getKey() . '"  class="btn btn-primary btnRegister"><i class="glyphicon glyphicon-pencil"></i> &nbsp Đăng ký </a>');
+                $actions->append('<a href="javascript:void(0);" data-id="' . $this->getKey() . '"  class="btn btn-primary btnRegister" style="display: none;"  ><i class="glyphicon glyphicon-pencil"></i> &nbsp Đăng ký </a>');
+          
+
+                    
+
+                
 
             });
 
