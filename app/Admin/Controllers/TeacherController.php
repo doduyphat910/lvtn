@@ -90,11 +90,11 @@ class TeacherController extends Controller
             $idUser = $user->id;
             $grid->model()->where('id_user_teacher', $idUser);
 //            $grid->id('ID')->sortable();
-            $grid->name('Tên lớp')->display(function ($name){
-                return '<a href="/admin/teacher/class/' . $this->id . '/details">'.$name.'</a>';
+            $grid->name('Tên lớp')->display(function ($name) {
+                return '<a href="/admin/teacher/class/' . $this->id . '/details">' . $name . '</a>';
             });
-            $grid->id_department('Tên khoa')->display(function ($idDepartment){
-                if($idDepartment) {
+            $grid->id_department('Tên khoa')->display(function ($idDepartment) {
+                if ($idDepartment) {
                     return Department::find($idDepartment)->name;
                 } else {
                     return '';
@@ -119,13 +119,13 @@ class TeacherController extends Controller
             $grid->code_number('Mã số sinh viên');
 //            $grid->avatar('Avatar')->image();
             $grid->first_name('Họ');
-            $grid->last_name('Tên')->display(function ($name){
-                return  '<a href="/admin/student_user/' . $this->id . '/details">'.$name.'</a>';
+            $grid->last_name('Tên')->display(function ($name) {
+                return '<a href="/admin/student_user/' . $this->id . '/details">' . $name . '</a>';
             });
             $grid->username('Tên đăng nhập');
             $grid->email('Email');
-            $grid->id_class('Lớp')->display(function ($idClass){
-                if($idClass){
+            $grid->id_class('Lớp')->display(function ($idClass) {
+                if ($idClass) {
                     return ClassSTU::find($idClass)->name;
                 } else {
                     return 'Không có';
@@ -145,6 +145,7 @@ class TeacherController extends Controller
             $grid->disableRowSelector();
         });
     }
+
     /**
      * Make a form builder.
      *
@@ -153,8 +154,8 @@ class TeacherController extends Controller
     protected function form()
     {
         return Admin::form(ClassSTU::class, function (Form $form) {
-            $form->text('name', 'Tên lớp')->rules(function ($form){
-                return 'required|unique:class,name,'.$form->model()->id.',id';
+            $form->text('name', 'Tên lớp')->rules(function ($form) {
+                return 'required|unique:class,name,' . $form->model()->id . ',id';
             })->readOnly();
             $form->select('id_department', 'Tên khoa')->options(Department::all()->pluck('name', 'id'))->rules('required')->readOnly();
             $form->disableReset();
@@ -162,7 +163,8 @@ class TeacherController extends Controller
     }
 
 
-    public function details($id){
+    public function details($id)
+    {
         return Admin::content(
             function (Content $content) use ($id) {
                 $class = ClassSTU::findOrFail($id);
@@ -172,7 +174,8 @@ class TeacherController extends Controller
             });
     }
 
-    public function detailsView($id) {
+    public function detailsView($id)
+    {
         $form = $this->form()->view($id);
         $gridStudent = $this->gridStudent($id);
         return view('vendor.details',
@@ -202,11 +205,11 @@ class TeacherController extends Controller
             $idUser = $user->id;
             $grid->model()->where('id_user_teacher', $idUser);
 //            $grid->id('ID')->sortable();
-            $grid->code_subject_register('Mã học phần')->display(function ($name){
-                return  '<a href="/admin/teacher/subject-register/' . $this->id . '/details">'.$name.'</a>';
+            $grid->code_subject_register('Mã học phần')->display(function ($name) {
+                return '<a href="/admin/teacher/subject-register/' . $this->id . '/details">' . $name . '</a>';
             });
-            $grid->id_subjects('Môn học')->display(function ($idSubject){
-                if($idSubject){
+            $grid->id_subjects('Môn học')->display(function ($idSubject) {
+                if ($idSubject) {
                     $name = Subjects::find($idSubject)->name;
                     return "<span class='label label-info'>{$name}</span>";
                 } else {
@@ -214,10 +217,10 @@ class TeacherController extends Controller
                 }
             });
 
-            $grid->id_user_teacher('Giảng viên')->display(function ($id_user_teacher){
-                if($id_user_teacher){
+            $grid->id_user_teacher('Giảng viên')->display(function ($id_user_teacher) {
+                if ($id_user_teacher) {
                     $teacher = UserAdmin::find($id_user_teacher);
-                    if($teacher){
+                    if ($teacher) {
                         return $teacher->name;
                     } else {
                         return '';
@@ -247,7 +250,8 @@ class TeacherController extends Controller
         });
     }
 
-    public function detailsSubjectRegister($id){
+    public function detailsSubjectRegister($id)
+    {
         return Admin::content(
             function (Content $content) use ($id) {
                 $class = SubjectRegister::findOrFail($id);
@@ -257,7 +261,8 @@ class TeacherController extends Controller
             });
     }
 
-    public function detailsViewSubjectRegister($id) {
+    public function detailsViewSubjectRegister($id)
+    {
         $formSubjectRegister = $this->formSubjectRegister()->view($id);
         $gridStudentSubject = $this->gridStudentSubject($id);
         return view('vendor.details',
@@ -312,36 +317,36 @@ EOT;
             $idUser = $user->id;
             $grid->model()->where('id_subject_register', $idSubjectRegister);
 //            $grid->id('ID')->sortable();
-            $grid->column('MSSV')->display(function (){
-                if(StudentUser::find($this->id_user_student)->code_number) {
+            $grid->column('MSSV')->display(function () {
+                if (StudentUser::find($this->id_user_student)->code_number) {
                     return StudentUser::find($this->id_user_student)->code_number;
                 } else {
                     return '';
                 }
             });
-            $grid->column('Họ')->display(function (){
-                if(StudentUser::find($this->id_user_student)->first_name) {
+            $grid->column('Họ')->display(function () {
+                if (StudentUser::find($this->id_user_student)->first_name) {
                     return StudentUser::find($this->id_user_student)->first_name;
                 } else {
                     return '';
                 }
             });
-            $grid->id_user_student('Tên')->display(function ($idStudent){
-                if(StudentUser::find($idStudent)->last_name) {
+            $grid->id_user_student('Tên')->display(function ($idStudent) {
+                if (StudentUser::find($idStudent)->last_name) {
                     return StudentUser::find($idStudent)->last_name;
                 } else {
                     return '';
                 }
             });
-            $grid->id_subject_register('Mã HP')->display(function ($idSubjectRegister){
-                if(SubjectRegister::find($idSubjectRegister)->code_subject_register) {
+            $grid->id_subject_register('Mã HP')->display(function ($idSubjectRegister) {
+                if (SubjectRegister::find($idSubjectRegister)->code_subject_register) {
                     return SubjectRegister::find($idSubjectRegister)->code_subject_register;
                 } else {
                     return '';
                 }
             });
-            $grid->id_subject('Môn')->display(function ($idSubject){
-                if(Subjects::find($idSubject)->name) {
+            $grid->id_subject('Môn')->display(function ($idSubject) {
+                if (Subjects::find($idSubject)->name) {
                     return Subjects::find($idSubject)->name;
                 } else {
                     return '';
@@ -354,15 +359,35 @@ EOT;
 //                    return '';
 //                }
 //            });
-            $grid->column('Lớp')->display(function (){
+            $grid->column('Lớp')->display(function () {
                 $idClass = StudentUser::find($this->id_user_student)->id_class;
                 $name = ClassSTU::find($idClass)->name;
                 return "<span class='label label-info'>{$name}</span>";
             });
             $grid->attendance('Điểm chuyên cần')->editable();
-            $grid->mid_term('Điểm giữa kì');
-            $grid->end_term('Điểm cuối kì');
-            $grid->final('Điểm tổng kết');
+            $grid->mid_term('Điểm giữa kì')->editable();
+            $grid->end_term('Điểm cuối kì')->editable();
+            $grid->column('Điểm tổng kết')->display(function () {
+                if(!$this->attendance || !$this->mid_term || !$this->end_term) {
+                    return 'X';
+                } else {
+                    $script = <<<SCRIPT
+                   var interval = setInterval(function() {
+                   var attendance = $('.grid-editable-attendance').text() * $this->rate_attendance ;
+                   var mid_term = $('.grid-editable-mid_term').text() * $this->rate_mid_term;
+                   var end_term = $('.grid-editable-end_term').text() * $this->rate_end_term;
+                      $('.finalPoint').html((attendance + mid_term + end_term)/100);
+                    }, 1500);
+
+SCRIPT;
+                    Admin::script($script);
+                    return (($this->attendance * $this->rate_attendance) +
+                            ($this->mid_term * $this->rate_mid_term) +
+                            ($this->end_term * $this->rate_end_term)) / 100;
+                }
+
+            })->setAttributes(['class'=>'finalPoint']);
+
 
 //            $grid->created_at('Tạo vào lúc');
 //            $grid->updated_at('Cập nhật vào lúc');
@@ -370,26 +395,24 @@ EOT;
             $grid->disableCreateButton();
             $grid->disableExport();
             $grid->disableRowSelector();
-            $grid->tools(function ($tools) use ($idSubjectRegister){
-                $idTimeRegister = ResultRegister::where('id_subject_register',$idSubjectRegister)->pluck('time_register');
+            $grid->tools(function ($tools) use ($idSubjectRegister) {
+                $idTimeRegister = ResultRegister::where('id_subject_register', $idSubjectRegister)->pluck('time_register');
                 $statusImport = TimeRegister::find($idTimeRegister)->first();
                 $statusImport = $statusImport->status_import;
 
-                if(in_array('1',$statusImport))
-                {
-                    $tools->append('<a href="/admin/teacher/'.$idSubjectRegister.'/import-attendance" class="btn btn-info btn-sm btn-import-attendance"><i class="fa fa-sign-in"></i> Import điểm chuyên cần</a>');
+                if (in_array('1', $statusImport)) {
+                    $tools->append('<a href="/admin/teacher/' . $idSubjectRegister . '/import-attendance" class="btn btn-info btn-sm btn-import-attendance"><i class="fa fa-sign-in"></i> Import điểm chuyên cần</a>');
                 }
-                if (in_array('2',$statusImport)) {
-                    $tools->append("<a href='/admin/teacher/import-midterm' class='btn btn-info btn-sm btn-import-midterm'><i class='fa fa-sign-in'></i> Import điểm giữa kì</a>");
+                if (in_array('2', $statusImport)) {
+                    $tools->append('<a href="/admin/teacher/' . $idSubjectRegister . '/import-midterm" class="btn btn-info btn-sm btn-import-midterm"><i class="fa fa-sign-in"    ></i> Import điểm giữa kì</a>');
                 }
-                if (in_array('3',$statusImport)) {
-                    $tools->append("<a href='/admin/teacher/import-endterm' class='btn btn-info btn-sm btn-import-endterm'><i class='fa fa-sign-in'></i> Import điểm cuối kì</a>");
+                if (in_array('3', $statusImport)) {
+                    $tools->append('<a href="/admin/teacher/' . $idSubjectRegister . '/import-endterm" class="btn btn-info btn-sm btn-import-endterm"><i class="fa fa-sign-in"></i> Import điểm cuối kì</a>');
                 }
-                if (in_array('All',$statusImport)) {
-                    $tools->append("<a href='/admin/teacher/import-all' class='btn btn-info btn-sm btn-import-all'><i class='fa fa-sign-in'></i> Import điểm SV</a>");
+                if (in_array('All', $statusImport)) {
+                    $tools->append('<a href="/admin/teacher/'. $idSubjectRegister .'/import-all" class="btn btn-info btn-sm btn-import-all"><i class="fa fa-sign-in"></i> Import điểm SV</a>');
                 }
             });
-
         });
     }
 

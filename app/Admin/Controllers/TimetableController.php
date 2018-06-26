@@ -2,9 +2,8 @@
 
 namespace App\Admin\Controllers;
 
-use App\Models\Point;
+use App\Models\TimeTable;
 
-use App\Models\ResultRegister;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Facades\Admin;
@@ -12,7 +11,7 @@ use Encore\Admin\Layout\Content;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\ModelForm;
 
-class PointController extends Controller
+class TimeTableController extends Controller
 {
     use ModelForm;
 
@@ -72,7 +71,7 @@ class PointController extends Controller
      */
     protected function grid()
     {
-        return Admin::grid(ResultRegister::class, function (Grid $grid) {
+        return Admin::grid(TimeTable::class, function (Grid $grid) {
 
             $grid->id('ID')->sortable();
 
@@ -88,23 +87,12 @@ class PointController extends Controller
      */
     protected function form()
     {
-        return Admin::form(ResultRegister::class, function (Form $form) {
+        return Admin::form(TimeTable::class, function (Form $form) {
 
             $form->display('id', 'ID');
-            $form->number('attendance', 'Điểm chuyên cần')->rules('numeric|min:0|max:10');
-            $form->number('mid_term', 'Điểm giữa kì')->rules('numeric|min:0|max:10');
-            $form->number('end_term', 'Điểm cuối kì')->rules('numeric|min:0|max:10');
-//            $form->number('final', 'Điểm tổng kết')->rules('numeric|min:0|max:10');
-            $form->number('rate_attendance', 'Tỉ lệ điểm chuyên cần');
-            $form->number('rate_mid_term', 'Tỉ lệ điểm giữa kì');
-            $form->number('rate_end_term', 'Tỉ lệ điểm cuối kì');
+
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
-//            $form->saving(function (Form $form){
-//                $form->final = (($form->attendance*$form->model()->rate_attendance) +
-//                                ($form->mid_term*$form->model()->rate_mid_term) +
-//                                ($form->end_term*$form->model()->rate_end_term))/100;
-//            });
         });
     }
 }

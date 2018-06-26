@@ -162,7 +162,7 @@ class TimeRegisterController extends Controller
                 });
             });
 EOT;
-//            Admin::script($script);
+            Admin::script($script);
             $form->saving(function (Form $form) {
                 if($form->school_year['0'] == "0" || $form->school_year['0'] == null  ) {
                     $form->school_year = 'All';

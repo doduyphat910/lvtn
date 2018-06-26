@@ -125,7 +125,7 @@ class APIController extends Controller {
             $resultRegister->attendance = null;
             $resultRegister->mid_term = null;
             $resultRegister->end_term = null;
-            $resultRegister->final = null;
+//            $resultRegister->final = null;
             //get rate now
             $subjectRegister = SubjectRegister::find($idSubjecRegister);
             $subjectId = $subjectRegister->id_subjects;
