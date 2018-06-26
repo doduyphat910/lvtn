@@ -59,10 +59,12 @@ $arrPeriods = collect($arrPeriods)->map(function($x){ return (array) $x; })->toA
                     if (!empty($idSubject)) {
                         $idSubject = $idSubject->id_subjects;
                         $isExisted = false;
-                        foreach ($arrayTable[$key] as $pSubKey => $item) {
-                            if (isset($item[$idSubject])) {
-                                $arrayTable[$key][$pSubKey][$idSubject] = $arrayTable[$key][$pSubKey][$idSubject] + 1;
-                                $isExisted = true;
+                        if(isset($arrayTable[$key])) {
+                            foreach ($arrayTable[$key] as $pSubKey => $item) {
+                                if (isset($item[$idSubject])) {
+                                    $arrayTable[$key][$pSubKey][$idSubject] = $arrayTable[$key][$pSubKey][$idSubject] + 1;
+                                    $isExisted = true;
+                                }
                             }
                         }
                         if (!$isExisted) {

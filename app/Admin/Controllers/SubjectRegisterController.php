@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Models\Classroom;
+use App\Models\TimeTable;
 use App\Models\UserAdmin;
 use App\Models\SubjectRegister;
 
@@ -205,8 +206,10 @@ EOT;
                 $options = ['2'=>'Thứ 2', '3'=>'Thứ 3', '4'=>'Thứ 4', '5'=>'Thứ 5', '6'=>'Thứ 6', '7'=>'Thứ 7', '8'=>'Chủ nhật'];
                 $form->select('day', 'Ngày học')->options($options);
                 $form->select('id_classroom', 'Phòng học')->options(Classroom::all()->pluck('name', 'id'))->rules('required');
-                $form->time('time_study_start', 'Giờ học bắt đầu');
-                $form->time('time_study_end', 'Giờ học kết thúc');
+                $timeStart = Timetable::all()->pluck('time_start', 'time_start' );
+                $timeEnd = Timetable::all()->pluck('time_end', 'time_end' );
+                $form->select('time_study_start', 'Giờ học bắt đầu')->options($timeStart);
+                $form->select('time_study_end', 'Giờ học kết thúc')->options($timeEnd);
             })->rules('required');
             $form->hidden('id_semester');
             $form->saving(function (Form $form){

@@ -13,6 +13,7 @@ use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\ModelForm;
 use App\Models\Semester;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\MessageBag;
 
 class TimeRegisterController extends Controller
 {
@@ -169,6 +170,16 @@ EOT;
                 }
                 if($form->status_import['0'] == 'All' || $form->status_import['0'] == '1' && $form->status_import['1'] == '2' && $form->status_import['2'] == '3'){
                     $form->status_import = 'All';
+                }
+                if($form->status == 'on' ) {
+                    $countStatusActive = TimeRegister::where('status', 1)->get()->count();
+                    if($countStatusActive > 0) {
+                        $error = new MessageBag([
+                            'title'   => 'Lỗi',
+                            'message' => 'Có đợt đăng ký đang mở',
+                        ]);
+                        return back()->with(compact('error'));
+                    }
                 }
             });
             $currentPath = Route::getFacadeRoot()->current()->uri();

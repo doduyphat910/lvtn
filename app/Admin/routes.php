@@ -78,6 +78,9 @@ Route::group([
     //notifications
     $router->resource('notifications',NotificationsController::class);
 
+    //time-table
+    $router->resource('time-table',TimeTableController::class);
+
     //router teacher
     //point
     $router->resource('teacher/point',PointController::class);
@@ -88,6 +91,10 @@ Route::group([
     ///list subject-register
     $router->get('teacher/subject-register/{id}/details','TeacherController@detailsSubjectRegister')->middleware('teacher');
     $router->get('teacher/subject-register','TeacherController@subjectRegister');
+    //list history subject-register of teacher
+    $router->get('teacher/history-subject-register/{id}/details','TeacherHistoryController@details');
+    $router->resource('teacher/history-subject-register/',TeacherHistoryController::class);
+
 
     //import point attendance
     $router->post('teacher/import-attendance/parse','ImportPointController@parseAttendance');
