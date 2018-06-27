@@ -10,6 +10,7 @@ use Encore\Admin\Facades\Admin;
 use Encore\Admin\Layout\Content;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\ModelForm;
+use Illuminate\Support\MessageBag;
 
 class TimeTableController extends Controller
 {
@@ -24,8 +25,8 @@ class TimeTableController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('header');
-            $content->description('description');
+            $content->header('Phòng, tiết học');
+            $content->description('Tiết học');
 
             $content->body($this->grid());
         });
@@ -74,7 +75,11 @@ class TimeTableController extends Controller
         return Admin::grid(TimeTable::class, function (Grid $grid) {
 
             $grid->id('ID')->sortable();
-
+            $grid->period('Tiết học')->display(function ($period) {
+                return '<a href="#" >'.$period.'</a>';
+            });
+            $grid->time_start('Thời gian bắt đầu');
+            $grid->time_end('Thời gian kết thúc');
             $grid->created_at();
             $grid->updated_at();
         });
@@ -90,7 +95,19 @@ class TimeTableController extends Controller
         return Admin::form(TimeTable::class, function (Form $form) {
 
             $form->display('id', 'ID');
-
+            $form->number('period', 'Tiết học')->rules('integer|min:1');
+            $form->timeRange('time_start', 'time_end', 'Thời gian');
+            $form->saving(function (Form $form) {
+                $form->period = 'Tiết '.$form->period;
+                $countPeriod = TimeTable::where('period', $form->period)->get()->count();
+                if($countPeriod > 0) {
+                    $error = new MessageBag([
+                        'title'   => 'Lỗi',
+                        'message' => 'Tiết học này đã tồn tại',
+                    ]);
+                    return back()->with(compact('error'));
+                }
+            });
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
         });

@@ -126,6 +126,7 @@ class SubjectRegisterController extends Controller
                 return join('&nbsp;', $name);
             });
             $grid->column('Đăng ký')->display(function () {
+//                return '<a href="/user/subject-register/' . $this->id . '/details"  target="_blank" class="btn btn-md btnPencil" ><i class="glyphicon glyphicon-pencil"></i></a>';
                 return '<a href="/user/subject-register/' . $this->id . '/details" data-id='.$this->id.'  target="_blank" class="btn btn-md btnACV" ><i class="glyphicon glyphicon-pencil"></i></a>';
             });
 //            $script = <<<SCRIPT
