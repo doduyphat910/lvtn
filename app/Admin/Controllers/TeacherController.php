@@ -108,6 +108,8 @@ class TeacherController extends Controller
             $grid->created_at('Tạo vào lúc');
             $grid->updated_at('Cập nhật vào lúc');
             $grid->disableCreateButton();
+            $grid->disableRowSelector();
+            $grid->disableExport();
         });
     }
 
@@ -122,7 +124,7 @@ class TeacherController extends Controller
             $grid->last_name('Tên')->display(function ($name) {
                 return '<a href="/admin/student_user/' . $this->id . '/details">' . $name . '</a>';
             });
-            $grid->username('Tên đăng nhập');
+//            $grid->username('Tên đăng nhập');
             $grid->email('Email');
             $grid->id_class('Lớp')->display(function ($idClass) {
                 if ($idClass) {
@@ -250,7 +252,7 @@ class TeacherController extends Controller
             $grid->actions(function ($actions) {
                 $actions->disableEdit();
                 $actions->disableDelete();
-                $actions->append('<a href="/admin/teachers/subject-register/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
+                $actions->append('<a href="/admin/teacher/subject-register/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
             });
             $grid->disableCreateButton();
             $grid->disableExport();

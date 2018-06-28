@@ -128,7 +128,7 @@ class TeacherHistoryController extends Controller
             $grid->actions(function ($actions) {
                 $actions->disableEdit();
                 $actions->disableDelete();
-                $actions->append('<a href="/admin/teachers/history-subject-register/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
+                $actions->append('<a href="/admin/teacher/history-subject-register/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
             });
             $grid->disableCreateButton();
             $grid->disableExport();

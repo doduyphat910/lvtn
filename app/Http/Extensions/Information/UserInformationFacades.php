@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Admin\Extensions\Rate;
+namespace App\Http\Extensions\Information;
 
 use Illuminate\Support\Facades\Facade;
 
@@ -20,10 +20,10 @@ use Illuminate\Support\Facades\Facade;
  * @method static void registerAuthRoutes()
  * @method static void extend($name, $class)
  */
-class AdminRateFacades extends Facade
+class UserInformationFacades extends Facade
 {
     protected static function getFacadeAccessor()
     {
-        return \App\Admin\Extensions\Rate\AdminRate::class;
+        return \App\Http\Extensions\Information\UserInformation::class;
     }
 }
