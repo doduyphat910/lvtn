@@ -244,7 +244,8 @@ class SubjectRegisterController extends Controller
 
 SCRIPT;
                     User::script($script);
-            $grid->model()->where('id_Subjects', $idSubjects);
+            $timeRegister = TimeRegister::where('status', 1)->orderBy('id', 'DESC')->first();
+            $grid->model()->where('id_Subjects', $idSubjects)->where('id_time_register', $timeRegister->id);
 //            $grid->id('ID');
             $grid->code_subject_register('Mã học phần');
             $grid->id_subjects('Môn học')->display(function ($idSubject) {
@@ -372,9 +373,6 @@ SCRIPT;
 
                 //button Register (nút đăng kí)
                 $actions->append('<a href="javascript:void(0);" data-id="' . $this->getKey() . '"  class="btn btn-primary btnRegister" style="display: none;"  ><i class="glyphicon glyphicon-pencil"></i> &nbsp Đăng ký </a>');
-          
-
-                    
 
                 
 

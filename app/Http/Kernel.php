@@ -62,6 +62,10 @@ class Kernel extends HttpKernel
         'studentLogin'=>\App\Http\Middleware\StudentMiddleware::class,
         'subjectRegister'=>\App\Http\Middleware\SubjectRegisterMiddleware::class,
         'teacher'=>\App\Http\Middleware\TeacherMiddleware::class,
+        'importAttendance' => \App\Http\Middleware\ImportAttendanceMiddleware::class,
+        'importMidterm' => \App\Http\Middleware\ImportMidtermMiddleware::class,
+        'importEndterm' => \App\Http\Middleware\ImportEndtermMiddleware::class,
+        'importAll' => \App\Http\Middleware\ImportAllMiddleware::class,
 
     ];
 }

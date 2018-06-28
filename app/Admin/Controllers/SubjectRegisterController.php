@@ -93,12 +93,13 @@ class SubjectRegisterController extends Controller
                     return '';
                 }
             });
-            $grid->id_classroom('Phòng học')->display(function ($id_classroom){
-                if($id_classroom){
-                    return Classroom::find($id_classroom)->name;
-                } else {
-                    return '';
-                }
+            $grid->column('Phòng')->display(function () {
+                $idClassroom = TimeStudy::where('id_subject_register', $this->id)->pluck('id_classroom')->toArray();
+                $classRoom = Classroom::whereIn('id', $idClassroom)->pluck('name')->toArray();
+                $classRoom = array_map(function ($classRoom) {
+                    return "<span class='label label-success'>{$classRoom}</span>";
+                }, $classRoom);
+                return join('&nbsp;', $classRoom);
             });
             $grid->id_user_teacher('Giảng viên')->display(function ($id_user_teacher){
                 if($id_user_teacher){
@@ -119,6 +120,14 @@ class SubjectRegisterController extends Controller
 //            $grid->time_study_end('Giờ học kết thúc');
             $grid->date_start('Ngày bắt đầu');
             $grid->date_end('Ngày kết thúc');
+            $grid->id_time_register('Đợt đăng ký')->display(function ($idTimeRegister){
+                $timeRegister = TimeRegister::find($idTimeRegister);
+                if($timeRegister->name){
+                    return "<span class='label label-info'>{$timeRegister->name}</span>";
+                } else {
+                    return '';
+                }
+            });
 //            $grid->comlumn('Đợt đăng ký')->display(function (){
 //                if($this->id_time_register){
 //                    return TimeRegister::find($this->id_time_register)->name;
@@ -198,6 +207,7 @@ EOT;
             $form->hidden('qty_current', 'Số lượng hiện tại')->value('0');
             $form->number('qty_min', 'Số lượng tối thiểu')->rules('integer|min:5');
             $form->number('qty_max', 'Số lượng tối đa')->rules('integer|min:10');
+            $form->select('id_time_register', 'Đợt đăng ký')->options(TimeRegister::all()->pluck('name', 'id'));
             $form->date('date_start', 'Ngày bắt đầu')->placeholder('Ngày bắt đầu')->rules('required');
             $form->date('date_end', 'Ngày kết thúc')->placeholder('Ngày kết thúc')->rules('required');
             $form->display('created_at', 'Created At');
@@ -205,7 +215,7 @@ EOT;
             $form->hasMany('time_study', 'Thời gian học', function (Form\NestedForm $form) {
                 $options = ['2'=>'Thứ 2', '3'=>'Thứ 3', '4'=>'Thứ 4', '5'=>'Thứ 5', '6'=>'Thứ 6', '7'=>'Thứ 7', '8'=>'Chủ nhật'];
                 $form->select('day', 'Ngày học')->options($options);
-                $form->select('id_classroom', 'Phòng học')->options(Classroom::all()->pluck('name', 'id'))->rules('required');
+                $form->select('id_classroom', 'Phòng học')->options(Classroom::all()->pluck('name', 'id'));
                 $timeStart = Timetable::all()->pluck('time_start', 'time_start' );
                 $timeEnd = Timetable::all()->pluck('time_end', 'time_end' );
                 $form->select('time_study_start', 'Giờ học bắt đầu')->options($timeStart);
@@ -233,10 +243,11 @@ EOT;
                 //check conditions register
 //                $idSubjectRegisters = SubjectRegister::where('id_classroom', $form->id_classroom)->pluck('id');
                 $currentPath = Route::getFacadeRoot()->current()->uri();
+                $subjectToTime = SubjectRegister::where('id_time_register', $form->id_time_register)->pluck('id')->toArray();
                 if($currentPath == "admin/subject_register/{subject_register}") {
-                    $timeStudys = TimeStudy::where('id_subject_register', '!=',$form->model()->id)->get()->toArray();
+                    $timeStudys = TimeStudy::where('id_subject_register', '!=',$form->model()->id)->whereIn('id_subject_register', $subjectToTime)->get()->toArray();
                 } else {
-                    $timeStudys = TimeStudy::all()->toArray();
+                    $timeStudys = TimeStudy::all()->whereIn('id_subject_register', $subjectToTime)->toArray();
                 }
                     if($form->time_study) {
                         foreach ($form->time_study as $day) {

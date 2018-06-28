@@ -73,16 +73,17 @@ class NotificationsController extends Controller
     {
         return Admin::grid(Notifications::class, function (Grid $grid) {
 
-            $grid->id('ID')->sortable();
+//            $grid->id('ID')->sortable();
             $grid->name('Tên thông báo');
             $grid->description('Mô tả');
             //$grid->URL('Đường dẫn');
-            $grid->url('Đường dẫn')->display(function ($name){
-                return  '<a href="' . $this->url . '" >'.$name.'</a>';
-            });
-            $grid->disableActions();
-            $grid->created_at();
-            $grid->updated_at();
+//            $grid->url('Đường dẫn')->display(function ($name){
+//                return  '<a href="' . $this->url . '" >'.$name.'</a>';
+//            });
+//            $grid->disableActions();
+            $grid->created_at('Tạo vào lúc');
+            $grid->updated_at('Cập nhật vào lúc');
+
         });
     }
 

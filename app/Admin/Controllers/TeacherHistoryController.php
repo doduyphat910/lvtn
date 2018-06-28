@@ -83,14 +83,16 @@ class TeacherHistoryController extends Controller
             $user = Admin::user();
             $idUser = $user->id;
             $idNewsTime = TimeRegister::orderBy('id', 'DESC')->limit(1)->pluck('id')->toArray();
-            $arrSubjectTeacher = SubjectRegister::where('id_user_teacher', $idUser)->pluck('id')->toArray();
-            $arrIdSubjectTeacher = ResultRegister::where('time_register', '!=', $idNewsTime)->whereIn('id_subject_register', $arrSubjectTeacher)
-                ->pluck('id_subject_register')->toArray();
-            if(count($arrIdSubjectTeacher) == 0) {
-                $arrIdSubjectTeacher = [];
-            }
-            $grid->model()->whereIn('id', $arrIdSubjectTeacher);
+//            $arrSubjectTeacher = SubjectRegister::where('id_user_teacher', $idUser)->pluck('id')->toArray();
+//            $arrIdSubjectTeacher = ResultRegister::where('time_register', '!=', $idNewsTime)->whereIn('id_subject_register', $arrSubjectTeacher)
+//                ->pluck('id_subject_register')->toArray();
+//            if(count($arrIdSubjectTeacher) == 0) {
+//                $arrIdSubjectTeacher = [];
+//            }
+//            $grid->model()->whereIn('id', $arrIdSubjectTeacher);
 //            $grid->id('ID')->sortable();
+            $grid->model()->where('id_time_register','!=' ,$idNewsTime)->where('id_user_teacher', $idUser);
+
             $grid->code_subject_register('Mã học phần')->display(function ($name) {
                 return '<a href="/admin/teacher/history-subject-register/' . $this->id . '/details">' . $name . '</a>';
             });

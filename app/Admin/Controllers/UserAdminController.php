@@ -61,8 +61,8 @@ class UserAdminController extends UserController
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('header');
-            $content->description('description');
+            $content->header('Tài khoản');
+            $content->description('Tạo tài khoản');
 
             $content->body($this->form());
         });
@@ -88,12 +88,12 @@ class UserAdminController extends UserController
             $grid->name(trans('admin.name'));
             $grid->roles(trans('admin.roles'))->pluck('name')->label();
             $grid->email('Email');
-            $grid->id_class('Lớp')->display(function ($idClass){
-                if($idClass){
-                    return ClassSTU::find($idClass)->name;
-                } else {
-                    return 'Không có';
-                }
+            $grid->column('Lớp')->display(function (){
+                array_map(function ($idTeacher){
+                    $name = ClassSTU::where('id_user_teacher', $idTeacher)->name;
+
+                },$this->id);
+//            s    }
             });
             $grid->type_user('Loại tài khoản')->display(function ($typeUser){
                 if($typeUser == 0) {

@@ -92,35 +92,35 @@ Route::group([
     $router->get('teacher/subject-register/{id}/details','TeacherController@detailsSubjectRegister')->middleware('teacher');
     $router->get('teacher/subject-register','TeacherController@subjectRegister');
     //list history subject-register of teacher
-    $router->get('teacher/history-subject-register/{id}/details','TeacherHistoryController@details');
+    $router->get('teacher/history-subject-register/{id}/details','TeacherHistoryController@details')->middleware('teacher');
     $router->resource('teacher/history-subject-register/',TeacherHistoryController::class);
 
 
     //import point attendance
     $router->post('teacher/import-attendance/parse','ImportPointController@parseAttendance');
     $router->post('teacher/import-attendance/review','ImportPointController@reviewAttendance');
-    $router->get('teacher/{id}/import-attendance','ImportPointController@attendance');
+    $router->get('teacher/{id}/import-attendance','ImportPointController@attendance')->middleware('importAttendance');
 
     //export point
-    $router->get('teacher/{id}/export-all','ImportPointController@exportAll');
-    $router->get('teacher/{id}/export-attendance','ImportPointController@exportAttendance');
-    $router->get('teacher/{id}/export-midterm','ImportPointController@exportMidterm');
-    $router->get('teacher/{id}/export-endterm','ImportPointController@exportEndterm');
+    $router->get('teacher/{id}/export-all','ImportPointController@exportAll')->middleware('importAll');
+    $router->get('teacher/{id}/export-attendance','ImportPointController@exportAttendance')->middleware('importAttendance');
+    $router->get('teacher/{id}/export-midterm','ImportPointController@exportMidterm')->middleware('importMidterm');
+    $router->get('teacher/{id}/export-endterm','ImportPointController@exportEndterm')->middleware('importEndterm');
 
     //import point mid-term
     $router->post('teacher/import-midterm/parse','ImportPointController@parseMidterm');
     $router->post('teacher/import-midterm/review','ImportPointController@reviewMidterm');
-    $router->get('teacher/{id}/import-midterm','ImportPointController@midTerm');
+    $router->get('teacher/{id}/import-midterm','ImportPointController@midTerm')->middleware('importMidterm');
 
     //import point end-term
     $router->post('teacher/import-endterm/parse','ImportPointController@parseEndterm');
     $router->post('teacher/import-endterm/review','ImportPointController@reviewEndterm');
-    $router->get('teacher/{id}/import-endterm','ImportPointController@endTerm');
+    $router->get('teacher/{id}/import-endterm','ImportPointController@endTerm')->middleware('importEndterm');
 
     //import point all
     $router->post('teacher/import-all/parse','ImportPointController@parseAll');
     $router->post('teacher/import-all/review','ImportPointController@reviewAll');
-    $router->get('teacher/{id}/import-all','ImportPointController@all');
+    $router->get('teacher/{id}/import-all','ImportPointController@all')->middleware('importAll');
 
 }
 

@@ -172,13 +172,15 @@ EOT;
                     $form->status_import = 'All';
                 }
                 if($form->status == 'on' ) {
-                    $countStatusActive = TimeRegister::where('status', 1)->get()->count();
-                    if($countStatusActive > 0) {
-                        $error = new MessageBag([
-                            'title'   => 'Lỗi',
-                            'message' => 'Có đợt đăng ký đang mở',
-                        ]);
-                        return back()->with(compact('error'));
+                    if (!$id = $form->model()->id) {
+                        $countStatusActive = TimeRegister::where('status', 1)->get()->count();
+                        if ($countStatusActive > 0) {
+                            $error = new MessageBag([
+                                'title' => 'Lỗi',
+                                'message' => 'Có đợt đăng ký đang mở',
+                            ]);
+                            return back()->with(compact('error'));
+                        }
                     }
                 }
             });

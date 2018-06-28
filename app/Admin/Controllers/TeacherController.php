@@ -207,13 +207,14 @@ class TeacherController extends Controller
             $idUser = $user->id;
 
             $idNewsTime = TimeRegister::orderBy('id', 'DESC')->limit(1)->pluck('id')->toArray();
-            $arrSubjectTeacher = SubjectRegister::where('id_user_teacher', $idUser)->pluck('id')->toArray();
-            $arrIdSubjectTeacher = ResultRegister::where('time_register', $idNewsTime)->whereIn('id_subject_register', $arrSubjectTeacher)
-                ->pluck('id_subject_register')->toArray();
-            if(count($arrIdSubjectTeacher) == 0) {
-                $arrIdSubjectTeacher = [];
-            }
-            $grid->model()->whereIn('id', $arrIdSubjectTeacher);
+//            $arrSubjectTeacher = SubjectRegister::where('id_user_teacher', $idUser)->pluck('id')->toArray();
+//            $arrIdSubjectTeacher = ResultRegister::where('time_register', $idNewsTime)->whereIn('id_subject_register', $arrSubjectTeacher)
+//                ->pluck('id_subject_register')->toArray();
+
+//            if(count($arrIdSubjectTeacher) == 0) {
+//                $arrIdSubjectTeacher = [];
+//            }
+            $grid->model()->where('id_time_register', $idNewsTime)->where('id_user_teacher', $idUser);
 //            $grid->id('ID')->sortable();
             $grid->code_subject_register('Mã học phần')->display(function ($name) {
                 return '<a href="/admin/teacher/subject-register/' . $this->id . '/details">' . $name . '</a>';
@@ -374,9 +375,23 @@ EOT;
                 $name = ClassSTU::find($idClass)->name;
                 return "<span class='label label-info'>{$name}</span>";
             });
-            $grid->attendance('Điểm chuyên cần')->editable();
-            $grid->mid_term('Điểm giữa kì')->editable();
-            $grid->end_term('Điểm cuối kì')->editable();
+            $idTimeRegister = ResultRegister::where('id_subject_register', $idSubjectRegister)->pluck('time_register');
+            $statusImport = TimeRegister::find($idTimeRegister)->first();
+            $statusImport = $statusImport->status_import;
+            if (in_array('1', $statusImport)) {
+                $grid->attendance('Điểm chuyên cần')->editable();
+            }
+            if (in_array('2', $statusImport)) {
+                $grid->mid_term('Điểm giữa kì')->editable();
+            }
+            if (in_array('3', $statusImport)) {
+                $grid->end_term('Điểm cuối kì')->editable();
+            }
+            if (in_array('All', $statusImport)) {
+                $grid->attendance('Điểm chuyên cần')->editable();
+                $grid->mid_term('Điểm giữa kì')->editable();
+                $grid->end_term('Điểm cuối kì')->editable();
+            }
             $grid->column('Điểm tổng kết')->display(function () {
                 if(!$this->attendance || !$this->mid_term || !$this->end_term) {
                     return 'X';
