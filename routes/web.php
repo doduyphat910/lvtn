@@ -25,6 +25,8 @@ Route::group(['prefix'=>'user', 'middleware'=>'studentLogin'], function(Router $
 
     $router->resource('user-subject',UserSubjectController::class);
 
+    $router->resource('result-register',ResultRegisterController::class);
+
     Route::group(['middleware' => ['subjectRegister']], function (Router $router) {
         //subject timeable
         $router->get('subject-timetable', 'SubjectRegisterController@timetable');

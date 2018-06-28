@@ -23,4 +23,7 @@ class StudentUser  extends Model
             $this->attributes['password'] = bcrypt($password);
         }
     }
+    public function comments() {
+        return $this->belongsTo(Comments::class, 'id_user', 'id');
+    }
 }

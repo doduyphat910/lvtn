@@ -13,6 +13,8 @@ use Encore\Admin\Facades\Admin;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\ModelForm;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Extensions\Comments\FormComments;
+use App\Http\Extensions\Comments\UserCommentsFacades;
 
 class UserSubjectController extends Controller
 {
@@ -30,7 +32,7 @@ class UserSubjectController extends Controller
     
     protected function form()
     {
-        return User::form(UserSubject::class, function (Form $form) {
+        return UserCommentsFacades::form(UserSubject::class, function (FormComments $form) {
             $form->registerBuiltinFields();
             $id = Auth::User()->id;
             $form->setAction('/user/user-subject');
