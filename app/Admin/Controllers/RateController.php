@@ -1,9 +1,6 @@
 <?php
 
 namespace App\Admin\Controllers;
-
-use App\Admin\Extensions\Rate\AdminRateFacades;
-use App\Admin\Extensions\Rate\FormRate;
 use App\Models\Rate;
 
 use App\Models\Semester;

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Extensions\Information\FormInformation;
+use App\Http\Extensions\Information\UserInformationFacades;
 use App\Models\ClassSTU;
 use App\Models\Status;
 use App\Models\StudentUser;
@@ -49,7 +51,7 @@ class StudentInformationController extends Controller
 
     protected function form()
     {
-        return User::form(StudentUser::class, function (Form $form) {
+        return UserInformationFacades::form(StudentUser::class, function (FormInformation $form) {
             $form->registerBuiltinFields();
             $id = Auth::User()->id;
             $form->hidden('id');
@@ -69,7 +71,7 @@ class StudentInformationController extends Controller
                 ->default(function ($form) {
                     return $form->model()->password;
                 });
-            $form->image('avatar', 'Ảnh đại diện');
+//            $form->image('avatar', 'Ảnh đại diện');
             $form->ignore(['password_confirmation', 'id_class', 'school_year', 'level', 'code_number', 'first_name', 'last_name']);
             $form->select('id_class', 'Lớp')->options(ClassSTU::all()->pluck('name', 'id'))->default(function ($form) {
                 return $form->model()->id_class;
@@ -90,7 +92,7 @@ class StudentInformationController extends Controller
 //                return redirect('/user/information/'.$form->model()->id);//todo error when submit
 
 //            $form->saving(function (Form $form) {
-//                if(!($form->model->save())) {
+//                if(strlen($form->password) < 5 ) {
 //                    $error = new MessageBag([
 //                        'title'   => 'Lỗi',
 //                        'message' => 'Mật khẩu và xác nhận mật khẩu khác nhau',

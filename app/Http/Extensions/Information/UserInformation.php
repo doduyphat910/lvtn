@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Admin\Extensions\Rate;
+namespace App\Http\Extensions\Information;
 //use App\Admin\Extensions\FormLocation\FormLocation;
 use Closure;
 use Encore\Admin\Auth\Database\Menu;
@@ -16,11 +16,11 @@ use Encore\Admin\Admin;
 /**
  * Class AdminRollOut.
  */
-class AdminRate extends Admin
+class UserInformation extends Admin
 {
     public function form($model, Closure $callable)
     {
-        return new FormRate($this->getModel($model), $callable);
+        return new FormInformation($this->getModel($model), $callable);
     }
 
 }
