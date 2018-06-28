@@ -88,13 +88,20 @@ class UserAdminController extends UserController
             $grid->name(trans('admin.name'));
             $grid->roles(trans('admin.roles'))->pluck('name')->label();
             $grid->email('Email');
-            $grid->column('Lớp')->display(function (){
-                array_map(function ($idTeacher){
-                    $name = ClassSTU::where('id_user_teacher', $idTeacher)->name;
-
-                },$this->id);
-//            s    }
-            });
+            if ($currentPath == 'admin/teacher_user') {
+                $grid->column('Lớp')->display(function ($id) {
+                    $idTeacher = $this->id;
+                    $arrClassName = ClassSTU::where('id_user_teacher', $idTeacher)->pluck('name')->toArray();
+                    $arrClassName = array_map(function ($arrClassName){
+                        if($arrClassName) {
+                            return "<span class='label label-primary'>{$arrClassName}</span>"  ;
+                        } else {
+                            return '';
+                        }
+                    },$arrClassName);
+                    return join('&nbsp;', $arrClassName);
+                });
+            }
             $grid->type_user('Loại tài khoản')->display(function ($typeUser){
                 if($typeUser == 0) {
                     return 'Giảng viên';

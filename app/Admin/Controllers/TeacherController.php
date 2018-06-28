@@ -189,24 +189,61 @@ class TeacherController extends Controller
         );
     }
 
+    //subject register of teacher
+
     public function subjectRegister()
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('Khoa, lớp');
-            $content->description('Danh sách lớp');
+            $content->header('Giảng viên');
+            $content->description('Danh sách học kỳ');
 
-            $content->body($this->gridSubjectRegister());
+            $content->body($this->formTimeRegister());
         });
     }
 
-    protected function gridSubjectRegister()
+    protected function formTimeRegister()
     {
-        return Admin::grid(SubjectRegister::class, function (Grid $grid) {
+        return Admin::form(TimeRegister::class, function (Form $form) {
+            $form->select('id_time_register', 'Đợt đăng ký')->options(TimeRegister::all()->pluck('name', 'id'));
+            $selected = '';
+            $script = <<<EOT
+        $(function () {
+        var pathname = window.location.pathname; 
+        if(pathname == '/admin/teacher' || pathname == '/admin' ) {
+            window.location.href = '/admin/teacher'
+        }
+            $('.id_time_register').change(function(e) {
+                $("form").submit(function(){
+                    var selected = $( ".id_time_register option:selected" ).val();
+                    window.location.href = '/admin/teacher/list-subject-register/' + selected;
+                });
+            });
+        });
+EOT;
+            Admin::script($script);
+//            $form->setAction('/teacher/list-subject-register/'.$selected );
+            $form->disableReset();
+        });
+    }
+
+    public function listSubjectRegister($id)
+    {
+        return Admin::content(function (Content $content) use ($id) {
+            $content->header('Khoa, lớp');
+            $content->description('Danh sách lớp');
+
+            $content->body($this->gridSubjectRegister($id));
+        });
+    }
+
+    protected function gridSubjectRegister($idTimeRegister)
+    {
+        return Admin::grid(SubjectRegister::class, function (Grid $grid) use ($idTimeRegister) {
             $user = Admin::user();
             $idUser = $user->id;
 
-            $idNewsTime = TimeRegister::orderBy('id', 'DESC')->limit(1)->pluck('id')->toArray();
+//            $idNewsTime = TimeRegister::orderBy('id', 'DESC')->limit(1)->pluck('id')->toArray();
 //            $arrSubjectTeacher = SubjectRegister::where('id_user_teacher', $idUser)->pluck('id')->toArray();
 //            $arrIdSubjectTeacher = ResultRegister::where('time_register', $idNewsTime)->whereIn('id_subject_register', $arrSubjectTeacher)
 //                ->pluck('id_subject_register')->toArray();
@@ -214,7 +251,7 @@ class TeacherController extends Controller
 //            if(count($arrIdSubjectTeacher) == 0) {
 //                $arrIdSubjectTeacher = [];
 //            }
-            $grid->model()->where('id_time_register', $idNewsTime)->where('id_user_teacher', $idUser);
+            $grid->model()->where('id_time_register', $idTimeRegister)->where('id_user_teacher', $idUser);
 //            $grid->id('ID')->sortable();
             $grid->code_subject_register('Mã học phần')->display(function ($name) {
                 return '<a href="/admin/teacher/subject-register/' . $this->id . '/details">' . $name . '</a>';
@@ -377,26 +414,42 @@ EOT;
             });
             $idTimeRegister = ResultRegister::where('id_subject_register', $idSubjectRegister)->pluck('time_register');
             $statusImport = TimeRegister::find($idTimeRegister)->first();
-            $statusImport = $statusImport->status_import;
-            if (in_array('1', $statusImport)) {
-                $grid->attendance('Điểm chuyên cần')->editable();
-            }
-            if (in_array('2', $statusImport)) {
-                $grid->mid_term('Điểm giữa kì')->editable();
-            }
-            if (in_array('3', $statusImport)) {
-                $grid->end_term('Điểm cuối kì')->editable();
-            }
-            if (in_array('All', $statusImport)) {
-                $grid->attendance('Điểm chuyên cần')->editable();
-                $grid->mid_term('Điểm giữa kì')->editable();
-                $grid->end_term('Điểm cuối kì')->editable();
-            }
-            $grid->column('Điểm tổng kết')->display(function () {
-                if(!$this->attendance || !$this->mid_term || !$this->end_term) {
-                    return 'X';
-                } else {
-                    $script = <<<SCRIPT
+            if($statusImport == null) {
+                $grid->attendance('Điểm chuyên cần');
+                $grid->mid_term('Điểm giữa kì');
+                $grid->end_term('Điểm cuối kì');
+                $grid->column('Điểm tổng kết')->display(function () {
+                    if(!$this->attendance || !$this->mid_term || !$this->end_term) {
+                        return 'X';
+                    } else {
+                        return (($this->attendance * $this->rate_attendance) +
+                                ($this->mid_term * $this->rate_mid_term) +
+                                ($this->end_term * $this->rate_end_term)) / 100;
+                    }
+
+                })->setAttributes(['class'=>'finalPoint']);
+
+            } else {
+                $statusImport = $statusImport->status_import;
+                if (in_array('1', $statusImport)) {
+                    $grid->attendance('Điểm chuyên cần')->editable();
+                }
+                if (in_array('2', $statusImport)) {
+                    $grid->mid_term('Điểm giữa kì')->editable();
+                }
+                if (in_array('3', $statusImport)) {
+                    $grid->end_term('Điểm cuối kì')->editable();
+                }
+                if (in_array('All', $statusImport)) {
+                    $grid->attendance('Điểm chuyên cần')->editable();
+                    $grid->mid_term('Điểm giữa kì')->editable();
+                    $grid->end_term('Điểm cuối kì')->editable();
+                }
+                $grid->column('Điểm tổng kết')->display(function () {
+                    if(!$this->attendance || !$this->mid_term || !$this->end_term) {
+                        return 'X';
+                    } else {
+                        $script = <<<SCRIPT
                    var interval = setInterval(function() {
                    var attendance = $('.grid-editable-attendance').text() * $this->rate_attendance ;
                    var mid_term = $('.grid-editable-mid_term').text() * $this->rate_mid_term;
@@ -405,13 +458,15 @@ EOT;
                     }, 1500);
 
 SCRIPT;
-                    Admin::script($script);
-                    return (($this->attendance * $this->rate_attendance) +
-                            ($this->mid_term * $this->rate_mid_term) +
-                            ($this->end_term * $this->rate_end_term)) / 100;
-                }
+                        Admin::script($script);
+                        return (($this->attendance * $this->rate_attendance) +
+                                ($this->mid_term * $this->rate_mid_term) +
+                                ($this->end_term * $this->rate_end_term)) / 100;
+                    }
 
-            })->setAttributes(['class'=>'finalPoint']);
+                })->setAttributes(['class'=>'finalPoint']);
+            }
+
 
 
 //            $grid->created_at('Tạo vào lúc');
@@ -423,19 +478,21 @@ SCRIPT;
             $grid->tools(function ($tools) use ($idSubjectRegister) {
                 $idTimeRegister = ResultRegister::where('id_subject_register', $idSubjectRegister)->pluck('time_register');
                 $statusImport = TimeRegister::find($idTimeRegister)->first();
-                $statusImport = $statusImport->status_import;
+                if($statusImport != null) {
+                    $statusImport = $statusImport->status_import;
 
-                if (in_array('1', $statusImport)) {
-                    $tools->append('<a href="/admin/teacher/' . $idSubjectRegister . '/import-attendance" class="btn btn-info btn-sm btn-import-attendance"><i class="fa fa-sign-in"></i> Import điểm chuyên cần</a>');
-                }
-                if (in_array('2', $statusImport)) {
-                    $tools->append('<a href="/admin/teacher/' . $idSubjectRegister . '/import-midterm" class="btn btn-info btn-sm btn-import-midterm"><i class="fa fa-sign-in"    ></i> Import điểm giữa kì</a>');
-                }
-                if (in_array('3', $statusImport)) {
-                    $tools->append('<a href="/admin/teacher/' . $idSubjectRegister . '/import-endterm" class="btn btn-info btn-sm btn-import-endterm"><i class="fa fa-sign-in"></i> Import điểm cuối kì</a>');
-                }
-                if (in_array('All', $statusImport)) {
-                    $tools->append('<a href="/admin/teacher/'. $idSubjectRegister .'/import-all" class="btn btn-info btn-sm btn-import-all"><i class="fa fa-sign-in"></i> Import điểm SV</a>');
+                    if (in_array('1', $statusImport)) {
+                        $tools->append('<a href="/admin/teacher/' . $idSubjectRegister . '/import-attendance" class="btn btn-info btn-sm btn-import-attendance"><i class="fa fa-sign-in"></i> Import điểm chuyên cần</a>');
+                    }
+                    if (in_array('2', $statusImport)) {
+                        $tools->append('<a href="/admin/teacher/' . $idSubjectRegister . '/import-midterm" class="btn btn-info btn-sm btn-import-midterm"><i class="fa fa-sign-in"    ></i> Import điểm giữa kì</a>');
+                    }
+                    if (in_array('3', $statusImport)) {
+                        $tools->append('<a href="/admin/teacher/' . $idSubjectRegister . '/import-endterm" class="btn btn-info btn-sm btn-import-endterm"><i class="fa fa-sign-in"></i> Import điểm cuối kì</a>');
+                    }
+                    if (in_array('All', $statusImport)) {
+                        $tools->append('<a href="/admin/teacher/'. $idSubjectRegister .'/import-all" class="btn btn-info btn-sm btn-import-all"><i class="fa fa-sign-in"></i> Import điểm SV</a>');
+                    }
                 }
             });
         });
