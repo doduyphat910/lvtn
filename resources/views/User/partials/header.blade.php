@@ -83,6 +83,7 @@
         .navbar-default .navbar-toggle .icon-bar {background-color: white;}
         /*.active{
             background-color: blue;*/
+        .
         }
     </style>
     <nav class="navbar navbar-default navbar-fixed-top" style="margin-left: 0px;">
@@ -104,7 +105,17 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li class="active"><a href="{{ url('user/student') }}" >Trang chủ <span class="sr-only">(current)</span></a></li>
-                    <li><a href="{{ url('user/subject-register') }}">Đăng ký môn học</a></li>
+                    <li class="dropdown-register">
+                         <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">Đăng ký <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url('user/subject-register') }}"><i class="glyphicon glyphicon-pencil"></i>Đăng ký môn học</a></li>
+                            <li><a href="javascript:void(0);"><i class="glyphicon glyphicon-pencil"></i>Đăng ký học cải thiện, học lại</a></li>
+                            <li><a href="{{ url('user/user-subject') }}"><i class="glyphicon glyphicon-pencil"></i>Đăng ký ngoài kế hoạch</a></li>
+                            
+                        </ul>
+                       
+                    </li>
+                    <li><a href="{{ url('user/result-register') }}">Kết quả đăng ký</a></li>
                     <li><a href="#">Xem điểm</a></li>
                     <li><a href="{{ url('user/subject-parallel') }}">Xem môn song song</a></li>
                     <li><a href="{{ url('user/subject-before-after') }}">Xem môn tiên quyết</a></li>
@@ -115,12 +126,12 @@
 
                       <ul class="nav navbar-nav navbar-right" style="margin-right: 0px;">
 
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Xin chào {{Auth::User()->last_name}}<img src="" class="user-image"><span class="caret"></span></a>
+                        <li class="dropdown-register">
+                            <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Xin chào {{Auth::User()->last_name}}<img src="" class="user-image"><span class="caret"></span></a>
                              <ul class="dropdown-menu">
                                  @php $id = Auth::User()->id @endphp
-                                    <li><a href="{{ url('user/information/'. $id.'/edit') }}">Thông tin cá nhân</a></li>
-                                   <li><a href="{{ url('logout') }}">Đăng xuất</a></li>
+                                    <li><a href="{{ url('user/information/'. $id.'/edit') }}"><i class="glyphicon glyphicon-user"></i>Thông tin cá nhân</a></li>
+                                   <li><a href="{{ url('logout') }}"><i class="glyphicon glyphicon-log-out"></i>Đăng xuất</a></li>
                             </ul>
                          </li>
                       </ul>
@@ -150,3 +161,10 @@
 
     });
 </script> --}}
+<script type="text/javascript">
+    $('li.dropdown-register').hover(function() {
+  $(this).find('.dropdown-menu').stop(true, true).fadeIn(500);
+}, function() {
+  $(this).find('.dropdown-menu').stop(true, true).fadeOut(500);
+});
+</script>

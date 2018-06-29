@@ -182,6 +182,7 @@ EOT;
                             return back()->with(compact('error'));
                         }
                     }
+                    
                 }
             });
             $currentPath = Route::getFacadeRoot()->current()->uri();

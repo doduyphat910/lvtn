@@ -1,5 +1,11 @@
 <?php
-use App\Models\ResultRegister;use App\Models\SubjectRegister;use App\Models\Subjects;use App\Models\TimeRegister;use App\Models\TimeStudy;use App\Models\TimeTable;$idUser = Auth::user()->id;
+use App\Models\ResultRegister;
+use App\Models\SubjectRegister;
+use App\Models\Subjects;
+use App\Models\TimeRegister;
+use App\Models\TimeStudy;
+use App\Models\TimeTable;
+$idUser = Auth::user()->id;
 $timeRegister = TimeRegister::where('status', 1)->orderBy('id', 'DESC')->first();
 $idTimeRegister = $timeRegister->id;
 $idSubjectRegister = ResultRegister::where('id_user_student', $idUser)->where('time_register', $idTimeRegister)->pluck('id_subject_register');
