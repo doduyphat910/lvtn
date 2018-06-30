@@ -109,14 +109,14 @@
                          <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">Đăng ký <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a href="{{ url('user/subject-register') }}"><i class="glyphicon glyphicon-pencil"></i>Đăng ký môn học</a></li>
-                            <li><a href="javascript:void(0);"><i class="glyphicon glyphicon-pencil"></i>Đăng ký học cải thiện, học lại</a></li>
+                            <li><a href="{{ url('user/learn-improvement') }}"><i class="glyphicon glyphicon-pencil"></i>Đăng ký học cải thiện, học lại</a></li>
                             <li><a href="{{ url('user/user-subject') }}"><i class="glyphicon glyphicon-pencil"></i>Đăng ký ngoài kế hoạch</a></li>
                             
                         </ul>
                        
                     </li>
                     <li><a href="{{ url('user/result-register') }}">Kết quả đăng ký</a></li>
-                    <li><a href="#">Xem điểm</a></li>
+                    <li><a href="{{ url('user/point-subject') }}">Xem điểm</a></li>
                     <li><a href="{{ url('user/subject-parallel') }}">Xem môn song song</a></li>
                     <li><a href="{{ url('user/subject-before-after') }}">Xem môn tiên quyết</a></li>
                     <li><a href="{{ url('user/comments') }}">Góp ý kiến</a></li>

@@ -55,13 +55,20 @@
     }
     .bg-aqua, .callout.callout-info, .alert-info, .label-info, .modal-info .modal-body {
         background-color: #3c8dbc !important;
-        font-size: 1rem;
+        font-size: 1.3rem;
 
     }
     .bg-light-blue, .label-primary, .modal-primary .modal-body {
         background-color: #3b5998 !important;
         color: black;
-        font-size: 1rem;
+        font-size: 1.3rem;
+    }
+    .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+      vertical-align: middle;
+    }
+    .label-success{
+        background-color: #00a657cc !important;
+        font-size: 1.3rem;
     }
 </style>
 </head>

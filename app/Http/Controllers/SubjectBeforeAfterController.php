@@ -23,8 +23,12 @@ class SubjectBeforeAfterController extends Controller
 
             $content->header('Môn học tiên quyết');
             $content->description('Danh sách môn học tiên quyết');
-
+            $content->breadcrumb(
+                ['text' => 'Môn học tiên quyết', 'url' => '../user/subject-before-after']
+            );
             $content->body($this->grid());
+            
+
         });
     }
     protected function grid()

@@ -60,6 +60,7 @@ class ResultRegisterController extends Controller
             $user = Auth::user();
             //check school year
             $timeRegister = TimeRegister::orderBy('id', 'DESC')->first();
+            //dd( $timeRegister->id);
             $grid->model()->where('time_register', $timeRegister->id)->where('id_user_student', $user->id);
 //             $schoolYearUser = (string) $schoolYearUser;
             

@@ -27,6 +27,10 @@ Route::group(['prefix'=>'user', 'middleware'=>'studentLogin'], function(Router $
 
     $router->resource('result-register',ResultRegisterController::class);
 
+    $router->resource('point-subject',PointSubjectController::class);
+
+    
+
     Route::group(['middleware' => ['subjectRegister']], function (Router $router) {
         //subject timeable
         $router->get('subject-timetable', 'SubjectRegisterController@timetable');
@@ -47,7 +51,8 @@ Route::group(['prefix'=>'user', 'middleware'=>'studentLogin'], function(Router $
 
         //API check subject parallel
         $router->get('subject-register/{id}/checkParallel', 'APIController@checkParallel');
-
+        //learn-improvement
+        $router->resource('learn-improvement',LearnImprovenmentController::class);
     });
 });
 

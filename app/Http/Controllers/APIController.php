@@ -48,6 +48,135 @@ class APIController extends Controller {
 
         //lấy số lượng tín chỉ được đăng kí tối đa
         $creditsMax = $timeRegister->credits_max;
+        $idSubject = ResultRegister::where('id_user_student', $idUser)->where('time_register', $idTimeRegister)->where('is_learned', 2)->pluck('id_subject');
+        $creditCurrentUser = Subjects::find($idSubject)->pluck('credits')->sum();
+        $idSubjects = SubjectRegister::where('id',$idSubjecRegister)->pluck('id_subjects');
+        $creditSubject = Subjects::find($idSubjects)->pluck('credits')->toArray();
+        if(($creditCurrentUser + $creditSubject['0']) > $creditsMax) {
+            return response()->json([
+                'status'  => false,
+                'message' => trans('Bạn đã đăng kí tối đa số tín chỉ'),
+            ]);
+        }
+
+        //kiểm tra giờ học trùng
+        $arrIdSubjectRegiter = ResultRegister::where('id_user_student',$idUser)->where('time_register', $idTimeRegister)->pluck('id_subject_register')->toArray();
+        $arrResultRegiter = TimeStudy::whereIn('id_subject_register', $arrIdSubjectRegiter)->get()->toArray();
+        $arrTimeStudyUser = TimeStudy::where('id_subject_register',$idSubjecRegister)->get()->toArray();
+
+                foreach ($arrResultRegiter as $dayAll){
+                    foreach ($arrTimeStudyUser as $dayUser){
+                        if ($dayAll['day'] == $dayUser['day'] ) {
+                            if (
+                                ($dayAll['time_study_end'] > $dayUser['time_study_start'] && $dayAll['time_study_end'] <= $dayUser['time_study_end']) ||
+                                ($dayAll['time_study_start'] >= $dayUser['time_study_start'] && $dayAll['time_study_start'] < $dayUser['time_study_end']) ||
+                                ($dayAll['time_study_start'] >= $dayUser['time_study_start'] && $dayAll['time_study_end'] <= $dayUser['time_study_end'])  ||
+                                ($dayAll['time_study_start'] <= $dayUser['time_study_start'] && $dayAll['time_study_end'] >= $dayUser['time_study_end'])
+                            )
+                            {
+                                return response()->json([
+                                    'status'  => false,
+                                    'message' => trans('Bạn đã đăng kí giờ học này'),
+                                ]);
+                            }
+                        }
+                    }
+                }
+
+//        dd(ResultRegister::all()->toArray());
+
+
+//        $arrayTime = Array();
+//        $timeResultRegister=ResultRegister::all();
+//        foreach ($timeResultRegister as $value){
+//            $arrayTime[]=$value->id_subject_register;
+//        }
+//        $t = TimeStudy::all();
+//        $arrayTime_Day = Array();
+//        $i=0;
+//        foreach ($t as $value){
+//            foreach ($arrayTime as $val){
+//                if($value->id_subject_register ==  $val){
+//                    $arrayTime_Day[$i]['time_study_start']= $value->time_study_start;
+//                    $arrayTime_Day[$i]['time_study_end']= $value->time_study_end;
+//                    $arrayTime_Day[$i]['day']= $value->day;
+//                    $i=$i+1;
+//                }
+//            }
+//        }
+//        //dd($arrayTime_Day);
+
+
+
+
+        //nếu số lượng hiện tại lớn hơn số lượng max thì không được đăng kí
+        if($qtyCurrent >= $qtyMax) {
+            return response()->json([
+                'status'  => false,
+                'message' => trans('Học phần đã hết chỗ'),
+            ]);
+        } else {
+            $resultRegister = new ResultRegister;
+            $resultRegister->id_user_student = $idUser;
+            $resultRegister->id_subject_register = $idSubjecRegister;
+            $idSubjects = SubjectRegister::find($idSubjecRegister)->id_subjects;
+            $resultRegister->id_subject = $idSubjects;
+            $resultRegister->is_learned = 2;// lưu bằng 2 để không show ra bảng điểm
+            $resultRegister->attendance = null;
+            $resultRegister->mid_term = null;
+            $resultRegister->end_term = null;
+//            $resultRegister->final = null;
+            //get rate now
+            $subjectRegister = SubjectRegister::find($idSubjecRegister);
+            $subjectId = $subjectRegister->id_subjects;
+            $idRate = Subjects::find($subjectId)->id_rate;
+            $rate = Rate::find($idRate);
+            $resultRegister->rate_attendance = $rate->attendance;
+            $resultRegister->rate_mid_term = $rate->mid_term;
+            $resultRegister->rate_end_term = $rate->end_term;
+            $resultRegister->time_register = $idTimeRegister;
+            if($resultRegister->save()) {
+                $subjecRegister->qty_current = $qtyCurrent + 1;
+                if($subjecRegister->save()) {
+                    return response()->json([
+                        'status'  => true,
+                        'message' => trans('Đăng ký thành công'),
+                    ]);
+                }else {
+                    return response()->json([
+                        'status'  => false,
+                        'message' => trans('Đăng ký không thành công'),
+                    ]);
+                }
+            }
+        }
+    }
+    public function Register(Request $request){
+        $idSubjecRegister = $request->id;
+        $user = Auth::user();
+        $idUser = $user->id;
+        $timeRegister = TimeRegister::where('status', 1)->orderBy('id', 'DESC')->first();
+        $idTimeRegister = $timeRegister->id;
+
+        //get qty current
+        $subjecRegister = SubjectRegister::find($idSubjecRegister);
+        $qtyCurrent = $subjecRegister->qty_current;
+        $qtyMax = $subjecRegister->qty_max;
+
+
+        //nếu đã đăng kí rồi thì không được đăng kí nữa
+        $idSubjects = SubjectRegister::where('id',$idSubjecRegister)->pluck('id_subjects')->toArray();
+        $countSubject = ResultRegister::where('id_subject', $idSubjects['0'])->where('id_user_student', $idUser)->where('time_register', $idTimeRegister)->get()->count();
+            if($countSubject >= 1)
+            {
+            return response()->json([
+                'status'  => false,
+                'message' => trans('Bạn đã đăng kí môn học này'),
+            ]);
+        }
+
+        //lấy số lượng tín chỉ được đăng kí tối đa
+        $creditsMax = $timeRegister->credits_max;
         $idSubject = ResultRegister::where('id_user_student', $idUser)->where('time_register', $idTimeRegister)->where('is_learned', 0)->pluck('id_subject');
         $creditCurrentUser = Subjects::find($idSubject)->pluck('credits')->sum();
         $idSubjects = SubjectRegister::where('id',$idSubjecRegister)->pluck('id_subjects');

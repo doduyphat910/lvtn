@@ -82,6 +82,7 @@ class SubjectRegisterController extends Controller
         return Admin::grid(SubjectRegister::class, function (Grid $grid) {
 
             $grid->id('ID')->sortable();
+            
             $grid->code_subject_register('Mã học phần')->display(function ($name){
                 return  '<a href="/admin/subject_register/' . $this->id . '/details">'.$name.'</a>';
             });
@@ -122,7 +123,7 @@ class SubjectRegisterController extends Controller
             $grid->date_end('Ngày kết thúc');
             $grid->id_time_register('Đợt đăng ký')->display(function ($idTimeRegister){
                 $timeRegister = TimeRegister::find($idTimeRegister);
-                if($timeRegister->name){
+                if(!empty($timeRegister->name)){
                     return "<span class='label label-info'>{$timeRegister->name}</span>";
                 } else {
                     return '';
@@ -197,7 +198,7 @@ class SubjectRegisterController extends Controller
 
         });
 EOT;
-            Admin::script($script);
+            // Admin::script($script);
             $form->display('id', 'ID');
             $form->text('code_subject_register', 'Mã học phần')->rules(function ($form){
                 return 'required|unique:subject_register,code_subject_register,'.$form->model()->id.',id';

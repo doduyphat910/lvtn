@@ -26,7 +26,9 @@ class CommentsController extends Controller
 
             $content->header('Góp ý kiến');
             $content->description('Ý kiến');
-
+            $content->breadcrumb(
+                ['text' => 'Góp ý kiến', 'url' => '../user/comments']
+            );
             $content->body($this->form());
         });
     }
