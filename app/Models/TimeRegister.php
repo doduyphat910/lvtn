@@ -42,4 +42,16 @@ class TimeRegister extends Model
     {
         return json_decode($statusImport, true);
     }
+
+    public function setStatusEditPointAttribute($statusPoint)
+    {
+        if(is_array($statusPoint)) {
+            $this->attributes['status_edit_point'] = json_encode($statusPoint);
+        }
+    }
+
+    public function getStatusEditPointAttribute($statusPoint)
+    {
+        return json_decode($statusPoint, true);
+    }
 }

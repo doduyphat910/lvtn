@@ -122,7 +122,7 @@ class SubjectRegisterController extends Controller
             $grid->date_end('Ngày kết thúc');
             $grid->id_time_register('Đợt đăng ký')->display(function ($idTimeRegister){
                 $timeRegister = TimeRegister::find($idTimeRegister);
-                if($timeRegister->name){
+                if(!empty($timeRegister->name)){
                     return "<span class='label label-info'>{$timeRegister->name}</span>";
                 } else {
                     return '';
@@ -198,7 +198,7 @@ class SubjectRegisterController extends Controller
         });
 EOT;
             Admin::script($script);
-            $form->display('id', 'ID');
+//            $form->display('id', 'ID');
             $form->text('code_subject_register', 'Mã học phần')->rules(function ($form){
                 return 'required|unique:subject_register,code_subject_register,'.$form->model()->id.',id';
             });

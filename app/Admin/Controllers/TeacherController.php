@@ -189,114 +189,106 @@ class TeacherController extends Controller
         );
     }
 
+    //todo start subject-register
+    #region subject register
     //subject register of teacher
-
     public function subjectRegister()
     {
         return Admin::content(function (Content $content) {
 
             $content->header('Giảng viên');
-            $content->description('Danh sách học kỳ');
+            $content->description('Xem lịch, TKB');
 
-            $content->body($this->formTimeRegister());
+            $content->body(
+             view('vendor.details',
+                [
+                    'template_body_name' => 'admin.Teacher.SubjectRegister.info',
+                    'formTimeRegister' => $this->formTimeRegister(),
+                ]));
         });
     }
 
     protected function formTimeRegister()
     {
         return Admin::form(TimeRegister::class, function (Form $form) {
-            $form->select('id_time_register', 'Đợt đăng ký')->options(TimeRegister::all()->pluck('name', 'id'));
-            $selected = '';
-            $script = <<<EOT
-        $(function () {
-        var pathname = window.location.pathname; 
-        if(pathname == '/admin/teacher' || pathname == '/admin' ) {
-            window.location.href = '/admin/teacher'
-        }
-            $('.id_time_register').change(function(e) {
-                $("form").submit(function(){
-                    var selected = $( ".id_time_register option:selected" ).val();
-                    window.location.href = '/admin/teacher/list-subject-register/' + selected;
-                });
-            });
-        });
-EOT;
-            Admin::script($script);
-//            $form->setAction('/teacher/list-subject-register/'.$selected );
+            $form->select('id_time_register', 'Thời gian')->options(TimeRegister::orderBy('id', 'DESC')->pluck('name', 'id'));
+
             $form->disableReset();
+            $form->disableSubmit();
+
         });
     }
 
-    public function listSubjectRegister($id)
-    {
-        return Admin::content(function (Content $content) use ($id) {
-            $content->header('Khoa, lớp');
-            $content->description('Danh sách lớp');
+//    public function listSubjectRegister($id)
+//    {
+//        return Admin::content(function (Content $content) use ($id) {
+//            $content->header('Khoa, lớp');
+//            $content->description('Danh sách lớp');
+//
+//            $content->body($this->gridSubjectRegister($id));
+//        });
+//    }
 
-            $content->body($this->gridSubjectRegister($id));
-        });
-    }
-
-    protected function gridSubjectRegister($idTimeRegister)
-    {
-        return Admin::grid(SubjectRegister::class, function (Grid $grid) use ($idTimeRegister) {
-            $user = Admin::user();
-            $idUser = $user->id;
-
-//            $idNewsTime = TimeRegister::orderBy('id', 'DESC')->limit(1)->pluck('id')->toArray();
-//            $arrSubjectTeacher = SubjectRegister::where('id_user_teacher', $idUser)->pluck('id')->toArray();
-//            $arrIdSubjectTeacher = ResultRegister::where('time_register', $idNewsTime)->whereIn('id_subject_register', $arrSubjectTeacher)
-//                ->pluck('id_subject_register')->toArray();
-
-//            if(count($arrIdSubjectTeacher) == 0) {
-//                $arrIdSubjectTeacher = [];
-//            }
-            $grid->model()->where('id_time_register', $idTimeRegister)->where('id_user_teacher', $idUser);
-//            $grid->id('ID')->sortable();
-            $grid->code_subject_register('Mã học phần')->display(function ($name) {
-                return '<a href="/admin/teacher/subject-register/' . $this->id . '/details">' . $name . '</a>';
-            });
-            $grid->id_subjects('Môn học')->display(function ($idSubject) {
-                if ($idSubject) {
-                    $name = Subjects::find($idSubject)->name;
-                    return "<span class='label label-info'>{$name}</span>";
-                } else {
-                    return '';
-                }
-            });
-
-            $grid->id_user_teacher('Giảng viên')->display(function ($id_user_teacher) {
-                if ($id_user_teacher) {
-                    $teacher = UserAdmin::find($id_user_teacher);
-                    if ($teacher) {
-                        return $teacher->name;
-                    } else {
-                        return '';
-                    }
-                } else {
-                    return '';
-                }
-            });
-            $grid->qty_current('Số lượng hiện tại');
-//            $grid->qty_min('Số lượng tối thiểu');
-//            $grid->qty_max('Số lượng tối đa');
-
-            $grid->date_start('Ngày bắt đầu');
-            $grid->date_end('Ngày kết thúc');
-            $grid->created_at('Tạo vào lúc');
-            $grid->updated_at('Cập nhật vào lúc');
-
-            //action
-            $grid->actions(function ($actions) {
-                $actions->disableEdit();
-                $actions->disableDelete();
-                $actions->append('<a href="/admin/teacher/subject-register/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
-            });
-            $grid->disableCreateButton();
-            $grid->disableExport();
-            $grid->disableRowSelector();
-        });
-    }
+//    protected function gridSubjectRegister($idTimeRegister)
+//    {
+//        return Admin::grid(SubjectRegister::class, function (Grid $grid) use ($idTimeRegister)  {
+//            $user = Admin::user();
+//            $idUser = $user->id;
+//
+////            $idNewsTime = TimeRegister::orderBy('id', 'DESC')->limit(1)->pluck('id')->toArray();
+////            $arrSubjectTeacher = SubjectRegister::where('id_user_teacher', $idUser)->pluck('id')->toArray();
+////            $arrIdSubjectTeacher = ResultRegister::where('time_register', $idNewsTime)->whereIn('id_subject_register', $arrSubjectTeacher)
+////                ->pluck('id_subject_register')->toArray();
+//
+////            if(count($arrIdSubjectTeacher) == 0) {
+////                $arrIdSubjectTeacher = [];
+////            }
+////            $grid->model()->where('id_time_register', $idTimeRegister)->where('id_user_teacher', $idUser);
+////            $grid->id('ID')->sortable();
+//            $grid->code_subject_register('Mã học phần')->display(function ($name) {
+//                return '<a href="/admin/teacher/subject-register/' . $this->id . '/details">' . $name . '</a>';
+//            });
+//            $grid->id_subjects('Môn học')->display(function ($idSubject) {
+//                if ($idSubject) {
+//                    $name = Subjects::find($idSubject)->name;
+//                    return "<span class='label label-info'>{$name}</span>";
+//                } else {
+//                    return '';
+//                }
+//            });
+//
+//            $grid->id_user_teacher('Giảng viên')->display(function ($id_user_teacher) {
+//                if ($id_user_teacher) {
+//                    $teacher = UserAdmin::find($id_user_teacher);
+//                    if ($teacher) {
+//                        return $teacher->name;
+//                    } else {
+//                        return '';
+//                    }
+//                } else {
+//                    return '';
+//                }
+//            });
+//            $grid->qty_current('Số lượng hiện tại');
+////            $grid->qty_min('Số lượng tối thiểu');
+////            $grid->qty_max('Số lượng tối đa');
+//
+//            $grid->date_start('Ngày bắt đầu');
+//            $grid->date_end('Ngày kết thúc');
+//            $grid->created_at('Tạo vào lúc');
+//            $grid->updated_at('Cập nhật vào lúc');
+//
+//            //action
+//            $grid->actions(function ($actions) {
+//                $actions->disableEdit();
+//                $actions->disableDelete();
+//                $actions->append('<a href="/admin/teacher/subject-register/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
+//            });
+//            $grid->disableCreateButton();
+//            $grid->disableExport();
+//            $grid->disableRowSelector();
+//        });
+//    }
 
     public function detailsSubjectRegister($id)
     {
@@ -413,8 +405,10 @@ EOT;
                 return "<span class='label label-info'>{$name}</span>";
             });
             $idTimeRegister = ResultRegister::where('id_subject_register', $idSubjectRegister)->pluck('time_register');
-            $statusImport = TimeRegister::find($idTimeRegister)->first();
-            if($statusImport == null) {
+            $timeRegister = TimeRegister::find($idTimeRegister)->first();
+            $statusImport = $timeRegister->status_import;
+            $statusEditPoint = $timeRegister->status_edit_point;
+            if($statusEditPoint == null || $statusEditPoint == []) {
                 $grid->attendance('Điểm chuyên cần');
                 $grid->mid_term('Điểm giữa kì');
                 $grid->end_term('Điểm cuối kì');
@@ -430,21 +424,64 @@ EOT;
                 })->setAttributes(['class'=>'finalPoint']);
 
             } else {
-                $statusImport = $statusImport->status_import;
-                if (in_array('1', $statusImport)) {
-                    $grid->attendance('Điểm chuyên cần')->editable();
+                switch (true){
+                    case in_array('1', $statusEditPoint)&& in_array('2', $statusEditPoint) && in_array('3', $statusEditPoint):
+                        $grid->attendance('Điểm chuyên cần')->editable();
+                        $grid->mid_term('Điểm giữa kì')->editable();
+                        $grid->end_term('Điểm cuối kì')->editable();
+                        break;
+                    case in_array('1', $statusEditPoint) && in_array('2', $statusEditPoint):
+                        $grid->attendance('Điểm chuyên cần')->editable();
+                        $grid->mid_term('Điểm giữa kì')->editable();
+                        $grid->end_term('Điểm cuối kì');
+                        break;
+                    case in_array('2', $statusEditPoint) && in_array('3', $statusEditPoint):
+                        $grid->attendance('Điểm chuyên cần');
+                        $grid->mid_term('Điểm giữa kì')->editable();
+                        $grid->end_term('Điểm cuối kì')->editable();
+                        break;
+                    case in_array('1', $statusEditPoint) && in_array('3', $statusEditPoint):
+                        $grid->attendance('Điểm chuyên cần')->editable();
+                        $grid->mid_term('Điểm giữa kì');
+                        $grid->end_term('Điểm cuối kì')->editable();
+                        break;
+                    case in_array('1', $statusEditPoint):
+                        $grid->attendance('Điểm chuyên cần')->editable();
+                        $grid->mid_term('Điểm giữa kì');
+                        $grid->end_term('Điểm cuối kì');
+                    break;
+                    case in_array('2', $statusEditPoint):
+                        $grid->attendance('Điểm chuyên cần');
+                        $grid->mid_term('Điểm giữa kì')->editable();
+                        $grid->end_term('Điểm cuối kì');
+                        break;
+                    case in_array('3', $statusEditPoint):
+                        $grid->attendance('Điểm chuyên cần');
+                        $grid->mid_term('Điểm giữa kì');
+                        $grid->end_term('Điểm cuối kì')->editable();
+                        break;
+
                 }
-                if (in_array('2', $statusImport)) {
-                    $grid->mid_term('Điểm giữa kì')->editable();
-                }
-                if (in_array('3', $statusImport)) {
-                    $grid->end_term('Điểm cuối kì')->editable();
-                }
-                if (in_array('All', $statusImport)) {
-                    $grid->attendance('Điểm chuyên cần')->editable();
-                    $grid->mid_term('Điểm giữa kì')->editable();
-                    $grid->end_term('Điểm cuối kì')->editable();
-                }
+//                    if(in_array('1', $statusEditPoint)) {
+//                        $grid->attendance('Điểm chuyên cần')->editable();
+//                        $grid->mid_term('Điểm giữa kì');
+//                        $grid->end_term('Điểm cuối kì');
+//                    }
+//                    if(in_array('2', $statusEditPoint)){
+//                        $grid->attendance('Điểm chuyên cần');
+//                        $grid->mid_term('Điểm giữa kì')->editable();
+//                        $grid->end_term('Điểm cuối kì');
+//                    }
+//                    if(in_array('3', $statusEditPoint)) {
+//                        $grid->attendance('Điểm chuyên cần');
+//                        $grid->mid_term('Điểm giữa kì');
+//                        $grid->end_term('Điểm cuối kì')->editable();
+//                    }
+//                    if(in_array('1', $statusEditPoint) && in_array('2', $statusEditPoint) ){
+//                        $grid->attendance('Điểm chuyên cần')->editable();
+//                        $grid->mid_term('Điểm giữa kì')->editable();
+//                        $grid->end_term('Điểm cuối kì');
+//                    }
                 $grid->column('Điểm tổng kết')->display(function () {
                     if(!$this->attendance || !$this->mid_term || !$this->end_term) {
                         return 'X';
@@ -496,6 +533,7 @@ SCRIPT;
             });
         });
     }
+    #endregion
 
 
 
