@@ -25,7 +25,9 @@ class UserSubjectController extends Controller
 
             $content->header('Đăng ký ngoài kế hoạch');
             $content->description('Danh sách môn học');
-
+            $content->breadcrumb(
+                ['text' => 'Đăng ký ngoài kế hoạch', 'url' => '../user/learn-improvement']
+            );
             $content->body($this->form());
         });
     }
@@ -39,7 +41,10 @@ class UserSubjectController extends Controller
             $form->hidden('id_user')->value($id);
             $form->hidden('id');
             $form->select('id_subject', 'Môn học')->options(Subjects::all()->pluck('name', 'id'))->rules('required');
-            
+            $form->tools(function (Form\Tools $tools) {
+            $tools->disableListButton();
+            $tools->disableBackButton();
+            });
        });
     }
 }

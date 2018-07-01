@@ -9,7 +9,7 @@
         </div>
     </div>
 
-    <!-- /.box-header -->
+    /.box-header
     <div class="box-body">
         <div class="table-responsive">
             <table class="table table-striped">

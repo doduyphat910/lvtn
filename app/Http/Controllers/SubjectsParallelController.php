@@ -23,7 +23,9 @@ class SubjectsParallelController extends Controller
 
             $content->header('Môn học song song');
             $content->description('Danh sách môn học song song');
-
+            $content->breadcrumb(
+                ['text' => 'Danh sách môn học song song', 'url' => '../user/subject-parallel']
+            );
             $content->body($this->grid());
         });
     }

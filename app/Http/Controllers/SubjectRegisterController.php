@@ -55,6 +55,7 @@ class SubjectRegisterController extends Controller
         return User::grid(Subjects::class, function (Grid $grid) {
             $grid->registerColumnDisplayer();
             $user = Auth::user();
+
             $schoolYearUser = $user->school_year;
             //check school year
             $timeRegister = TimeRegister::where('status', 1)->orderBy('id', 'DESC')->first();
@@ -121,50 +122,19 @@ class SubjectRegisterController extends Controller
                     }
                     $year = Semester::find($arraySemester)->year()->get();
                     $nameYear = $year['0']->name;
-                    return "<span class='label label-info'>{$nameSemester} - {$nameYear}</span>";
+                    if(substr($nameYear,4,5) % 2 == 0)
+                    {
+                        return "<span class='label label-info'>{$nameSemester} - {$nameYear}</span>";    
+                    } else {
+                        return "<span class='label label-success'>{$nameSemester} - {$nameYear}</span>";    
+                    }
+                    
                 }, $arraySemester);
                 return join('&nbsp;', $name);
             });
             $grid->column('Đăng ký')->display(function () {
-//                return '<a href="/user/subject-register/' . $this->id . '/details"  target="_blank" class="btn btn-md btnPencil" ><i class="glyphicon glyphicon-pencil"></i></a>';
                 return '<a href="/user/subject-register/' . $this->id . '/details" data-id='.$this->id.'  target="_blank" class="btn btn-md btnACV" ><i class="glyphicon glyphicon-pencil"></i></a>';
             });
-//            $script = <<<SCRIPT
-//                 $('.btnACV').click(function(e) {
-//                    var id = $(this).data('id');
-
-//             $.ajax({
-//                 method: 'get',
-//                 url: '/user/subject-register/' + id + '/checkBeforeAtfer',
-//                 data: {
-//                     _method:'checkBeforeAtfer',
-//                     _token:LA.token,
-//                 },
-//                 success: function (data) {
-//                     if (typeof data === 'object') {
-//                         if (data.status == false) {
-//                              swal({
-//                                   type: "error",
-//                                   title:"Thông báo",
-//                                   text: data.message,
-//                                  },function() {
-//                                     var href = $('.btnACV').attr('href');
-//                                   $('.btnACV').attr('href', 'javascript:void(0);');
-//                                   $('.btnACV').attr('target', '_self');
-
-//                              });
-//                         } 
-//                     }
-//                 }
-//             });
-
-//         });
-
-// SCRIPT;
-//                     User::script($script);
-
-
-
             $grid->disableCreateButton();
             $grid->disableExport();
             $grid->disableRowSelector();
@@ -172,23 +142,6 @@ class SubjectRegisterController extends Controller
             $grid->disableActions();
         });
     }
-
-    protected function form()
-    {
-        return User::form(Subjects::class, function (Form $form) {
-            $form->registerBuiltinFields();
-            $form->text('name', 'Tên môn học')->rules('required')->readOnly();
-            $form->number('credits', 'Tín chỉ')->rules('integer|min:1|max:6')->readOnly();
-            $form->multipleSelect('subject_group', 'Nhóm môn')->readOnly()->options(SubjectGroup::all()->pluck('name', 'id'))->rules('required');
-            $form->disableReset();
-
-            $form->tools(function (Form\Tools $tools) {
-                $tools->disableListButton();
-                $tools->disableBackButton();
-            });
-        });
-    }
-
     protected function gridSubjectRegister($idSubjects)
     {
         return User::grid(SubjectRegister::class, function (Grid $grid) use ($idSubjects) {
@@ -245,7 +198,7 @@ class SubjectRegisterController extends Controller
 SCRIPT;
                     User::script($script);
             $timeRegister = TimeRegister::where('status', 1)->orderBy('id', 'DESC')->first();
-            $grid->model()->where('id_Subjects', $idSubjects)->where('id_time_register', $timeRegister->id);
+            $grid->model()->where('id_subjects', $idSubjects)->where('id_time_register', $timeRegister->id);
 //            $grid->id('ID');
             $grid->code_subject_register('Mã học phần');
             $grid->id_subjects('Môn học')->display(function ($idSubject) {
