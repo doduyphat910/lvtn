@@ -90,8 +90,11 @@ Route::group([
     $router->resource('teacher/class',TeacherController::class);
     ///list subject-register
     $router->get('teacher/subject-register/{id}/details','TeacherController@detailsSubjectRegister')->middleware('teacher');
-    $router->get('teacher/list-subject-register/{id}','TeacherController@listSubjectRegister');
+//    $router->get('teacher/list-subject-register/{id}','TeacherController@listSubjectRegister');
+    $router->get('teacher/time-table/{id}','APIAdminController@timeTable');
+    $router->get('teacher/list-subject/{id}','APIAdminController@gridSubjectRegister');
     $router->get('teacher/subject-register','TeacherController@subjectRegister');
+
     $router->get('teacher','TeacherController@subjectRegister');
     //list history subject-register of teacher
     $router->get('teacher/history-subject-register/{id}/details','TeacherHistoryController@details')->middleware('teacher');

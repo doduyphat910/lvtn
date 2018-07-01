@@ -152,7 +152,10 @@ class TimeRegisterController extends Controller
             ];
             $form->switch('status', 'Trạng thái')->states($states)->default('0');
             $options = ['All'=>'Tất cả', '1'=>'Chuyên cần', '2'=>'Giữa kì', '3'=>'Cuối kì' ];
+            $options2 = ['AllPoint'=>'Tất cả', '1'=>'Chuyên cần', '2'=>'Giữa kì', '3'=>'Cuối kì' ];
+
             $form->checkbox('status_import', 'Trạng thái import')->options($options);
+            $form->checkbox('status_edit_point', 'Trạng thái sửa điểm')->options($options2);
             $script = <<<EOT
             $(function () {
                 $('input[value="All"]').on('ifChecked', function(event){
@@ -160,6 +163,12 @@ class TimeRegisterController extends Controller
                 });
                 $('input[value="All"]').on('ifUnchecked', function(event){
                   $('input[name="status_import[]"]').iCheck('uncheck');
+                });
+                 $('input[value="AllPoint"]').on('ifChecked', function(event){
+                  $('input[name="status_edit_point[]"]').iCheck('check');
+                });
+                $('input[value="AllPoint"]').on('ifUnchecked', function(event){
+                  $('input[name="status_edit_point[]"]').iCheck('uncheck');
                 });
             });
 EOT;
@@ -170,6 +179,9 @@ EOT;
                 }
                 if($form->status_import['0'] == 'All' || $form->status_import['0'] == '1' && $form->status_import['1'] == '2' && $form->status_import['2'] == '3'){
                     $form->status_import = 'All';
+                }
+                if(in_array('AllPoint',$form->status_edit_point)){
+                    $form->status_edit_point = ["1","2","3"];
                 }
                 if($form->status == 'on' ) {
                     if (!$id = $form->model()->id) {
@@ -182,7 +194,6 @@ EOT;
                             return back()->with(compact('error'));
                         }
                     }
-                    
                 }
             });
             $currentPath = Route::getFacadeRoot()->current()->uri();

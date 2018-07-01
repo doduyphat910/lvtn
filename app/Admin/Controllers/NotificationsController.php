@@ -83,7 +83,11 @@ class NotificationsController extends Controller
 //            $grid->disableActions();
             $grid->created_at('Tạo vào lúc');
             $grid->updated_at('Cập nhật vào lúc');
-
+            $grid->filter(function($filter){
+                $filter->disableIdFilter();
+                $filter->like('name', 'Tên thông báo');
+                $filter->like('description', 'Mô tả');
+            });
         });
     }
 

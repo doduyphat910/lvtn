@@ -16,6 +16,9 @@ use App\Models\SubjectGroup;
 use App\Models\Rate;
 use App\Models\Classroom;
 use App\Models\UserAdmin;
+use App\Models\ClassSTU;
+use App\Models\Department;
+
 
 use App\Http\Extensions\Facades\User;
 use app\Http\Extensions\LayoutUser\ContentUser;
@@ -45,15 +48,21 @@ class PointSubjectController extends Controller
             $content->breadcrumb(
                 ['text' => 'Điểm', 'url' => '../user/point-subject']
             );
-            $content->body($this->grid());
+            $content->body(
+                view('vendor.details',
+                [
+                    'template_body_name' => 'user.PointSubject.info',
+                    'form' => $this->form(),
+                    'grid' => $this->grid()
+                ]));
         });
     }
    protected function grid()
     {
         return User::grid(ResultRegister::class, function (Grid $grid) {
             $user = Auth::user();
-            $timeRegister = TimeRegister::orderBy('id', 'DESC')->first();
-            $grid->model()->where('id_user_student', $user->id);
+            // $timeRegister = TimeRegister::orderBy('id', 'DESC')->first();
+            $grid->model()->where('id_user_student', $user->id)->orderBy('time_register', 'DESC');
 
             $grid->column('Mã MH')->display(function(){
                 $subjetRegister = Subjects::find($this->id_subject);
@@ -147,5 +156,18 @@ class PointSubjectController extends Controller
             $grid->disableActions();
  			
     	});
+    }
+    protected function form()
+    {
+        return User::form(TimeRegister::class, function (Form $form) {
+            $form->registerBuiltinFields();
+            $id = Auth::User()->id;
+            $arrIdTimeRegiter=ResultRegister::where('id_user_student',$id)->distinct()->pluck('time_register')->toArray();
+
+            $form->select('id_time_register', 'Thời gian')->options(TimeRegister::whereIn('id',$arrIdTimeRegiter)->orderBy('id', 'DESC')->pluck('name', 'id'))->attribute(['id' => 'resultPoint']);
+            $form->disableReset();
+            $form->disableSubmit();
+
+        });
     }
 }

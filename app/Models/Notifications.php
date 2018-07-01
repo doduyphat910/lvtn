@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Notifications extends Model
 {
     use SoftDeletes;
-//    protected $table = 'class';
+    protected $table = 'notifications';
 }
