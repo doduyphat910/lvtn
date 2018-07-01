@@ -76,18 +76,26 @@ class RateController extends Controller
     {
         return Admin::grid(Rate::class, function (Grid $grid) {
 
-            $grid->id('ID')->sortable();
+//            $grid->id('ID')->sortable();
             $grid->name('Tỷ lệ')->display(function ($name){
                 return  '<a href="/admin/rate/' . $this->id . '/details">'.$name.'</a>';
-            });
-            $grid->attendance('Chuyên cần');
-            $grid->mid_term('Giữa kì');
-            $grid->end_term('Cuối kì');
+            })->sortable();
+            $grid->attendance('Chuyên cần')->sortable();
+            $grid->mid_term('Giữa kì')->sortable();
+            $grid->end_term('Cuối kì')->sortable();
             $grid->actions(function ($actions) {
                 $actions->append('<a href="/admin/rate/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
             });
-            $grid->created_at();
-            $grid->updated_at();
+            $grid->created_at('Tạo vào lúc')->sortable();
+            $grid->updated_at('Cập nhạt vào lúc')->sortable();
+            $grid->filter(function($filter) {
+                $filter->disableIdFilter();
+                $filter->like('name', 'Tên');
+                $filter->equal('attendance', 'Chuyên cần');
+                $filter->equal('mid_term', 'Giữa kì');
+                $filter->equal('end_term', 'Cuối kì');
+
+            });
         });
     }
 

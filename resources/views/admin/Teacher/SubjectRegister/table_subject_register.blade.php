@@ -8,6 +8,8 @@ $(function () {
                 data:{_token: "{{ csrf_token() }}"
                 },
                 success: function( msg ) {
+                    $('.grid-subject-register').hide();
+                    $('.timetable-teacher').hide();
                     $('.gridTimeRegister').html(msg);
                 }
             });

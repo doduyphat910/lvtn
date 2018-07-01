@@ -87,6 +87,7 @@ class NotificationsController extends Controller
                 $filter->disableIdFilter();
                 $filter->like('name', 'Tên thông báo');
                 $filter->like('description', 'Mô tả');
+                $filter->between('created_at', 'Tạo vào lúc')->datetime();
             });
         });
     }

@@ -8,6 +8,7 @@ use App\Models\SubjectRegister;
 use App\Models\Subjects;
 
 use App\Models\UserAdmin;
+use App\Models\Year;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Facades\Admin;
@@ -80,13 +81,13 @@ class SubjectsController extends Controller
         return Admin::grid(Subjects::class, function (Grid $grid) {
 //            debug($this->id);
 //            $grid->model()->where();
-            $grid->id('ID')->sortable();
-            $grid->subject_code('Mã môn học');
+//            $grid->id('ID')->sortable();
+            $grid->subject_code('Mã môn học')->sortable();
             $grid->name('Tên môn học')->display(function ($name){
                 return  '<a href="/admin/subject/' . $this->id . '/details" >'.$name.'</a>';
-            });
-            $grid->credits('Số tín chỉ');
-            $grid->credits_fee('Số tín chỉ học phí');
+            })->sortable();
+            $grid->credits('Số tín chỉ')->sortable();
+            $grid->credits_fee('Số tín chỉ học phí')->sortable();
             $grid->column('Học kỳ - Năm')->display(function () {
                 $id = $this->id;
                 $subject = Subjects::find($id);
@@ -111,7 +112,7 @@ class SubjectsController extends Controller
                     $nameYear = $year['0']->name;
                     return "<span class='label label-info'>{$nameSemester} - {$nameYear}</span>"  ;
                 }, $arraySemester);
-                return join('&nbsp;', $name);});
+                return join('&nbsp;', $name);})->sortable();
             $grid->column('Nhóm môn')->display(function () {
                 $subject = Subjects::find($this->id);
                 $nameGroup = $subject->subject_group()->pluck('name')->toArray();
@@ -123,33 +124,75 @@ class SubjectsController extends Controller
                     }
                 },$nameGroup);
                 return join('&nbsp;', $groupSubject);
-            });
+            })->sortable();
             $grid->id_rate('Tỷ lệ chuyên cần')->display(function ($rate){
                 if($rate){
                     return Rate::find($rate)->attendance;
                 } else {
                     return '';
                 }
-            });
+            })->sortable();
             $grid->column('Tỷ lệ giữa kì')->display(function (){
                 if($this->id_rate) {
                     return Rate::find($this->id_rate)->mid_term;
                 } else {
                     return '';
                 }
-            });
+            })->sortable();
             $grid->column('Tỷ lệ cuối kì')->display(function (){
                 if($this->id_rate) {
                     return Rate::find($this->id_rate)->end_term;
                 } else {
                     return '';
                 }
-            });
-            $grid->created_at();
-            $grid->updated_at();
+            })->sortable();
+            $grid->created_at('Tạo vào lúc')->sortable();
+            $grid->updated_at('Cập nhật vào lúc')->sortable();
             //action
             $grid->actions(function ($actions) {
                 $actions->append('<a href="/admin/subject/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
+            });
+            $grid->filter(function($filter){
+                $filter->disableIdFilter();
+                $filter->like('subject_code', 'Mã môn học');
+                $filter->like('name', 'Tên môn học');
+                $filter->like('credits', 'Tín chỉ');
+                $filter->like('credits_fee', 'Tín chỉ học phí');
+                $semesters = Semester::all()->toArray();
+                $optionSemesters = [];
+                foreach($semesters as $semester) {
+                    $nameYear = Year::where('id', $semester['id_year'])->first();
+                    $optionSemesters += [$semester['id'] => 'Học kỳ '. $semester['name']. ' - ' . $nameYear->name];
+                }
+                $filter->where(function ($query){
+                    $input = $this->input;
+                    $semester = Semester::where('id',$input)->first();
+                    $idSubject = $semester->subjects()->pluck('id')->toArray();
+                    $query->whereIn('id', $idSubject);
+                }, 'Học kì')->select($optionSemesters);
+                $filter->where(function ($query){
+                    $input = $this->input;
+                    $subjectGroup = SubjectGroup::where('id',$input)->first();
+                    $idSubject = $subjectGroup->subject()->pluck('id')->toArray();
+                    $query->where(function ($query) use ($idSubject) {
+                        $query->whereIn('id', $idSubject);
+                    });
+//                    $query->whereIn('id', $idSubject);
+                }, 'Nhóm môn học')->multipleSelect(SubjectGroup::all()->pluck('name', 'id'));
+                $rates = Rate::all();
+                $arrayRate = [];
+                foreach($rates as $rate) {
+                    $arrayRate += [$rate['id'] => $rate['attendance'] . '-'.  $rate['mid_term'] .'-' .$rate['end_term']];
+                }
+                $filter->where(function ($query){
+                    $input = $this->input;
+//                    $idRate = Rate::where('attendance', '%'. $input .'%')->pluck('id')->toArray();
+                    $query->whereIn('id_rate', $input);
+                }, 'Tỷ lệ điểm')->multipleSelect($arrayRate);
+//                $filter->in('id_subject1', 'Môn học trước')->multipleSelect(Subjects::all()->pluck('name', 'id'));
+//                $filter->in('id_subject2', 'Môn học song song')->multipleSelect(Subjects::all()->pluck('name', 'id'));
+                $filter->between('created_at', 'Tạo vào lúc')->datetime();
+
             });
         });
     }
@@ -165,7 +208,7 @@ class SubjectsController extends Controller
 
             $form->display('id', 'ID');
             $form->text('subject_code', 'Mã môn học')->rules(function ($form){
-                return 'required|unique:subjects,subject_code,'.$form->model()->id.',id';
+                return 'required|unique:subjects,subject_code,'.$form->model()->id.',id,deleted_at,NULL';
             });
             $form->text('name','Tên môn học')->rules('required');
             $form->number('credits','Tín chỉ')->rules('integer|min:1|max:6');

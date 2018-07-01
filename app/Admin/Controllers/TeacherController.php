@@ -11,6 +11,7 @@ use App\Models\StudentUser;
 use App\Models\SubjectRegister;
 use App\Models\Subjects;
 use App\Models\TimeRegister;
+use App\Models\TimeStudy;
 use App\Models\UserAdmin;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -204,6 +205,7 @@ class TeacherController extends Controller
                 [
                     'template_body_name' => 'admin.Teacher.SubjectRegister.info',
                     'formTimeRegister' => $this->formTimeRegister(),
+                    'gridSubjectRegister' => $this->gridSubjectRegister()
                 ]));
         });
     }
@@ -211,7 +213,10 @@ class TeacherController extends Controller
     protected function formTimeRegister()
     {
         return Admin::form(TimeRegister::class, function (Form $form) {
-            $form->select('id_time_register', 'Thời gian')->options(TimeRegister::orderBy('id', 'DESC')->pluck('name', 'id'));
+            $user = Admin::user();
+            $idUser = $user->id;
+            $timeRegisterTeacher = SubjectRegister::where('id_user_teacher', $idUser)->pluck('id_time_register')->toArray();
+            $form->select('id_time_register', 'Thời gian')->options(TimeRegister::whereIn('id', $timeRegisterTeacher)->orderBy('id', 'DESC')->pluck('name', 'id'));
 
             $form->disableReset();
             $form->disableSubmit();
@@ -219,76 +224,102 @@ class TeacherController extends Controller
         });
     }
 
-//    public function listSubjectRegister($id)
-//    {
-//        return Admin::content(function (Content $content) use ($id) {
-//            $content->header('Khoa, lớp');
-//            $content->description('Danh sách lớp');
-//
-//            $content->body($this->gridSubjectRegister($id));
-//        });
-//    }
+    protected function gridSubjectRegister()
+    {
+        return Admin::grid(SubjectRegister::class, function (Grid $grid)  {
+            $user = Admin::user();
+            $idUser = $user->id;
+            $subjectRegister = SubjectRegister::where('id_user_teacher', $idUser)->orderBy('id_time_register', 'DESC')->first();
+            $grid->model()->where('id_time_register', $subjectRegister->id_time_register)->where('id_user_teacher', $idUser);
+            $grid->code_subject_register('Mã học phần')->display(function ($name) {
+                return '<a href="/admin/teacher/subject-register/' . $this->id . '/details">' . $name . '</a>';
+            });
+            $grid->id_subjects('Môn học')->display(function ($idSubject) {
+                if ($idSubject) {
+                    $name = Subjects::find($idSubject)->name;
+                    return "<span class='label label-info'>{$name}</span>";
+                } else {
+                    return '';
+                }
+            });
+            $grid->column('Phòng')->display(function () {
+                $idClassroom = TimeStudy::where('id_subject_register', $this->id)->pluck('id_classroom')->toArray();
+                $classRoom = Classroom::whereIn('id', $idClassroom)->pluck('name')->toArray();
+                $classRoom = array_map(function ($classRoom) {
+                    return "<span class='label label-success'>{$classRoom}</span>";
+                }, $classRoom);
+                return join('&nbsp;', $classRoom);
+            });
+            $grid->column('Buổi học')->display(function () {
+                $day = TimeStudy::where('id_subject_register', $this->id)->pluck('day')->toArray();
+                $day = array_map(function ($day) {
+                    switch ($day) {
+                        case 2:
+                            $day = 'Thứ 2';
+                            break;
+                        case 3:
+                            $day = 'Thứ 3';
+                            break;
+                        case 4:
+                            $day = 'Thứ 4';
+                            break;
+                        case 5:
+                            $day = 'Thứ 5';
+                            break;
+                        case 6:
+                            $day = 'Thứ 6';
+                            break;
+                        case 7:
+                            $day = 'Thứ 7';
+                            break;
+                        case 8:
+                            $day = 'Chủ nhật';
+                            break;
+                    }
+                    return "<span class='label label-success'>{$day}</span>";
+                }, $day);
+                return join('&nbsp;', $day);
+            });
+            $grid->column('Thời gian học')->display(function () {
+                $timeStart = TimeStudy::where('id_subject_register', $this->id)->pluck('time_study_start')->toArray();
+                $timeEnd = TimeStudy::where('id_subject_register', $this->id)->pluck('time_study_end')->toArray();
+                $time = array_map(function ($timeStart, $timeEnd) {
+                    return "<span class='label label-success'>{$timeStart} - {$timeEnd}</span>";
+                }, $timeStart, $timeEnd);
+                return join('&nbsp;', $time);
+            });
+            $grid->id_user_teacher('Giảng viên')->display(function ($id_user_teacher) {
+                if ($id_user_teacher) {
+                    $teacher = UserAdmin::find($id_user_teacher);
+                    if ($teacher) {
+                        return $teacher->name;
+                    } else {
+                        return '';
+                    }
+                } else {
+                    return '';
+                }
+            });
+            $grid->qty_current('Số lượng hiện tại');
+//            $grid->qty_min('Số lượng tối thiểu');
+//            $grid->qty_max('Số lượng tối đa');
 
-//    protected function gridSubjectRegister($idTimeRegister)
-//    {
-//        return Admin::grid(SubjectRegister::class, function (Grid $grid) use ($idTimeRegister)  {
-//            $user = Admin::user();
-//            $idUser = $user->id;
-//
-////            $idNewsTime = TimeRegister::orderBy('id', 'DESC')->limit(1)->pluck('id')->toArray();
-////            $arrSubjectTeacher = SubjectRegister::where('id_user_teacher', $idUser)->pluck('id')->toArray();
-////            $arrIdSubjectTeacher = ResultRegister::where('time_register', $idNewsTime)->whereIn('id_subject_register', $arrSubjectTeacher)
-////                ->pluck('id_subject_register')->toArray();
-//
-////            if(count($arrIdSubjectTeacher) == 0) {
-////                $arrIdSubjectTeacher = [];
-////            }
-////            $grid->model()->where('id_time_register', $idTimeRegister)->where('id_user_teacher', $idUser);
-////            $grid->id('ID')->sortable();
-//            $grid->code_subject_register('Mã học phần')->display(function ($name) {
-//                return '<a href="/admin/teacher/subject-register/' . $this->id . '/details">' . $name . '</a>';
-//            });
-//            $grid->id_subjects('Môn học')->display(function ($idSubject) {
-//                if ($idSubject) {
-//                    $name = Subjects::find($idSubject)->name;
-//                    return "<span class='label label-info'>{$name}</span>";
-//                } else {
-//                    return '';
-//                }
-//            });
-//
-//            $grid->id_user_teacher('Giảng viên')->display(function ($id_user_teacher) {
-//                if ($id_user_teacher) {
-//                    $teacher = UserAdmin::find($id_user_teacher);
-//                    if ($teacher) {
-//                        return $teacher->name;
-//                    } else {
-//                        return '';
-//                    }
-//                } else {
-//                    return '';
-//                }
-//            });
-//            $grid->qty_current('Số lượng hiện tại');
-////            $grid->qty_min('Số lượng tối thiểu');
-////            $grid->qty_max('Số lượng tối đa');
-//
-//            $grid->date_start('Ngày bắt đầu');
-//            $grid->date_end('Ngày kết thúc');
-//            $grid->created_at('Tạo vào lúc');
-//            $grid->updated_at('Cập nhật vào lúc');
-//
-//            //action
-//            $grid->actions(function ($actions) {
-//                $actions->disableEdit();
-//                $actions->disableDelete();
-//                $actions->append('<a href="/admin/teacher/subject-register/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
-//            });
-//            $grid->disableCreateButton();
-//            $grid->disableExport();
-//            $grid->disableRowSelector();
-//        });
-//    }
+            $grid->date_start('Ngày bắt đầu');
+            $grid->date_end('Ngày kết thúc');
+            $grid->created_at('Tạo vào lúc');
+            $grid->updated_at('Cập nhật vào lúc');
+
+            //action
+            $grid->actions(function ($actions) {
+                $actions->disableEdit();
+                $actions->disableDelete();
+                $actions->append('<a href="/admin/teacher/subject-register/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
+            });
+            $grid->disableCreateButton();
+            $grid->disableExport();
+            $grid->disableRowSelector();
+        });
+    }
 
     public function detailsSubjectRegister($id)
     {
@@ -462,26 +493,6 @@ EOT;
                         break;
 
                 }
-//                    if(in_array('1', $statusEditPoint)) {
-//                        $grid->attendance('Điểm chuyên cần')->editable();
-//                        $grid->mid_term('Điểm giữa kì');
-//                        $grid->end_term('Điểm cuối kì');
-//                    }
-//                    if(in_array('2', $statusEditPoint)){
-//                        $grid->attendance('Điểm chuyên cần');
-//                        $grid->mid_term('Điểm giữa kì')->editable();
-//                        $grid->end_term('Điểm cuối kì');
-//                    }
-//                    if(in_array('3', $statusEditPoint)) {
-//                        $grid->attendance('Điểm chuyên cần');
-//                        $grid->mid_term('Điểm giữa kì');
-//                        $grid->end_term('Điểm cuối kì')->editable();
-//                    }
-//                    if(in_array('1', $statusEditPoint) && in_array('2', $statusEditPoint) ){
-//                        $grid->attendance('Điểm chuyên cần')->editable();
-//                        $grid->mid_term('Điểm giữa kì')->editable();
-//                        $grid->end_term('Điểm cuối kì');
-//                    }
                 $grid->column('Điểm tổng kết')->display(function () {
                     if(!$this->attendance || !$this->mid_term || !$this->end_term) {
                         return 'X';

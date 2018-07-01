@@ -2,6 +2,7 @@
 namespace App\Admin\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Classroom;
 use App\Models\SubjectRegister;
 use App\Models\Subjects;
 use App\Models\TimeRegister;
@@ -19,7 +20,6 @@ class APIAdminController extends Controller
     protected function gridSubjectRegister(Request $request)
     {
         $idTimeRegister = $request->id;
-
         return Admin::grid(SubjectRegister::class, function (Grid $grid) use ($idTimeRegister)  {
             $user = Admin::user();
             $idUser = $user->id;
@@ -35,7 +35,52 @@ class APIAdminController extends Controller
                     return '';
                 }
             });
-
+            $grid->column('Phòng')->display(function () {
+                $idClassroom = TimeStudy::where('id_subject_register', $this->id)->pluck('id_classroom')->toArray();
+                $classRoom = Classroom::whereIn('id', $idClassroom)->pluck('name')->toArray();
+                $classRoom = array_map(function ($classRoom) {
+                    return "<span class='label label-success'>{$classRoom}</span>";
+                }, $classRoom);
+                return join('&nbsp;', $classRoom);
+            });
+            $grid->column('Buổi học')->display(function () {
+                $day = TimeStudy::where('id_subject_register', $this->id)->pluck('day')->toArray();
+                $day = array_map(function ($day) {
+                    switch ($day) {
+                        case 2:
+                            $day = 'Thứ 2';
+                            break;
+                        case 3:
+                            $day = 'Thứ 3';
+                            break;
+                        case 4:
+                            $day = 'Thứ 4';
+                            break;
+                        case 5:
+                            $day = 'Thứ 5';
+                            break;
+                        case 6:
+                            $day = 'Thứ 6';
+                            break;
+                        case 7:
+                            $day = 'Thứ 7';
+                            break;
+                        case 8:
+                            $day = 'Chủ nhật';
+                            break;
+                    }
+                    return "<span class='label label-success'>{$day}</span>";
+                }, $day);
+                return join('&nbsp;', $day);
+            });
+            $grid->column('Thời gian học')->display(function () {
+                $timeStart = TimeStudy::where('id_subject_register', $this->id)->pluck('time_study_start')->toArray();
+                $timeEnd = TimeStudy::where('id_subject_register', $this->id)->pluck('time_study_end')->toArray();
+                $time = array_map(function ($timeStart, $timeEnd) {
+                    return "<span class='label label-success'>{$timeStart} - {$timeEnd}</span>";
+                }, $timeStart, $timeEnd);
+                return join('&nbsp;', $time);
+            });
             $grid->id_user_teacher('Giảng viên')->display(function ($id_user_teacher) {
                 if ($id_user_teacher) {
                     $teacher = UserAdmin::find($id_user_teacher);
@@ -51,12 +96,10 @@ class APIAdminController extends Controller
             $grid->qty_current('Số lượng hiện tại');
     //            $grid->qty_min('Số lượng tối thiểu');
     //            $grid->qty_max('Số lượng tối đa');
-
             $grid->date_start('Ngày bắt đầu');
             $grid->date_end('Ngày kết thúc');
             $grid->created_at('Tạo vào lúc');
             $grid->updated_at('Cập nhật vào lúc');
-
             //action
             $grid->actions(function ($actions) {
                 $actions->disableEdit();

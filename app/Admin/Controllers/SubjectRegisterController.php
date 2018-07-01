@@ -81,18 +81,18 @@ class SubjectRegisterController extends Controller
     {
         return Admin::grid(SubjectRegister::class, function (Grid $grid) {
 
-            $grid->id('ID')->sortable();
+//            $grid->id('ID')->sortable();
             $grid->code_subject_register('Mã học phần')->display(function ($name){
                 return  '<a href="/admin/subject_register/' . $this->id . '/details">'.$name.'</a>';
-            });
+            })->sortable();
             $grid->id_subjects('Môn học')->display(function ($idSubject){
                 if($idSubject){
                     $name = Subjects::find($idSubject)->name;
-                    return "<span class='label label-info'>{$name}</span>";
+                    return "<span class='label label-danger'>{$name}</span>";
                 } else {
                     return '';
                 }
-            });
+            })->sortable();
             $grid->column('Phòng')->display(function () {
                 $idClassroom = TimeStudy::where('id_subject_register', $this->id)->pluck('id_classroom')->toArray();
                 $classRoom = Classroom::whereIn('id', $idClassroom)->pluck('name')->toArray();
@@ -100,7 +100,7 @@ class SubjectRegisterController extends Controller
                     return "<span class='label label-success'>{$classRoom}</span>";
                 }, $classRoom);
                 return join('&nbsp;', $classRoom);
-            });
+            })->sortable();
             $grid->id_user_teacher('Giảng viên')->display(function ($id_user_teacher){
                 if($id_user_teacher){
                     $teacher = UserAdmin::find($id_user_teacher);
@@ -112,14 +112,14 @@ class SubjectRegisterController extends Controller
                 } else {
                     return '';
                 }
-            });
-            $grid->qty_current('Số lượng hiện tại');
-            $grid->qty_min('Số lượng tối thiểu');
-            $grid->qty_max('Số lượng tối đa');
+            })->sortable();
+            $grid->qty_current('Số lượng hiện tại')->sortable();
+//            $grid->qty_min('Số lượng tối thiểu');
+//            $grid->qty_max('Số lượng tối đa');
 //            $grid->time_study_start('Giờ học bắt đầu');
 //            $grid->time_study_end('Giờ học kết thúc');
-            $grid->date_start('Ngày bắt đầu');
-            $grid->date_end('Ngày kết thúc');
+            $grid->date_start('Ngày bắt đầu')->sortable();
+            $grid->date_end('Ngày kết thúc')->sortable();
             $grid->id_time_register('Đợt đăng ký')->display(function ($idTimeRegister){
                 $timeRegister = TimeRegister::find($idTimeRegister);
                 if(!empty($timeRegister->name)){
@@ -127,7 +127,7 @@ class SubjectRegisterController extends Controller
                 } else {
                     return '';
                 }
-            });
+            })->sortable();
 //            $grid->comlumn('Đợt đăng ký')->display(function (){
 //                if($this->id_time_register){
 //                    return TimeRegister::find($this->id_time_register)->name;
@@ -152,14 +152,28 @@ class SubjectRegisterController extends Controller
 //                }
 //                debug($this->id);
            // });
-            $grid->created_at('Tạo vào lúc');
-            $grid->updated_at('Cập nhật vào lúc');
+            $grid->created_at('Tạo vào lúc')->sortable();
+            $grid->updated_at('Cập nhật vào lúc')->sortable();
 
             //action
             $grid->actions(function ($actions) {
                 $actions->append('<a href="/admin/subject_register/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
             });
-
+            $grid->filter(function($filter){
+                $filter->disableIdFilter();
+                $filter->like('code_subject_register', 'Mã học phần');
+//                $filter->in('id_subjects', 'Tên môn học')->multipleSelect(Subjects::all()->pluck('name', 'id'));
+                $filter->where(function ($query) {
+                    $input = $this->input;
+                    $query->whereIn('id_subjects', $input);
+                }, 'Tên môn học')->multipleSelect(Subjects::all()->pluck('name', 'id'));
+                $filter->in('id_user_teacher', 'Giảng viên')->multipleSelect(UserAdmin::where('type_user', 0)->pluck('name', 'id'));
+                $filter->in('id_time_register', 'TG Đăng ký')->multipleSelect(TimeRegister::all()->pluck('name','id'));
+                $filter->like('qty_current', 'SL hiện tại');
+                $filter->date('date_start', 'Ngày bắt đầu');
+                $filter->date('date_end', 'Ngày kết thúc');
+                $filter->between('created_at', 'Tạo vào lúc')->datetime();
+            });
         });
     }
 
@@ -200,7 +214,8 @@ EOT;
             Admin::script($script);
 //            $form->display('id', 'ID');
             $form->text('code_subject_register', 'Mã học phần')->rules(function ($form){
-                return 'required|unique:subject_register,code_subject_register,'.$form->model()->id.',id';
+//
+                return 'required|unique:subject_register,code_subject_register,'.$form->model()->id.',idx';
             });
             $form->select('id_subjects', 'Môn học')->options(Subjects::all()->pluck('name', 'id'))->rules('required');
             $form->select('id_user_teacher', 'Giảng viên')->options(UserAdmin::where('type_user', '0')->pluck('name', 'id'))->rules('required');

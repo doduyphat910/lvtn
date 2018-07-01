@@ -75,17 +75,30 @@ class SubjectParallelController extends Controller
     {
         return Admin::grid(SubjectParallel::class, function (Grid $grid) {
 
-            $grid->id('ID')->sortable();
+//            $grid->id('ID')->sortable();
             $grid->id_subject1('Môn học trước')->display(function ($idSubject1){
                 $name = Subjects::find($idSubject1)->name;
                 return $name;
-            });
+            })->sortable();
             $grid->id_subject2('Môn học song song')->display(function ($idSubject2){
                 $name = Subjects::find($idSubject2)->name;
                 return $name;
+            })->sortable();
+            $grid->created_at()->sortable();
+            $grid->updated_at()->sortable();
+            $grid->filter(function($filter){
+                $filter->disableIdFilter();
+//                $filter->where(function ($query){
+//                    $input = $this->input;
+//                    $subject1 = Subjects::where('name', 'like' ,'%'.$input.'%' )->pluck('id')->toArray();
+//                    $query->where(function ($query) use ($subject1) {
+//                        $query->whereIn('id_subject1', $subject1);
+//                    });
+//                }, 'Môn học trước');
+                $filter->in('id_subject1', 'Môn học trước')->multipleSelect(Subjects::all()->pluck('name', 'id'));
+                $filter->in('id_subject2', 'Môn học song song')->multipleSelect(Subjects::all()->pluck('name', 'id'));
+                $filter->between('created_at', 'Tạo vào lúc')->datetime();
             });
-            $grid->created_at();
-            $grid->updated_at();
         });
     }
 

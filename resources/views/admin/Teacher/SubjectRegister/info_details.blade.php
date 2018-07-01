@@ -13,6 +13,12 @@
                 </ul>
                 <div class="tab-content fields-group">
                     <div class="tab-pane active" id="tab-form-1" >
+                            <div class="grid-subject-register">
+                                @include('admin.Teacher.SubjectRegister.table_teacher_subject')
+                            </div>
+                            <div class="timetable-teacher">
+                                @include('admin.Teacher.SubjectRegister.time_table_teacher')
+                            </div>
                             @include('admin.Teacher.SubjectRegister.table_subject_register')
                     </div>
                 </div>

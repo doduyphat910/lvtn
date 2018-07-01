@@ -75,15 +75,22 @@ class SubjectGroupController extends Controller
     protected function grid()
     {
         return Admin::grid(SubjectGroup::class, function (Grid $grid) {
-            $grid->id('ID')->sortable();
+//            $grid->id('ID')->sortable();
+            $grid->model()->orderBy('created_at', 'DESC');
             $grid->name('Tên nhóm môn')->display(function ($name){
                 return  '<a href="/admin/subject_group/' . $this->id . '/details">'.$name.'</a>';
             });
             $grid->actions(function ($actions) {
                 $actions->append('<a href="/admin/subject_group/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
             });
-            $grid->created_at();
-            $grid->updated_at();
+            $grid->created_at('Tạo vào lúc');
+            $grid->updated_at('Cập nhật vào lúc');
+            $grid->filter(function($filter) {
+                $filter->disableIdFilter();
+                $filter->like('name', 'Tên nhóm môn');
+                $filter->between('created_at', 'Tạo vào lúc')->datetime();
+
+            });
         });
     }
 
