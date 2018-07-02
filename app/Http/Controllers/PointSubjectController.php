@@ -63,7 +63,6 @@ class PointSubjectController extends Controller
             $user = Auth::user();
             // $timeRegister = TimeRegister::orderBy('id', 'DESC')->first();
             $grid->model()->where('id_user_student', $user->id)->orderBy('time_register', 'DESC');
-
             $grid->column('Mã MH')->display(function(){
                 $subjetRegister = Subjects::find($this->id_subject);
                 if($subjetRegister->subject_code) {

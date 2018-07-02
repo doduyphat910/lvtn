@@ -76,18 +76,22 @@ class UserAdminController extends UserController
     protected function grid()
     {
         return Admin::grid(UserAdmin::class,function (Grid $grid) {
-            $grid->id('ID')->sortable();
+//            $grid->id('ID')->sortable();
             $currentPath = Route::getFacadeRoot()->current()->uri();
             if ($currentPath == 'admin/teacher_user') {
                 $grid->model()->where('type_user', 0);
             } else if($currentPath == 'admin/user_admin') {
                 $grid->model()->where('type_user', 1);
             }
-            $grid->code_number('Mã số');
-            $grid->username(trans('admin.username'));
-            $grid->name(trans('admin.name'));
-            $grid->roles(trans('admin.roles'))->pluck('name')->label();
-            $grid->email('Email');
+            $grid->rows(function (Grid\Row $row) {
+                $row->column('number', $row->number);
+            });
+            $grid->number('STT');
+//            $grid->code_number('Mã số');
+            $grid->username(trans('admin.username'))->sortable();
+            $grid->name(trans('admin.name'))->sortable();
+            $grid->roles(trans('admin.roles'))->pluck('name')->label()->sortable();
+            $grid->email('Email')->sortable();
             if ($currentPath == 'admin/teacher_user') {
                 $grid->column('Lớp')->display(function ($id) {
                     $idTeacher = $this->id;
@@ -100,7 +104,7 @@ class UserAdminController extends UserController
                         }
                     },$arrClassName);
                     return join('&nbsp;', $arrClassName);
-                });
+                })->sortable();
             }
             $grid->type_user('Loại tài khoản')->display(function ($typeUser){
                 if($typeUser == 0) {
@@ -108,12 +112,12 @@ class UserAdminController extends UserController
                 } else if($typeUser == 1) {
                     return 'Quản trị';
                 }
-            });
-            $grid->created_at(trans('admin.created_at'));
-            $grid->updated_at(trans('admin.updated_at'));
+            })->sortable();
+            $grid->created_at(trans('admin.created_at'))->sortable();
+            $grid->updated_at(trans('admin.updated_at'))->sortable();
 
             $grid->actions(function (Grid\Displayers\Actions $actions) {
-                if ($actions->getKey() == 3) {
+                if ($actions->getKey() == 1) {
                     $actions->disableDelete();
                 }
             });
@@ -122,6 +126,24 @@ class UserAdminController extends UserController
                 $tools->batch(function (Grid\Tools\BatchActions $actions) {
                     $actions->disableDelete();
                 });
+            });
+            $grid->filter(function ($filter){
+                $filter->disableIdFilter();
+                $filter->like('user_name', 'Tên đăng nhập');
+                $filter->like('name', 'Tên');
+                $filter->like('email', 'Email');
+                $currentPath = Route::getFacadeRoot()->current()->uri();
+                if ($currentPath == 'admin/teacher_user') {
+                    $filter->where(function ($query) {
+                        $input = $this->input;
+                        $arrTeacher = ClassSTU::where('id', $input)->pluck('id_user_teacher')->toArray();
+                        $query->whereIn('id', $arrTeacher);
+                    }, 'Lớp')->select(ClassSTU::all()->pluck('name', 'id'));
+                }
+                if ($currentPath == 'admin/all_user') {
+                   $filter->equal('type_user', 'Loại tài khoản')->radio([0 => 'Giảng viên', 1=> 'Quản trị']);
+                }
+                $filter->between('created_at', 'Tạo vào lúc')->datetime();
             });
         });
     }
@@ -153,6 +175,10 @@ EOT;
             Admin::script($script);
 
             $form->display('id', 'ID');
+            $currentPath = Route::getFacadeRoot()->current()->uri();
+//            if($currentPath == "admin/teacher_user/create") {
+//                $form->text('code_number', 'Mã GV')->rules('required');
+//            }
             $form->text('username', trans('admin.username'))->rules('required');
             $form->text('name', trans('admin.name'))->rules('required');
             $form->email('email', 'Email');
@@ -178,25 +204,18 @@ EOT;
 //                    $form->password = bcrypt($form->password);
 //                }
 //            });
-            $form->saving(function (Form $form) {
-                if($form->type_user == 0) {
-                    $code = 'GV';
-                    $count = UserAdmin::where('type_user', 0)->get()->count();
-                    $form->code_number = $code . '500'. ($count + 1);
-                } else if($form->type_user == 1) {
-                    $code = 'QT';
-                    $count = UserAdmin::where('type_user', 1)->get()->count();
-                    $form->code_number = $code . '00'. ($count + 1);
 
-                }
-            });
-
-
+            //random code_number teacher & admin
 //            $form->saving(function (Form $form) {
-//                $count = StudentUser::where('school_year', $form->school_year )->count();
-//                $year = $form->school_year;
-//                $year = substr( $year, 2, 2);
-//                $form->code_number = $form->level . '5' . $year . '00'. ($count + 1);
+//                if($form->type_user == 0) {
+//                    $code = 'GV';
+//                    $count = UserAdmin::where('type_user', 0)->get()->count();
+//                    $form->code_number = $code . '500'. ($count + 1);
+//                } else if($form->type_user == 1) {
+//                    $code = 'QT';
+//                    $count = UserAdmin::where('type_user', 1)->get()->count();
+//                    $form->code_number = $code . '00'. ($count + 1);
+//                }
 //            });
         });
     }

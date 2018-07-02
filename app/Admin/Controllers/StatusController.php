@@ -70,11 +70,20 @@ class StatusController extends Controller
     protected function grid()
     {
         return Admin::grid(Status::class, function (Grid $grid) {
-
+            $grid->rows(function (Grid\Row $row) {
+                $row->column('number', $row->number);
+            });
+            $grid->number('STT');
             $grid->ids('ID')->sortable();
-            $grid->status('Trạng thái');
-            $grid->created_at('Tạo vào lúc');
-            $grid->updated_at('Cập nhật vào lúc');
+            $grid->status('Trạng thái')->sortable();
+            $grid->created_at('Tạo vào lúc')->sortable();
+            $grid->updated_at('Cập nhật vào lúc')->sortable();
+            $grid->filter(function ($filter){
+                $filter->disableIdFilter();
+                $filter->equal('ids', 'ID');
+                $filter->like('status', 'Tên trạng thái');
+                $filter->between('created_at', 'Tạo vào lúc')->datetime();
+            });
         });
     }
 

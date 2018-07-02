@@ -97,8 +97,8 @@ Route::group([
 
     $router->get('teacher','TeacherController@subjectRegister');
     //list history subject-register of teacher
-    $router->get('teacher/history-subject-register/{id}/details','TeacherHistoryController@details')->middleware('teacher');
-    $router->resource('teacher/history-subject-register/',TeacherHistoryController::class);
+//    $router->get('teacher/history-subject-register/{id}/details','TeacherHistoryController@details')->middleware('teacher');
+//    $router->resource('teacher/history-subject-register/',TeacherHistoryController::class);
 
 
     //import point attendance

@@ -6,8 +6,14 @@ use Illuminate\Support\Facades\DB;
 
           $idUser = Admin::user()->id;
           $subjectRegister = SubjectRegister::where('id_user_teacher', $idUser)->orderBy('id_time_register', 'DESC')->first();
-          $idSubjectRegister = SubjectRegister::where('id_user_teacher', $idUser)->where('id_time_register', $subjectRegister->id_time_register)->pluck('id');
-          $timeStudys = TimeStudy::whereIn('id_subject_register', $idSubjectRegister)->get()->toArray();
+          if(!empty($subjectRegister)) {
+              $idSubjectRegister = SubjectRegister::where('id_user_teacher', $idUser)->where('id_time_register', $subjectRegister->id_time_register)->pluck('id');
+              $timeStudys = TimeStudy::whereIn('id_subject_register', $idSubjectRegister)->get()->toArray();
+          } else {
+              $subjectRegister = '';
+              $timeStudys = [];
+          }
+
 
           $arrDays = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ nhật"];
           $arrPeriods =DB::table('time_table')->select('time_start', 'time_end')->get();

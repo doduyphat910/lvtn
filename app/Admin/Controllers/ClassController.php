@@ -75,28 +75,41 @@ class ClassController extends Controller
     protected function grid()
     {
         return Admin::grid(ClassSTU::class, function (Grid $grid) {
-//            $grid->options()->select([
-//                1 => 'Sed ut perspiciatis unde omni',
-//                2 => 'voluptatem accusantium doloremque',
-//                3 => 'dicta sunt explicabo',
-//                4 => 'laudantium, totam rem aperiam',
-//            ]);
-            $grid->id('ID')->sortable();
+//            $grid->id('ID')->sortable();
+            $grid->rows(function (Grid\Row $row) {
+                $row->column('number', $row->number);
+            });
+            $grid->number('STT');
             $grid->name('Tên lớp')->display(function ($name){
                 return '<a href="/admin/class/' . $this->id . '/details">'.$name.'</a>';
-            });
+            })->sortable();
+            $grid->id_user_teacher('GV cố vấn')->display(function ($idTeacher){
+                if(!empty($idTeacher)){
+                    $nameTeacher = UserAdmin::find($idTeacher)->name;
+                    return "<span class='label label-success'>{$nameTeacher}</span>";
+                } else {
+                    return $idTeacher = '';
+                }
+            })->sortable();
             $grid->id_department('Tên khoa')->display(function ($idDepartment){
                 if($idDepartment) {
                     return Department::find($idDepartment)->name;
                 } else {
                     return '';
                 }
-            });
+            })->sortable();
             $grid->actions(function ($actions) {
                 $actions->append('<a href="/admin/class/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
             });
-            $grid->created_at();
-            $grid->updated_at();
+            $grid->created_at('Tạo vào lúc')->sortable();
+            $grid->updated_at('Cập nhật vào lúc')->sortable();
+            $grid->filter(function ($filter){
+                $filter->disableIdFilter();
+                $filter->like('name', 'Tên');
+                $filter->in('id_user_teacher', 'GV cố vấn')->multipleSelect(UserAdmin::where('type_user',0)->pluck('name', 'id'));
+                $filter->in('id_department', 'Tên khoa')->select(Department::all()->pluck('name','id'));
+                $filter->between('created_at', 'Tạo vào lúc')->datetime();
+            });
         });
     }
 

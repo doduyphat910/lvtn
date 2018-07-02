@@ -230,7 +230,11 @@ class TeacherController extends Controller
             $user = Admin::user();
             $idUser = $user->id;
             $subjectRegister = SubjectRegister::where('id_user_teacher', $idUser)->orderBy('id_time_register', 'DESC')->first();
-            $grid->model()->where('id_time_register', $subjectRegister->id_time_register)->where('id_user_teacher', $idUser);
+            if(!empty($subjectRegister)) {
+                $grid->model()->where('id_time_register', $subjectRegister->id_time_register)->where('id_user_teacher', $idUser);
+            } else {
+                $grid->model()->where('id', '-1');
+            }
             $grid->code_subject_register('Mã học phần')->display(function ($name) {
                 return '<a href="/admin/teacher/subject-register/' . $this->id . '/details">' . $name . '</a>';
             });
