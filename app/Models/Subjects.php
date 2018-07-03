@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Subjects extends Model
 {
     use SoftDeletes;
+    protected $primaryKey = 'subject_code';
+    protected $keyType  = 'string';
     protected $table = 'subjects';
 
     public function user_subject() {

@@ -74,25 +74,26 @@ class SubjectRegisterController extends Controller
                 //sort follow semester
                 $field = '';
                 foreach ($subjects_id as $id) {
-                    $field .= ($id . ',');
+                    $field .= ('"'.$id.'"' . ',');
                 }
                 $field = substr($field, 0, strlen($field) - 1);
+//                dd($field);
                 //get subject user learned
                 $idSubjectRegister = ResultRegister::where('id_user_student', $user->id)->where('is_learned', 1)->pluck('id_subject_register')->toArray();
-                $idSubjectLearned = SubjectRegister::whereIn('id', $idSubjectRegister)->pluck('id_subjects')->toArray();
+                $idSubjectLearned = SubjectRegister::whereIn('code_subject_register', $idSubjectRegister)->pluck('id_subjects')->toArray();
                 //show subject not learned and subjects in semester in time register (hiển thị các môn chưa học & trong đợt đăng kí đang mở)
-                $grid->model()->whereIn('id', $subjects_id)->whereNotIn('id', $idSubjectLearned)->orderBy(DB::raw('FIELD(id, ' . $field . ')'));
+                $grid->model()->whereIn('subject_code', $subjects_id)->whereNotIn('subject_code', $idSubjectLearned)->orderBy(DB::raw('FIELD(subject_code, ' . $field . ')'));
             }
             //$grid->id('id');
             $grid->subject_code('Mã môn học');
             $grid->name('Tên môn học')->display(function ($name) {
-                return '<a href="/user/subject-register/' . $this->id . '/details"  target="_blank" >' . $name . '</a>';
+                return '<a href="/user/subject-register/' . $this->subject_code . '/details"  target="_blank" >' . $name . '</a>';
             });
 
             $grid->credits('Số tín chỉ');
             $grid->credits_fee('Số tín chỉ học phí');
             $grid->column('Nhóm môn')->display(function () {
-                $subject = Subjects::find($this->id);
+                $subject = Subjects::find($this->subject_code);
                 $nameGroup = $subject->subject_group()->pluck('name')->toArray();
                 $groupSubject = array_map(function ($nameGroup){
                     if($nameGroup) {
@@ -105,7 +106,7 @@ class SubjectRegisterController extends Controller
 
             });
             $grid->column('Học kỳ - Năm')->display(function () {
-                $id = $this->id;
+                $id = $this->subject_code;
                 $subject = Subjects::find($id);
                 $arraySemester = $subject->semester()->pluck('id')->toArray();
                 $name = array_map(function ($arraySemester) {
@@ -133,7 +134,7 @@ class SubjectRegisterController extends Controller
                 return join('&nbsp;', $name);
             });
             $grid->column('Đăng ký')->display(function () {
-                return '<a href="/user/subject-register/' . $this->id . '/details" data-id='.$this->id.'  target="_blank" class="btn btn-md btnACV" ><i class="glyphicon glyphicon-pencil"></i></a>';
+                return '<a href="/user/subject-register/' . $this->subject_code . '/details" data-id='.$this->id.'  target="_blank" class="btn btn-md btnACV" ><i class="glyphicon glyphicon-pencil"></i></a>';
             });
             $grid->disableCreateButton();
             $grid->disableExport();
@@ -209,7 +210,7 @@ SCRIPT;
                 }
             });
             $grid->column('Phòng')->display(function () {
-                $idClassroom = TimeStudy::where('id_subject_register', $this->id)->pluck('id_classroom')->toArray();
+                $idClassroom = TimeStudy::where('id_subject_register', $this->code_subject_register)->pluck('id_classroom')->toArray();
                 $classRoom = Classroom::whereIn('id', $idClassroom)->pluck('name')->toArray();
                 $classRoom = array_map(function ($classRoom) {
                     return "<span class='label label-success'>{$classRoom}</span>";
@@ -217,7 +218,7 @@ SCRIPT;
                 return join('&nbsp;', $classRoom);
             });
             $grid->column('Buổi học')->display(function () {
-                $day = TimeStudy::where('id_subject_register', $this->id)->pluck('day')->toArray();
+                $day = TimeStudy::where('id_subject_register', $this->code_subject_register)->pluck('day')->toArray();
                 $day = array_map(function ($day) {
                     switch ($day) {
                         case 2:
@@ -248,8 +249,8 @@ SCRIPT;
                 return join('&nbsp;', $day);
             });
             $grid->column('Thời gian học')->display(function () {
-                $timeStart = TimeStudy::where('id_subject_register', $this->id)->pluck('time_study_start')->toArray();
-                $timeEnd = TimeStudy::where('id_subject_register', $this->id)->pluck('time_study_end')->toArray();
+                $timeStart = TimeStudy::where('id_subject_register', $this->code_subject_register)->pluck('time_study_start')->toArray();
+                $timeEnd = TimeStudy::where('id_subject_register', $this->code_subject_register)->pluck('time_study_end')->toArray();
                 $time = array_map(function ($timeStart, $timeEnd) {
                     return "<span class='label label-success'>{$timeStart} - {$timeEnd}</span>";
                 }, $timeStart, $timeEnd);

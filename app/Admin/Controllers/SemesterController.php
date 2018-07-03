@@ -280,7 +280,7 @@ class SemesterController extends Controller
 //                'off' => ['value' => 0, 'text' => 'Đóng', 'color' => 'danger'],
 //            ];
 //            $form->switch('status', 'Trạng thái đăng ký môn')->states($states)->default('0');
-            $form->listbox('subjects', 'Môn học')->options(Subjects::all()->pluck('name', 'id'));
+            $form->listbox('subjects', 'Môn học')->options(Subjects::all()->pluck('name', 'subject_code'));
             $form->display('created_at', 'Tạo vào lúc');
             $form->display('updated_at', 'Cập nhật vào lúc');
 //            $form->saving(function (Form $form) use ($currentPath) {

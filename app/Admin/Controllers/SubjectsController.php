@@ -79,6 +79,8 @@ class SubjectsController extends Controller
     protected function grid()
     {
         return Admin::grid(Subjects::class, function (Grid $grid) {
+
+            $grid->model()->orderBy('created_at','DESC');
             $grid->rows(function (Grid\Row $row) {
                 $row->column('number', $row->number);
             });
@@ -92,7 +94,7 @@ class SubjectsController extends Controller
             $grid->credits('Số tín chỉ')->sortable();
             $grid->credits_fee('Số tín chỉ học phí')->sortable();
             $grid->column('Học kỳ - Năm')->display(function () {
-                $id = $this->id;
+                $id = $this->subject_code;
                 $subject = Subjects::find($id);
                 $arraySemester = $subject->semester()->pluck('id')->toArray();
                 $name = array_map( function ($arraySemester){
@@ -117,7 +119,7 @@ class SubjectsController extends Controller
                 }, $arraySemester);
                 return join('&nbsp;', $name);})->sortable();
             $grid->column('Nhóm môn')->display(function () {
-                $subject = Subjects::find($this->id);
+                $subject = Subjects::find($this->subject_code);
                 $nameGroup = $subject->subject_group()->pluck('name')->toArray();
                 $groupSubject = array_map(function ($nameGroup){
                     if($nameGroup) {
@@ -208,9 +210,9 @@ class SubjectsController extends Controller
     {
         return Admin::form(Subjects::class, function (Form $form) {
 
-            $form->display('id', 'ID');
+//            $form->display('id', 'ID');
             $form->text('subject_code', 'Mã môn học')->rules(function ($form){
-                return 'required|unique:subjects,subject_code,'.$form->model()->id.',id,deleted_at,NULL';
+                return 'required|unique:subjects,subject_code,'.$form->model()->subject_code.',subject_code,deleted_at,NULL';
             });
             $form->text('name','Tên môn học')->rules('required');
             $form->number('credits','Tín chỉ')->rules('integer|min:1|max:6');

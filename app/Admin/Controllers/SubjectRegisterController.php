@@ -97,7 +97,7 @@ class SubjectRegisterController extends Controller
                 }
             })->sortable();
             $grid->column('Phòng')->display(function () {
-                $idClassroom = TimeStudy::where('id_subject_register', $this->id)->pluck('id_classroom')->toArray();
+                $idClassroom = TimeStudy::where('id_subject_register', $this->code_subject_register)->pluck('id_classroom')->toArray();
                 $classRoom = Classroom::whereIn('id', $idClassroom)->pluck('name')->toArray();
                 $classRoom = array_map(function ($classRoom) {
                     return "<span class='label label-danger'>{$classRoom}</span>";
@@ -220,7 +220,7 @@ EOT;
 //
                 return 'required|unique:subject_register,code_subject_register,'.$form->model()->id.',idx';
             });
-            $form->select('id_subjects', 'Môn học')->options(Subjects::all()->pluck('name', 'id'))->rules('required');
+            $form->select('id_subjects', 'Môn học')->options(Subjects::all()->pluck('name', 'subject_code'))->rules('required');
             $form->select('id_user_teacher', 'Giảng viên')->options(UserAdmin::where('type_user', '0')->pluck('name', 'id'))->rules('required');
             $form->hidden('qty_current', 'Số lượng hiện tại')->value('0');
             $form->number('qty_min', 'Số lượng tối thiểu')->rules('integer|min:5');
