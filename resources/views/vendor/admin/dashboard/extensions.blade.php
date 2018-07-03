@@ -1,4 +1,4 @@
-<style>
+{{-- <style>
     .ext-icon {
         color: rgba(0,0,0,0.5);
         margin-left: 10px;
@@ -46,4 +46,4 @@
         <a href="https://github.com/laravel-admin-extensions" target="_blank" class="uppercase">View All Extensions</a>
     </div>
     <!-- /.box-footer -->
-</div>
+</div> --}}
