@@ -75,7 +75,10 @@ class RateController extends Controller
     protected function grid()
     {
         return Admin::grid(Rate::class, function (Grid $grid) {
-
+            $grid->rows(function (Grid\Row $row) {
+                $row->column('number', $row->number);
+            });
+            $grid->number('STT');
 //            $grid->id('ID')->sortable();
             $grid->name('Tỷ lệ')->display(function ($name){
                 return  '<a href="/admin/rate/' . $this->id . '/details">'.$name.'</a>';
@@ -94,6 +97,7 @@ class RateController extends Controller
                 $filter->equal('attendance', 'Chuyên cần');
                 $filter->equal('mid_term', 'Giữa kì');
                 $filter->equal('end_term', 'Cuối kì');
+                $filter->between('created_at', 'Tạo vào lúc')->datetime();
 
             });
         });

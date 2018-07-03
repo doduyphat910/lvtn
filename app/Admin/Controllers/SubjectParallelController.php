@@ -74,15 +74,26 @@ class SubjectParallelController extends Controller
     protected function grid()
     {
         return Admin::grid(SubjectParallel::class, function (Grid $grid) {
-
+            $grid->rows(function (Grid\Row $row) {
+                $row->column('number', $row->number);
+            });
+            $grid->number('STT');
 //            $grid->id('ID')->sortable();
             $grid->id_subject1('Môn học trước')->display(function ($idSubject1){
-                $name = Subjects::find($idSubject1)->name;
-                return $name;
+                $subject1 = Subjects::find($idSubject1);
+                if(!empty($subject1->name)){
+                    return '<a href="/admin/subject/' . $idSubject1 . '/details">'.$subject1->name.'</a>';
+                } else {
+                    return '';
+                }
             })->sortable();
             $grid->id_subject2('Môn học song song')->display(function ($idSubject2){
-                $name = Subjects::find($idSubject2)->name;
-                return $name;
+                $subject2 = Subjects::find($idSubject2);
+                if(!empty($subject2->name)){
+                    return '<a href="/admin/subject/' . $idSubject2 . '/details">'.$subject2->name.'</a>';
+                } else {
+                    return '';
+                }
             })->sortable();
             $grid->created_at()->sortable();
             $grid->updated_at()->sortable();

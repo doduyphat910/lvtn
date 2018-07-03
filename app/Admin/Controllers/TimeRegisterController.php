@@ -77,7 +77,10 @@ class TimeRegisterController extends Controller
     {
         return Admin::grid(TimeRegister::class, function (Grid $grid) {
             $grid->model()->orderBy('created_at', 'DESC');
-
+            $grid->rows(function (Grid\Row $row) {
+                $row->column('number', $row->number);
+            });
+            $grid->number('STT');
 //            $grid->id('ID')->sortable();
             $grid->name('Tên')->sortable();
             $grid->time_register_start('Thời gian bắt đầu')->sortable();

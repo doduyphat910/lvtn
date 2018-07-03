@@ -74,7 +74,10 @@ class SubjectBeforeAfterController extends Controller
     protected function grid()
     {
         return Admin::grid(SubjectBeforeAfter::class, function (Grid $grid) {
-
+            $grid->rows(function (Grid\Row $row) {
+                $row->column('number', $row->number);
+            });
+            $grid->number('STT');
            // $grid->id('ID')->sortable();
             $grid->id_subject_before('Môn học trước')->display(function ($idSubjectBefore){
                 if($idSubjectBefore)

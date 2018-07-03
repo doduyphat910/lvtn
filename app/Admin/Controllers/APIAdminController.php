@@ -109,6 +109,7 @@ class APIAdminController extends Controller
             $grid->disableCreateButton();
             $grid->disableExport();
             $grid->disableRowSelector();
+            $grid->disableFilter();
         });
     }
     protected function timeTable(Request $request)

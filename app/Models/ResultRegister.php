@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class ResultRegister extends Model
 {
     protected $table = 'result_register';
-    protected $fillable = ['id_subject_register'];
+//    protected $fillable = ['id_subject_register'];
     use SoftDeletes;
 
 //    public function point() {

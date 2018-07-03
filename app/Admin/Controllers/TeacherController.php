@@ -81,33 +81,37 @@ class TeacherController extends Controller
     protected function grid()
     {
         return Admin::grid(ClassSTU::class, function (Grid $grid) {
-//            $grid->options()->select([
-//                1 => 'Sed ut perspiciatis unde omni',
-//                2 => 'voluptatem accusantium doloremque',
-//                3 => 'dicta sunt explicabo',
-//                4 => 'laudantium, totam rem aperiam',
-//            ]);
             $user = Admin::user();
             $idUser = $user->id;
             $grid->model()->where('id_user_teacher', $idUser);
+            $grid->rows(function (Grid\Row $row) {
+                $row->column('number', $row->number);
+            });
+            $grid->number('STT');
 //            $grid->id('ID')->sortable();
             $grid->name('Tên lớp')->display(function ($name) {
                 return '<a href="/admin/teacher/class/' . $this->id . '/details">' . $name . '</a>';
-            });
+            })->sortable();
             $grid->id_department('Tên khoa')->display(function ($idDepartment) {
                 if ($idDepartment) {
                     return Department::find($idDepartment)->name;
                 } else {
                     return '';
                 }
-            });
+            })->sortable();
             $grid->actions(function ($actions) {
                 $actions->disableEdit();
                 $actions->disableDelete();
                 $actions->append('<a href="/admin/teacher/class/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
             });
-            $grid->created_at('Tạo vào lúc');
-            $grid->updated_at('Cập nhật vào lúc');
+            $grid->created_at('Tạo vào lúc')->sortable();
+            $grid->updated_at('Cập nhật vào lúc')->sortable();
+            $grid->filter(function ($filter){
+                $filter->disableIdFilter();
+                $filter->like('name', 'Tên');
+                $filter->in('id_department', 'Tên khoa')->select(Department::all()->pluck('name','id'));
+                $filter->between('created_at', 'Tạo vào lúc')->datetime();
+            });
             $grid->disableCreateButton();
             $grid->disableRowSelector();
             $grid->disableExport();
@@ -142,6 +146,16 @@ class TeacherController extends Controller
 //            $grid->tools(function ($tools) {
 //                $tools->append("<a href='/admin/import_student' class='btn btn-info btn-sm '><i class='fa fa-sign-in'></i> Import DS sinh viên</a>");
 //            });
+            $grid->filter(function ($filter){
+                $filter->disableIdFilter();
+                $filter->like('code_number', 'MSSV');
+                $filter->like('first_name', 'Họ');
+                $filter->like('last_name', 'Tên');
+                $filter->like('email', 'Email');
+                $filter->equal('school_year', 'Năm nhập học')->year();
+                $filter->in('level', 'Trình độ')->radio(['CD'=>'Cao đẳng', 'DH'=>'Đại học']);
+                $filter->between('created_at', 'Tạo vào lúc')->datetime();
+            });
             $grid->disableActions();
             $grid->disableCreateButton();
             $grid->disableExport();
@@ -318,6 +332,21 @@ class TeacherController extends Controller
                 $actions->disableEdit();
                 $actions->disableDelete();
                 $actions->append('<a href="/admin/teacher/subject-register/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
+            });
+            $grid->filter(function($filter){
+                $filter->disableIdFilter();
+                $filter->like('code_subject_register', 'Mã học phần');
+//                $filter->in('id_subjects', 'Tên môn học')->multipleSelect(Subjects::all()->pluck('name', 'id'));
+                $filter->where(function ($query) {
+                    $input = $this->input;
+                    $query->whereIn('id_subjects', $input);
+                }, 'Tên môn học')->multipleSelect(Subjects::all()->pluck('name', 'id'));
+                $filter->in('id_user_teacher', 'Giảng viên')->multipleSelect(UserAdmin::where('type_user', 0)->pluck('name', 'id'));
+                $filter->in('id_time_register', 'TG Đăng ký')->multipleSelect(TimeRegister::all()->pluck('name','id'));
+                $filter->like('qty_current', 'SL hiện tại');
+                $filter->date('date_start', 'Ngày bắt đầu');
+                $filter->date('date_end', 'Ngày kết thúc');
+                $filter->between('created_at', 'Tạo vào lúc')->datetime();
             });
             $grid->disableCreateButton();
             $grid->disableExport();
@@ -522,6 +551,26 @@ SCRIPT;
 
 //            $grid->created_at('Tạo vào lúc');
 //            $grid->updated_at('Cập nhật vào lúc');
+            $grid->filter(function($filter) {
+                $filter->disableIdFilter();
+                $filter->where(function ($query){
+                    $input = $this->input;
+                    $idUser = StudentUser::where('first_name','like', '%'.$input.'%')->pluck('id')->toArray();
+                    $query->whereIn('id_user_student', $idUser);
+                }, 'Họ SV');
+                $filter->where(function ($query){
+                    $input = $this->input;
+                    $idUser = StudentUser::where('last_name','like', '%'.$input.'%')->pluck('id')->toArray();
+                    $query->whereIn('id_user_student', $idUser);
+                }, 'Tên SV');
+                $filter->where(function ($query){
+                    $input = $this->input;
+                    $idUser = StudentUser::where('id_class', $input)->pluck('id')->toArray();
+                    $query->whereIn('id_user_student', $idUser);
+                }, 'Lớp')->select(ClassSTU::all()->pluck('name','id'));
+                $filter->in('time_register', 'Đợt ĐK')->select(TimeRegister::all()->pluck('name','id'));
+                $filter->between('created_at', 'Tạo vào lúc')->datetime();
+            });
             $grid->disableActions();
             $grid->disableCreateButton();
             $grid->disableExport();

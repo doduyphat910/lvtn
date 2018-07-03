@@ -75,6 +75,10 @@ class YearController extends Controller
         return Admin::grid(Year::class, function (Grid $grid) {
 
 //            $grid->id('ID')->sortable();
+            $grid->rows(function (Grid\Row $row) {
+                $row->column('number', $row->number);
+            });
+            $grid->number('STT');
             $grid->name('Tên năm')->display(function ($name){
                 return  '<a href="/admin/year/' . $this->id . '/details">'.$name.'</a>';
             })->sortable();

@@ -81,6 +81,12 @@ Route::group([
     //time-table
     $router->resource('time-table',TimeTableController::class);
 
+    //request register
+    $router->resource('request-register', RequestRegisterController::class);
+
+    //subject-register history
+    $router->resource('history-subject-register', RegisterHistoryController::class);
+
     //router teacher
     //point
     $router->resource('teacher/point',PointController::class);

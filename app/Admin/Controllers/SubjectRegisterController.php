@@ -80,7 +80,10 @@ class SubjectRegisterController extends Controller
     protected function grid()
     {
         return Admin::grid(SubjectRegister::class, function (Grid $grid) {
-
+            $grid->rows(function (Grid\Row $row) {
+                $row->column('number', $row->number);
+            });
+            $grid->number('STT');
 //            $grid->id('ID')->sortable();
             $grid->code_subject_register('Mã học phần')->display(function ($name){
                 return  '<a href="/admin/subject_register/' . $this->id . '/details">'.$name.'</a>';
@@ -88,7 +91,7 @@ class SubjectRegisterController extends Controller
             $grid->id_subjects('Môn học')->display(function ($idSubject){
                 if($idSubject){
                     $name = Subjects::find($idSubject)->name;
-                    return "<span class='label label-danger'>{$name}</span>";
+                    return "<span class='label label-success'>{$name}</span>";
                 } else {
                     return '';
                 }
@@ -97,7 +100,7 @@ class SubjectRegisterController extends Controller
                 $idClassroom = TimeStudy::where('id_subject_register', $this->id)->pluck('id_classroom')->toArray();
                 $classRoom = Classroom::whereIn('id', $idClassroom)->pluck('name')->toArray();
                 $classRoom = array_map(function ($classRoom) {
-                    return "<span class='label label-success'>{$classRoom}</span>";
+                    return "<span class='label label-danger'>{$classRoom}</span>";
                 }, $classRoom);
                 return join('&nbsp;', $classRoom);
             })->sortable();

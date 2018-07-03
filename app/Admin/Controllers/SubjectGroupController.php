@@ -75,6 +75,10 @@ class SubjectGroupController extends Controller
     protected function grid()
     {
         return Admin::grid(SubjectGroup::class, function (Grid $grid) {
+            $grid->rows(function (Grid\Row $row) {
+                $row->column('number', $row->number);
+            });
+            $grid->number('STT');
 //            $grid->id('ID')->sortable();
             $grid->model()->orderBy('created_at', 'DESC');
             $grid->name('Tên nhóm môn')->display(function ($name){
