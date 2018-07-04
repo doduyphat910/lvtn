@@ -59,8 +59,8 @@ class RegisterHistoryController extends Controller
             })->sortable();
             $grid->id_subject_register('Mã HP')->display(function ($idSubjectRegister){
                 $subjectRegister = SubjectRegister::find($idSubjectRegister);
-                if(!empty($subjectRegister->code_subject_register)) {
-                    return $subjectRegister->code_subject_register;
+                if(!empty($subjectRegister->id)) {
+                    return $subjectRegister->id;
                 } else {
                     return '';
                 }
@@ -91,7 +91,7 @@ class RegisterHistoryController extends Controller
                 $filter->disableIdFilter();
                 $filter->like('first_name', 'Họ SV');
                 $filter->like('last_name', 'Tên SV');
-                $filter->in('id_subject_register', 'Mã HP')->multipleSelect(SubjectRegister::all()->pluck('code_subject_register','id'));
+                $filter->in('id_subject_register', 'Mã HP')->multipleSelect(SubjectRegister::all()->pluck('id','id'));
                 $filter->in('id_subject', 'Môn học')->multipleSelect(Subjects::all()->pluck('name','id'));
                 $filter->in('time_register', 'Đợt ĐK')->select(TimeRegister::all()->pluck('name','id'));
                 $filter->between('created_at', 'Tạo vào lúc')->datetime();

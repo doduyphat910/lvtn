@@ -65,8 +65,8 @@ class PointSubjectController extends Controller
             $grid->model()->where('id_user_student', $user->id)->orderBy('time_register', 'DESC');
             $grid->column('Mã MH')->display(function(){
                 $subjetRegister = Subjects::find($this->id_subject);
-                if($subjetRegister->subject_code) {
-                    return $subjetRegister->subject_code;
+                if($subjetRegister->id) {
+                    return $subjetRegister->id;
                 } else {
                     return '';
                 }
@@ -162,8 +162,9 @@ class PointSubjectController extends Controller
             $form->registerBuiltinFields();
             $id = Auth::User()->id;
             $arrIdTimeRegiter=ResultRegister::where('id_user_student',$id)->distinct()->pluck('time_register')->toArray();
-
-            $form->select('id_time_register', 'Thời gian')->options(TimeRegister::whereIn('id',$arrIdTimeRegiter)->orderBy('id', 'DESC')->pluck('name', 'id'))->attribute(['id' => 'resultPoint']);
+            $options = ['Tất cả'];
+            $options += TimeRegister::whereIn('id',$arrIdTimeRegiter)->orderBy('id', 'DESC')->pluck('name', 'id')->toArray();
+            $form->select('id_time_register', 'Thời gian')->options($options)->attribute(['id' => 'resultPoint']);
             $form->disableReset();
             $form->disableSubmit();
 

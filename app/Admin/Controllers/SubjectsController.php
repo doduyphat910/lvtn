@@ -87,14 +87,14 @@ class SubjectsController extends Controller
             $grid->number('STT');
 //            $grid->model()->where();
 //            $grid->id('ID')->sortable();
-            $grid->subject_code('Mã môn học')->sortable();
+            $grid->id('Mã môn học')->sortable();
             $grid->name('Tên môn học')->display(function ($name){
                 return  '<a href="/admin/subject/' . $this->id . '/details" >'.$name.'</a>';
             })->sortable();
             $grid->credits('Số tín chỉ')->sortable();
             $grid->credits_fee('Số tín chỉ học phí')->sortable();
             $grid->column('Học kỳ - Năm')->display(function () {
-                $id = $this->subject_code;
+                $id = $this->id;
                 $subject = Subjects::find($id);
                 $arraySemester = $subject->semester()->pluck('id')->toArray();
                 $name = array_map( function ($arraySemester){
@@ -119,7 +119,7 @@ class SubjectsController extends Controller
                 }, $arraySemester);
                 return join('&nbsp;', $name);})->sortable();
             $grid->column('Nhóm môn')->display(function () {
-                $subject = Subjects::find($this->subject_code);
+                $subject = Subjects::find($this->id);
                 $nameGroup = $subject->subject_group()->pluck('name')->toArray();
                 $groupSubject = array_map(function ($nameGroup){
                     if($nameGroup) {
@@ -159,7 +159,7 @@ class SubjectsController extends Controller
             });
             $grid->filter(function($filter){
                 $filter->disableIdFilter();
-                $filter->like('subject_code', 'Mã môn học');
+                $filter->like('id', 'Mã môn học');
                 $filter->like('name', 'Tên môn học');
                 $filter->like('credits', 'Tín chỉ');
                 $filter->like('credits_fee', 'Tín chỉ học phí');
@@ -211,8 +211,8 @@ class SubjectsController extends Controller
         return Admin::form(Subjects::class, function (Form $form) {
 
 //            $form->display('id', 'ID');
-            $form->text('subject_code', 'Mã môn học')->rules(function ($form){
-                return 'required|unique:subjects,subject_code,'.$form->model()->subject_code.',subject_code,deleted_at,NULL';
+            $form->text('id', 'Mã môn học')->rules(function ($form){
+                return 'required|unique:subjects,'.$form->model()->id.',id,deleted_at,NULL';
             });
             $form->text('name','Tên môn học')->rules('required');
             $form->number('credits','Tín chỉ')->rules('integer|min:1|max:6');
@@ -234,8 +234,8 @@ class SubjectsController extends Controller
     {
         return Admin::grid(SubjectRegister::class, function (Grid $grid) use ($idSubjects) {
             $grid->model()->where('id_Subjects', $idSubjects);
-            $grid->id('ID')->sortable();
-            $grid->code_subject_register('Mã học phần');
+//            $grid->id('ID')->sortable();
+            $grid->id('Mã học phần');
             $grid->id_subjects('Môn học')->display(function ($idSubject){
                 if($idSubject){
                     return Subjects::find($idSubject)->name;

@@ -2,9 +2,7 @@
 $(function () {
     $('#resultRegister').change(function(e) {
             var selected = $( "#resultRegister" ).val();
-            if(selected == 0) {
-                location.reload();
-            }
+
             $.ajax({
                 type:'GET',
                 url:'/user/register-result/'+selected,

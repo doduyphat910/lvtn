@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class SubjectRegister extends Model
 {
     use SoftDeletes;
-    protected $primaryKey = 'code_subject_register';
+    protected $primaryKey = 'id';
     protected $keyType  = 'string';
     protected $table = 'subject_register';
     protected $fillable = ['qty_current'];

@@ -121,8 +121,8 @@ class SubjectBeforeAfterController extends Controller
         return Admin::form(SubjectBeforeAfter::class, function (Form $form) {
 
             $form->display('id', 'ID');
-            $form->select('id_subject_before', 'Môn tiên quyết')->options(Subjects::all()->pluck('name', 'subject_code'))->rules('required');
-            $form->select('id_subject_after', 'Môn học sau')->options(Subjects::all()->pluck('name', 'subject_code'))->rules('required');
+            $form->select('id_subject_before', 'Môn tiên quyết')->options(Subjects::all()->pluck('name', 'id'))->rules('required');
+            $form->select('id_subject_after', 'Môn học sau')->options(Subjects::all()->pluck('name', 'id'))->rules('required');
             $form->saving(function (Form $form) {
                 if($form->id_subject_before == $form->id_subject_after) {
                     $error = new MessageBag([

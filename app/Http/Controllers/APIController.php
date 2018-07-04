@@ -47,7 +47,7 @@ class APIController extends Controller {
 
 
         //nếu đã đăng kí rồi thì không được đăng kí nữa
-        $idSubjects = SubjectRegister::where('code_subject_register',$idSubjecRegister)->pluck('id_subjects')->toArray();
+        $idSubjects = SubjectRegister::where('id',$idSubjecRegister)->pluck('id_subjects')->toArray();
         $countSubject = ResultRegister::where('id_subject', $idSubjects['0'])->where('id_user_student', $idUser)->where('time_register', $idTimeRegister)->get()->count();
             if($countSubject >= 1)
             {
@@ -61,7 +61,7 @@ class APIController extends Controller {
         $creditsMax = $timeRegister->credits_max;
         $idSubject = ResultRegister::where('id_user_student', $idUser)->where('time_register', $idTimeRegister)->where('is_learned', 2)->pluck('id_subject');
         $creditCurrentUser = Subjects::find($idSubject)->pluck('credits')->sum();
-        $idSubjects = SubjectRegister::where('code_subject_register',$idSubjecRegister)->pluck('id_subjects');
+        $idSubjects = SubjectRegister::where('id',$idSubjecRegister)->pluck('id_subjects');
         $creditSubject = Subjects::find($idSubjects)->pluck('credits')->toArray();
         if(($creditCurrentUser + $creditSubject['0']) > $creditsMax) {
             return response()->json([
@@ -319,7 +319,7 @@ class APIController extends Controller {
         $idUser = $user->id;
         $idSubjectBefore=SubjectBeforeAfter::where('id_subject_after',$idSubject)->pluck('id_subject_before')->toArray();
         if(count($idSubjectBefore) >0) {
-                    $nameSubjectBefore=Subjects::where('subject_code',$idSubjectBefore)->first();
+                    $nameSubjectBefore=Subjects::where('id',$idSubjectBefore)->first();
                    $countSubjectBefore=ResultRegister::where('id_user_student', $idUser)->where('id_subject',$idSubjectBefore)->where('is_learned', 1)->get()->count();
             if($countSubjectBefore==0){
              return response()->json([
@@ -336,7 +336,7 @@ class APIController extends Controller {
         $idUser = $user->id;
         $idSubject1=SubjectParallel::where('id_subject2',$idSubject)->pluck('id_subject1')->toArray();
         if(count($idSubject1) >0) {
-            $nameSubjectParallel=Subjects::where('subject_code',$idSubject1)->first();
+            $nameSubjectParallel=Subjects::where('id',$idSubject1)->first();
             $countIsLearned2 = ResultRegister::where('id_user_student', $idUser)->where('id_subject',$idSubject1)->where('is_learned', 2)->get()->count();
             $countIsLearned1 = ResultRegister::where('id_user_student', $idUser)->where('id_subject',$idSubject1)->where('is_learned', 1)->get()->count();
             if($countIsLearned2 > 0 || $countIsLearned1 > 0 ){
@@ -370,8 +370,8 @@ EOT;
 
             $grid->column('Mã MH')->display(function(){
                 $subjetRegister = Subjects::find($this->id_subject);
-                if($subjetRegister->subject_code) {
-                    return $subjetRegister->subject_code;
+                if($subjetRegister->id) {
+                    return $subjetRegister->id;
                 } else {
                     return '';
                 }
@@ -471,9 +471,9 @@ EOT;
             $grid->model()->where('time_register', $idTimeRegister)->where('id_user_student', $user->id);
                // $grid->id('ID');
             $grid->column('Mã học phần')->display(function () {
-                    $subjectRegister = SubjectRegister::where('code_subject_register',$this->id_subject_register)->first();
+                    $subjectRegister = SubjectRegister::where('id',$this->id_subject_register)->first();
                     if (!empty($subjectRegister)) {
-                        return $subjectRegister->code_subject_register;
+                        return $subjectRegister->id;
                     } else {
                         return '';
                     }
@@ -547,7 +547,7 @@ EOT;
                 // });
             $grid->column('Giảng viên')->display(function () {
                     $idSubjectRegister = $this->id_subject_register;
-                    $subjectRegister = SubjectRegister::where('code_subject_register',$this->id_subject_register)->first();
+                    $subjectRegister = SubjectRegister::where('id',$this->id_subject_register)->first();
                     if (!empty($subjectRegister)) {
                         $teacher = UserAdmin::find($subjectRegister->id_user_teacher);
                         if ($teacher) {
@@ -680,7 +680,7 @@ SCRIPT;
                                 $startTime = strtotime($timeStudy['time_study_start']);
                                 $endTime = strtotime($timeStudy['time_study_end']);
                                 if ($timeStudy['day'] == ($key + 2) && $start >= $startTime && $end <= $endTime) {
-                                    $idSubject = SubjectRegister::where('code_subject_register', $timeStudy['id_subject_register'])->first();
+                                    $idSubject = SubjectRegister::where('id', $timeStudy['id_subject_register'])->first();
                                     if (!empty($idSubject)) {
                                         $idSubject = $idSubject->id_subjects;
                                         $isExisted = false;
@@ -713,7 +713,7 @@ SCRIPT;
                                     $count = 1;
                                     $subjectId = array_keys($arrayTable[$dayKey][$periodKey])[0];
                                     $count = array_values($arrayTable[$dayKey][$periodKey])[0];
-                                    $nameSubject = Subjects::where("subject_code", $subjectId)->first();
+                                    $nameSubject = Subjects::where("id", $subjectId)->first();
                                     echo "<td rowspan='$count' style='background-color:#ecf0f1;border-color:Gray;border-width:1px;border-style:solid;height:22px;width:110px;color:Teal;text-align:center'>$nameSubject->name</td>";
                                 } else if(is_array($arrayTable[$dayKey][$periodKey])){// nếu như là array thì render
                                     echo "<td rowspan='1' class='td-object'></td>";

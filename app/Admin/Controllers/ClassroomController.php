@@ -101,8 +101,8 @@ class ClassroomController extends Controller
     {
         return Admin::grid(SubjectRegister::class, function (Grid $grid) use ($idSubjectRegister) {
             $grid->model()->whereIn('id', $idSubjectRegister);
-            $grid->id('ID')->sortable();
-            $grid->code_subject_register('Mã học phần');
+//            $grid->id('ID')->sortable();
+            $grid->id('Mã học phần');
             $grid->id_subjects('Môn học')->display(function ($idSubject){
                 if($idSubject){
                     return Subjects::find($idSubject)->name;

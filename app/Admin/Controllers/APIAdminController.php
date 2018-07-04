@@ -24,7 +24,7 @@ class APIAdminController extends Controller
             $user = Admin::user();
             $idUser = $user->id;
             $grid->model()->where('id_time_register', $idTimeRegister)->where('id_user_teacher', $idUser);
-            $grid->code_subject_register('Mã học phần')->display(function ($name) {
+            $grid->id('Mã học phần')->display(function ($name) {
                 return '<a href="/admin/teacher/subject-register/' . $this->id . '/details">' . $name . '</a>';
             });
             $grid->id_subjects('Môn học')->display(function ($idSubject) {

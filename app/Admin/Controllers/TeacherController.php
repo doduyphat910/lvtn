@@ -249,7 +249,7 @@ class TeacherController extends Controller
             } else {
                 $grid->model()->where('id', '-1');
             }
-            $grid->code_subject_register('Mã học phần')->display(function ($name) {
+            $grid->id('Mã học phần')->display(function ($name) {
                 return '<a href="/admin/teacher/subject-register/' . $this->id . '/details">' . $name . '</a>';
             });
             $grid->id_subjects('Môn học')->display(function ($idSubject) {
@@ -335,7 +335,7 @@ class TeacherController extends Controller
             });
             $grid->filter(function($filter){
                 $filter->disableIdFilter();
-                $filter->like('code_subject_register', 'Mã học phần');
+                $filter->like('id', 'Mã học phần');
 //                $filter->in('id_subjects', 'Tên môn học')->multipleSelect(Subjects::all()->pluck('name', 'id'));
                 $filter->where(function ($query) {
                     $input = $this->input;
@@ -360,7 +360,7 @@ class TeacherController extends Controller
             function (Content $content) use ($id) {
                 $class = SubjectRegister::findOrFail($id);
                 $content->header('Lớp HP');
-                $content->description($class->code_subject_register);
+                $content->description($class->id);
                 $content->body($this->detailsViewSubjectRegister($id));
             });
     }
@@ -395,8 +395,8 @@ class TeacherController extends Controller
         });
 EOT;
             Admin::script($script);
-            $form->text('code_subject_register', 'Mã học phần')->rules(function ($form) {
-                return 'required|unique:subject_register,code_subject_register,' . $form->model()->id . ',id';
+            $form->text('id', 'Mã học phần')->rules(function ($form) {
+                return 'required|unique:subject_register,' . $form->model()->id . ',id';
             })->readOnly();
             $form->select('id_subjects', 'Môn học')->options(Subjects::all()->pluck('name', 'id'))->rules('required')->readOnly();
             $form->select('id_user_teacher', 'Giảng viên')->options(UserAdmin::where('type_user', '0')->pluck('name', 'id'))->rules('required')->readOnly();
@@ -443,8 +443,8 @@ EOT;
                 }
             });
             $grid->id_subject_register('Mã HP')->display(function ($idSubjectRegister) {
-                if (SubjectRegister::find($idSubjectRegister)->code_subject_register) {
-                    return SubjectRegister::find($idSubjectRegister)->code_subject_register;
+                if (SubjectRegister::find($idSubjectRegister)->id) {
+                    return SubjectRegister::find($idSubjectRegister)->id;
                 } else {
                     return '';
                 }

@@ -85,7 +85,7 @@ class SubjectRegisterController extends Controller
             });
             $grid->number('STT');
 //            $grid->id('ID')->sortable();
-            $grid->code_subject_register('Mã học phần')->display(function ($name){
+            $grid->id('Mã học phần')->display(function ($name){
                 return  '<a href="/admin/subject_register/' . $this->id . '/details">'.$name.'</a>';
             })->sortable();
             $grid->id_subjects('Môn học')->display(function ($idSubject){
@@ -97,7 +97,7 @@ class SubjectRegisterController extends Controller
                 }
             })->sortable();
             $grid->column('Phòng')->display(function () {
-                $idClassroom = TimeStudy::where('id_subject_register', $this->code_subject_register)->pluck('id_classroom')->toArray();
+                $idClassroom = TimeStudy::where('id_subject_register', $this->id)->pluck('id_classroom')->toArray();
                 $classRoom = Classroom::whereIn('id', $idClassroom)->pluck('name')->toArray();
                 $classRoom = array_map(function ($classRoom) {
                     return "<span class='label label-danger'>{$classRoom}</span>";
@@ -164,7 +164,7 @@ class SubjectRegisterController extends Controller
             });
             $grid->filter(function($filter){
                 $filter->disableIdFilter();
-                $filter->like('code_subject_register', 'Mã học phần');
+                $filter->like('id', 'Mã học phần');
 //                $filter->in('id_subjects', 'Tên môn học')->multipleSelect(Subjects::all()->pluck('name', 'id'));
                 $filter->where(function ($query) {
                     $input = $this->input;
@@ -216,11 +216,11 @@ class SubjectRegisterController extends Controller
 EOT;
             Admin::script($script);
 //            $form->display('id', 'ID');
-            $form->text('code_subject_register', 'Mã học phần')->rules(function ($form){
+            $form->text('id', 'Mã học phần')->rules(function ($form){
 //
-                return 'required|unique:subject_register,code_subject_register,'.$form->model()->code_subject_register.',code_subject_register,deleted_at,NULL';
+                return 'required|unique:subject_register,'.$form->model()->id.',id,deleted_at,NULL';
             });
-            $form->select('id_subjects', 'Môn học')->options(Subjects::all()->pluck('name', 'subject_code'))->rules('required');
+            $form->select('id_subjects', 'Môn học')->options(Subjects::all()->pluck('name', 'id'))->rules('required');
             $form->select('id_user_teacher', 'Giảng viên')->options(UserAdmin::where('type_user', '0')->pluck('name', 'id'))->rules('required');
             $form->hidden('qty_current', 'Số lượng hiện tại')->value('0');
             $form->number('qty_min', 'Số lượng tối thiểu')->rules('integer|min:5');
@@ -261,9 +261,9 @@ EOT;
                 //check conditions register
 //                $idSubjectRegisters = SubjectRegister::where('id_classroom', $form->id_classroom)->pluck('id');
                 $currentPath = Route::getFacadeRoot()->current()->uri();
-                $subjectToTime = SubjectRegister::where('id_time_register', $form->id_time_register)->pluck('code_subject_register')->toArray();
+                $subjectToTime = SubjectRegister::where('id_time_register', $form->id_time_register)->pluck('id')->toArray();
                 if($currentPath == "admin/subject_register/{subject_register}") {
-                    $timeStudys = TimeStudy::where('id_subject_register', '!=',$form->model()->code_subject_register)->whereIn('id_subject_register', $subjectToTime)->get()->toArray();
+                    $timeStudys = TimeStudy::where('id_subject_register', '!=',$form->model()->id)->whereIn('id_subject_register', $subjectToTime)->get()->toArray();
                 } else {
                     $timeStudys = TimeStudy::all()->whereIn('id_subject_register', $subjectToTime)->toArray();
                 }
@@ -295,7 +295,7 @@ EOT;
         return Admin::content(function (Content $content) use ($id) {
             $subjectRegister = SubjectRegister::findOrFail($id);
             $content->header('Học phần');
-            $content->description($subjectRegister->code_subject_register);
+            $content->description($subjectRegister->id);
             $content->body($this->detailsView($id));
         });
     }

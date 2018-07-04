@@ -19,7 +19,7 @@ class ImportPointController extends Controller
 
             $content->header('Điểm chuyên cần');
             $subjectRegister = SubjectRegister::find($idSubjectRegister);
-            $codeSubjectRegister = $subjectRegister->code_subject_register;
+            $codeSubjectRegister = $subjectRegister->id;
             $content->description('Import '.$codeSubjectRegister);
             $content->body(view('admin.ImportPoint.import', ['router_target' => '/admin/teacher/import-attendance/review', 'idSubjectRegister' => $idSubjectRegister]));
 
@@ -46,7 +46,7 @@ class ImportPointController extends Controller
         return Admin::content(function (Content $content) use ($csv_data, $csv_data_file, $idSubjectRegister) {
             $content->header('Điểm chuyên cần');
             $subjectRegister = SubjectRegister::find($idSubjectRegister);
-            $codeSubjectRegister = $subjectRegister->code_subject_register;
+            $codeSubjectRegister = $subjectRegister->id;
             $content->description('Import ' . $codeSubjectRegister);
             $arrFields = [
                 'mssv',
@@ -111,7 +111,7 @@ class ImportPointController extends Controller
             }
         }
         $subjectRegister = SubjectRegister::find($idSubjectRegister);
-        $codeSubjectRegister = $subjectRegister->code_subject_register;
+        $codeSubjectRegister = $subjectRegister->id;
         return Admin::content(function (Content $content) use ($row_error, $error_logs, $row_add_successs, $codeSubjectRegister) {
             $content->header('Điểm chuyên cần');
             $content->description('Import '. $codeSubjectRegister);
@@ -130,7 +130,7 @@ class ImportPointController extends Controller
 
     $resultRegisters = ResultRegister::where('id_subject_register', $idSubjectRegister)->get()->toArray();
     $subjectRegister = SubjectRegister::where('id',$idSubjectRegister)->first();
-    $codeSubjectRegister = $subjectRegister->code_subject_register;
+    $codeSubjectRegister = $subjectRegister->id;
 
     // Generate and return the spreadsheet
             Excel::create('Lớp_'.$codeSubjectRegister, function($excel) use ($resultRegisters,$codeSubjectRegister)  {
@@ -190,7 +190,7 @@ class ImportPointController extends Controller
 
             $content->header('Điểm giữa kì');
             $subjectRegister = SubjectRegister::find($idSubjectRegister);
-            $codeSubjectRegister = $subjectRegister->code_subject_register;
+            $codeSubjectRegister = $subjectRegister->id;
             $content->description('Import '.$codeSubjectRegister);
             $content->body(view('admin.ImportPoint.import', ['router_target' => '/admin/teacher/import-midterm/review', 'idSubjectRegister' => $idSubjectRegister]));
 
@@ -216,7 +216,7 @@ class ImportPointController extends Controller
         return Admin::content(function (Content $content) use ($csv_data, $csv_data_file, $idSubjectRegister) {
             $content->header('Điểm giữa kì');
             $subjectRegister = SubjectRegister::find($idSubjectRegister);
-            $codeSubjectRegister = $subjectRegister->code_subject_register;
+            $codeSubjectRegister = $subjectRegister->id;
             $content->description('Import ' . $codeSubjectRegister);
             $arrFields = [
                 'mssv',
@@ -279,7 +279,7 @@ class ImportPointController extends Controller
             }
         }
         $subjectRegister = SubjectRegister::find($idSubjectRegister);
-        $codeSubjectRegister = $subjectRegister->code_subject_register;
+        $codeSubjectRegister = $subjectRegister->id;
         return Admin::content(function (Content $content) use ($row_error, $error_logs, $row_add_successs, $codeSubjectRegister) {
             $content->header('Điểm chuyên cần');
             $content->description('Import '. $codeSubjectRegister);
@@ -300,7 +300,7 @@ class ImportPointController extends Controller
 
         $resultRegisters = ResultRegister::where('id_subject_register', $idSubjectRegister)->get()->toArray();
         $subjectRegister = SubjectRegister::where('id',$idSubjectRegister)->first();
-        $codeSubjectRegister = $subjectRegister->code_subject_register;
+        $codeSubjectRegister = $subjectRegister->id;
 
         // Generate and return the spreadsheet
         Excel::create('Lớp_'.$codeSubjectRegister, function($excel) use ($resultRegisters,$codeSubjectRegister)  {
@@ -360,7 +360,7 @@ class ImportPointController extends Controller
 
             $content->header('Điểm cuối kì');
             $subjectRegister = SubjectRegister::find($idSubjectRegister);
-            $codeSubjectRegister = $subjectRegister->code_subject_register;
+            $codeSubjectRegister = $subjectRegister->id;
             $content->description('Import '.$codeSubjectRegister);
             $content->body(view('admin.ImportPoint.import', ['router_target' => '/admin/teacher/import-endterm/review', 'idSubjectRegister' => $idSubjectRegister]));
 
@@ -386,7 +386,7 @@ class ImportPointController extends Controller
         return Admin::content(function (Content $content) use ($csv_data, $csv_data_file, $idSubjectRegister) {
             $content->header('Điểm giữa kì');
             $subjectRegister = SubjectRegister::find($idSubjectRegister);
-            $codeSubjectRegister = $subjectRegister->code_subject_register;
+            $codeSubjectRegister = $subjectRegister->id;
             $content->description('Import ' . $codeSubjectRegister);
             $arrFields = [
                 'mssv',
@@ -460,7 +460,7 @@ class ImportPointController extends Controller
             }
         }
         $subjectRegister = SubjectRegister::find($idSubjectRegister);
-        $codeSubjectRegister = $subjectRegister->code_subject_register;
+        $codeSubjectRegister = $subjectRegister->id;
         return Admin::content(function (Content $content) use ($row_error, $error_logs, $row_add_successs, $codeSubjectRegister) {
             $content->header('Điểm cuối cần');
             $content->description('Import '. $codeSubjectRegister);
@@ -479,7 +479,7 @@ class ImportPointController extends Controller
 
         $resultRegisters = ResultRegister::where('id_subject_register', $idSubjectRegister)->get()->toArray();
         $subjectRegister = SubjectRegister::where('id',$idSubjectRegister)->first();
-        $codeSubjectRegister = $subjectRegister->code_subject_register;
+        $codeSubjectRegister = $subjectRegister->id;
 
         // Generate and return the spreadsheet
         Excel::create('Lớp_'.$codeSubjectRegister, function($excel) use ($resultRegisters,$codeSubjectRegister)  {
@@ -537,7 +537,7 @@ class ImportPointController extends Controller
 
             $content->header('Điểm');
             $subjectRegister = SubjectRegister::find($idSubjectRegister);
-            $codeSubjectRegister = $subjectRegister->code_subject_register;
+            $codeSubjectRegister = $subjectRegister->id;
             $content->description('Import '.$codeSubjectRegister);
             $content->body(view('admin.ImportPoint.import', ['router_target' => '/admin/teacher/import-all/review', 'idSubjectRegister' => $idSubjectRegister]));
 
@@ -563,7 +563,7 @@ class ImportPointController extends Controller
         return Admin::content(function (Content $content) use ($csv_data, $csv_data_file, $idSubjectRegister) {
             $content->header('Điểm');
             $subjectRegister = SubjectRegister::find($idSubjectRegister);
-            $codeSubjectRegister = $subjectRegister->code_subject_register;
+            $codeSubjectRegister = $subjectRegister->id;
             $content->description('Import ' . $codeSubjectRegister);
             $arrFields = [
                 'mssv',
@@ -678,7 +678,7 @@ class ImportPointController extends Controller
             }
         }
         $subjectRegister = SubjectRegister::find($idSubjectRegister);
-        $codeSubjectRegister = $subjectRegister->code_subject_register;
+        $codeSubjectRegister = $subjectRegister->id;
         return Admin::content(function (Content $content) use ($row_error, $error_logs, $row_add_successs, $codeSubjectRegister) {
             $content->header('Điểm cuối cần');
             $content->description('Import '. $codeSubjectRegister);
@@ -698,7 +698,7 @@ class ImportPointController extends Controller
 
         $resultRegisters = ResultRegister::where('id_subject_register', $idSubjectRegister)->get()->toArray();
         $subjectRegister = SubjectRegister::where('id',$idSubjectRegister)->first();
-        $codeSubjectRegister = $subjectRegister->code_subject_register;
+        $codeSubjectRegister = $subjectRegister->id;
 
         // Generate and return the spreadsheet
         Excel::create('Lớp_'.$codeSubjectRegister, function($excel) use ($resultRegisters,$codeSubjectRegister)  {

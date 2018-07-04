@@ -144,7 +144,7 @@ class SubjectGroupController extends Controller
         return Admin::grid(Subjects::class, function (Grid $grid) use ($idSubject) {
             $grid->model()->whereIn('id', $idSubject);
             $grid->id('ID')->sortable();
-            $grid->subject_code('Mã môn học');
+            $grid->id('Mã môn học');
             $grid->name('Tên môn học')->display(function ($name){
                 return  '<a href="/admin/subject/' . $this->id . '/details">'.$name.'</a>';
             });

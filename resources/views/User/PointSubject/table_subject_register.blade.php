@@ -2,6 +2,9 @@
 $(function () {
     $('#resultPoint').change(function(e) {
             var selected = $( "#resultPoint" ).val();
+            if(selected == 0) {
+                location.reload();
+            }
             $.ajax({
                 type:'GET',
                 url:'/user/point-result/'+selected,

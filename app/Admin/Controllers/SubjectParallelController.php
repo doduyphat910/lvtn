@@ -123,8 +123,8 @@ class SubjectParallelController extends Controller
         return Admin::form(SubjectParallel::class, function (Form $form) {
 
             $form->display('id', 'ID');
-            $form->select('id_subject1', 'Môn học trước')->options(Subjects::all()->pluck('name', 'subject_code'))->rules('required');
-            $form->select('id_subject2', 'Môn học song song')->options(Subjects::all()->pluck('name', 'subject_code'))->rules('required');
+            $form->select('id_subject1', 'Môn học trước')->options(Subjects::all()->pluck('name', 'id'))->rules('required');
+            $form->select('id_subject2', 'Môn học song song')->options(Subjects::all()->pluck('name', 'id'))->rules('required');
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
             $form->saving(function (Form $form){

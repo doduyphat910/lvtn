@@ -131,7 +131,7 @@ class SemesterController extends Controller
             $idSubjects = SemesterSubjects::where('semester_id', $idSemester)->pluck('subjects_id');
             $grid->model()->whereIn('id', $idSubjects);
             $grid->id('ID')->sortable();
-            $grid->subject_code('Mã môn học');
+            $grid->id('Mã môn học');
             $grid->name('Tên môn học')->display(function ($name){
                 return  '<a href="/admin/subject/' . $this->id . '/details">'.$name.'</a>';
             });
@@ -203,8 +203,8 @@ class SemesterController extends Controller
     {
         return Admin::grid(SubjectRegister::class, function (Grid $grid) use ($idSubjects) {
             $grid->model()->whereIn('id_Subjects', $idSubjects);
-            $grid->id('ID')->sortable();
-            $grid->code_subject_register('Mã học phần');
+//            $grid->id('ID')->sortable();
+            $grid->id('Mã học phần');
             $grid->id_subjects('Môn học')->display(function ($idSubject){
                 if($idSubject){
                     return Subjects::find($idSubject)->name;
@@ -280,7 +280,7 @@ class SemesterController extends Controller
 //                'off' => ['value' => 0, 'text' => 'Đóng', 'color' => 'danger'],
 //            ];
 //            $form->switch('status', 'Trạng thái đăng ký môn')->states($states)->default('0');
-            $form->listbox('subjects', 'Môn học')->options(Subjects::all()->pluck('name', 'subject_code'));
+            $form->listbox('subjects', 'Môn học')->options(Subjects::all()->pluck('name', 'id'));
             $form->display('created_at', 'Tạo vào lúc');
             $form->display('updated_at', 'Cập nhật vào lúc');
 //            $form->saving(function (Form $form) use ($currentPath) {
