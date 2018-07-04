@@ -77,9 +77,9 @@ class RegisterHistoryController extends Controller
                 $timeRegister = TimeRegister::find($this->time_register);
                 if($timeRegister->name){
                     if($this->time_register % 2 == 0 ) {
-                        return "<span class='label label-success'>{$timeRegister->name}</span>";
+                        return "<span class='label label-info'>{$timeRegister->name}</span>";
                     } else {
-                        return "<span class='label label-primary'>{$timeRegister->name}</span>";
+                        return "<span class='label label-success'>{$timeRegister->name}</span>";
                     }
                 } else {
                     return '';

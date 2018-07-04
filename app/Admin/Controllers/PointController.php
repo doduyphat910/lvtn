@@ -98,13 +98,12 @@ class PointController extends Controller
             $form->number('rate_attendance', 'Tỉ lệ điểm chuyên cần');
             $form->number('rate_mid_term', 'Tỉ lệ điểm giữa kì');
             $form->number('rate_end_term', 'Tỉ lệ điểm cuối kì');
+            $form->hidden('is_learned');
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
-//            $form->saving(function (Form $form){
-//                $form->final = (($form->attendance*$form->model()->rate_attendance) +
-//                                ($form->mid_term*$form->model()->rate_mid_term) +
-//                                ($form->end_term*$form->model()->rate_end_term))/100;
-//            });
+            $form->saving(function (Form $form){
+                $form->is_learned = 1;
+            });
         });
     }
 }

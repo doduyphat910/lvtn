@@ -6,7 +6,8 @@ use Illuminate\Support\Facades\Facade;
 /**
  * Class Admin.
  *
- * @method static \Encore\Admin\Grid grid($model, \Closure $callable)
+// * @method static \Encore\Admin\Grid grid($model, \Closure $callable)
+ * @method static \App\Http\Extensions\GridUser gridUser($model, \Closure $callable)
 // * @method static \App\Http\Extensions\src\FormUser formUser($model, \Closure $callable)
  * @method static \Encore\Admin\Form form($model, \Closure $callable)
  * @method static \Encore\Admin\Tree tree($model, \Closure $callable = null)
@@ -26,4 +27,5 @@ class User extends Facade
     {
         return \App\Http\Extensions\src\User::class;
     }
+
 }

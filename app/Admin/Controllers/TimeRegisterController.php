@@ -82,7 +82,9 @@ class TimeRegisterController extends Controller
             });
             $grid->number('STT');
 //            $grid->id('ID')->sortable();
-            $grid->name('Tên')->sortable();
+            $grid->name('Tên')->display(function ($name){
+                return '<a href="/admin/time-register/' . $this->id . '/details" >'.$name.'</a>';
+            })->sortable();
             $grid->time_register_start('Thời gian bắt đầu')->sortable();
             $grid->time_register_end('Thời gian kết thúc')->sortable();
             $grid->semester('Học kỳ')->display(function ($semester) {

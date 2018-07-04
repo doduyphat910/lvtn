@@ -188,7 +188,7 @@ class RateController extends Controller
             });
             $grid->column('Tỷ lệ giữa kì')->display(function (){
                 if($this->id_rate) {
-                    return Rate::find($this->id_rate)->midterm;
+                    return Rate::find($this->id_rate)->mid_term;
                 } else {
                     return '';
                 }

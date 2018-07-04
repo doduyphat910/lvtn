@@ -118,13 +118,12 @@ class ClassController extends Controller
         return Admin::grid(StudentUser::class, function (Grid $grid) use ($idClass) {
             $grid->model()->where('id_class', $idClass);
             $grid->id('ID')->sortable();
-            $grid->avatar('Avatar')->image();
+//            $grid->avatar('Avatar')->image();
             $grid->first_name('Họ');
             $grid->last_name('Tên')->display(function ($name){
                 return  '<a href="/admin/student_user/' . $this->id . '/details">'.$name.'</a>';
             });
             $grid->code_number('Mã số sinh viên');
-            $grid->username('Tên đăng nhập');
             $grid->email('Email');
             $grid->id_class('Lớp')->display(function ($idClass){
                 if($idClass){

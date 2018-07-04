@@ -10,16 +10,16 @@
                             Lớp học phần <i class="fa fa-exclamation-circle text-red hide"></i>
                         </a>
                     </li>
-                    <li >
-                        <a href="#tab-form-2" data-toggle="tab" aria-expanded="false">
-                            Môn học song song <i class="fa fa-exclamation-circle text-red hide"></i>
-                        </a>
-                    </li>
-                    <li >
-                        <a href="#tab-form-3" data-toggle="tab" aria-expanded="false">
-                            Môn học tiên quyết <i class="fa fa-exclamation-circle text-red hide"></i>
-                        </a>
-                    </li>
+                    {{--<li >--}}
+                        {{--<a href="#tab-form-2" data-toggle="tab" aria-expanded="false">--}}
+                            {{--Môn học song song <i class="fa fa-exclamation-circle text-red hide"></i>--}}
+                        {{--</a>--}}
+                    {{--</li>--}}
+                    {{--<li >--}}
+                        {{--<a href="#tab-form-3" data-toggle="tab" aria-expanded="false">--}}
+                            {{--Môn học tiên quyết <i class="fa fa-exclamation-circle text-red hide"></i>--}}
+                        {{--</a>--}}
+                    {{--</li>--}}
                 </ul>
                 <div class="tab-content fields-group">
                     <div class="tab-pane active" id="tab-form-1">

@@ -92,6 +92,10 @@ Route::group([
     //point
     $router->resource('teacher/point',PointController::class);
 
+    //manage point
+    $router->get('teacher/manage-point/{id}/details','ManagePointController@details');
+    $router->resource('teacher/manage-point',ManagePointController::class);
+
     //list class (teacher)
     $router->get('teacher/class/{id}/details','TeacherController@details');
     $router->resource('teacher/class',TeacherController::class);

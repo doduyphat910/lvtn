@@ -2,6 +2,7 @@
 
 namespace App\Http\Extensions\src;
 
+use App\Http\Extensions\GridUser;
 use App\Http\Extensions\LayoutUser\ContentUser;
 use Closure;
 use Encore\Admin\Admin;
@@ -26,6 +27,26 @@ class User extends Admin
     public function formUser($model, Closure $callable)
     {
         return new FormUser($this->getModel($model), $callable);
+    }
+
+    public function gridUser($model, Closure $callable)
+    {
+        return new GridUser($this->getModel($model), $callable);
+    }
+
+    public static function css($css = null)
+    {
+        if (!is_null($css)) {
+            self::$css = array_merge(self::$css, (array) $css);
+
+            return;
+        }
+
+        $css = array_get(Form::collectFieldAssets(), 'css', []);
+
+        static::$css = array_merge(static::$css, $css);
+
+        return view('User.partials.css', ['css' => array_unique(static::$css)]);
     }
 
 
