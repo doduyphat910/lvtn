@@ -1,4 +1,4 @@
-<div class="box box-default">
+{{-- <div class="box box-default">
     <div class="box-header with-border">
         <h3 class="box-title">Environment</h3>
 
@@ -25,4 +25,4 @@
         <!-- /.table-responsive -->
     </div>
     <!-- /.box-body -->
-</div>
+</div> --}}
