@@ -74,19 +74,27 @@ class DepartmentController extends Controller
     protected function grid()
     {
         return Admin::grid(Department::class, function (Grid $grid) {
-
-            $grid->id('ID')->sortable();
+            $grid->rows(function (Grid\Row $row) {
+                $row->column('number', $row->number);
+            });
+            $grid->number('STT');
+//            $grid->id('ID')->sortable();
             $grid->name('Tên khoa')->display(function ($name){
                 return '<a href="/admin/department/' . $this->id . '/details">'.$name.'</a>';
-            });
+            })->sortable();
             $grid->actions(function ($actions) {
 //                $actions->disableDelete();
 //                $flag = 1;
 //                $actions->append('<a href="/admin/department/' . $actions->getKey().'/'.$flag .'"><i class="fa fa-eye"></i></a>');
                 $actions->append('<a href="/admin/department/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
             });
-            $grid->created_at();
-            $grid->updated_at();
+            $grid->created_at('Tạo vào lúc')->sortable();
+            $grid->updated_at('Cập nhật vào lúc')->sortable();
+            $grid->filter(function ($filter){
+                $filter->disableIdFilter();
+                $filter->like('name', 'Tên');
+                $filter->between('created_at', 'Tạo vào lúc')->datetime();
+            });
         });
     }
 

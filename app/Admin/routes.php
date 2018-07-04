@@ -81,6 +81,13 @@ Route::group([
     //time-table
     $router->resource('time-table',TimeTableController::class);
 
+    //request register
+    $router->get('request-register/{id}/details', 'RequestRegisterController@details');
+    $router->resource('request-register', RequestRegisterController::class);
+
+    //subject-register history
+    $router->resource('history-subject-register', RegisterHistoryController::class);
+
     //router teacher
     //point
     $router->resource('teacher/point',PointController::class);
@@ -97,8 +104,8 @@ Route::group([
 
     $router->get('teacher','TeacherController@subjectRegister');
     //list history subject-register of teacher
-    $router->get('teacher/history-subject-register/{id}/details','TeacherHistoryController@details')->middleware('teacher');
-    $router->resource('teacher/history-subject-register/',TeacherHistoryController::class);
+//    $router->get('teacher/history-subject-register/{id}/details','TeacherHistoryController@details')->middleware('teacher');
+//    $router->resource('teacher/history-subject-register/',TeacherHistoryController::class);
 
 
     //import point attendance

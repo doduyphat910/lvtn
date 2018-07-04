@@ -82,8 +82,11 @@ class SemesterController extends Controller
     protected function grid()
     {
         return Admin::grid(Semester::class, function (Grid $grid) {
-
-            $grid->id('ID')->sortable();
+            $grid->rows(function (Grid\Row $row) {
+                $row->column('number', $row->number);
+            });
+            $grid->number('STT');
+//            $grid->id('ID')->sortable();
             $grid->name('Tên')->display(function ($name){
                 if($name == 0) {
                     $name = 'Học kỳ hè';
@@ -93,7 +96,7 @@ class SemesterController extends Controller
                     $name = 'Học kỳ 2';
                 }
                 return  '<a href="/admin/semester/' . $this->id . '/details">'.$name.'</a>';
-            });
+            })->sortable();
             $grid->id_year('Tên năm')->display(function ($idyear) {
                 if ($idyear) {
                     $name = Year::find($idyear)->name;
@@ -102,15 +105,23 @@ class SemesterController extends Controller
                     return '';
                 }
 
-            });
+            })->sortable();
 
             // $grid->time_start('Thời gian bắt đầu');
             // $grid->time_end('Thời gian kết thúc');
             $grid->actions(function ($actions) {
                 $actions->append('<a href="/admin/semester/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
             });
-            $grid->created_at('Tạo vào lúc');
-            $grid->updated_at('Cập nhật vào lúc');
+            $grid->created_at('Tạo vào lúc')->sortable();
+            $grid->updated_at('Cập nhật vào lúc')->sortable();
+            $grid->filter(function($filter) {
+                $filter->disableIdFilter();
+                $filter->like('name', 'Tên học kì');
+                $filter->where(function ($query){
+                    $query->whereIn('id_year', $this->input);
+                }, 'Năm')->multipleSelect(Year::all()->pluck('name','id'));
+                $filter->between('created_at', 'Tạo vào lúc')->datetime();
+            });
         });
     }
 
@@ -120,7 +131,7 @@ class SemesterController extends Controller
             $idSubjects = SemesterSubjects::where('semester_id', $idSemester)->pluck('subjects_id');
             $grid->model()->whereIn('id', $idSubjects);
             $grid->id('ID')->sortable();
-            $grid->subject_code('Mã môn học');
+            $grid->id('Mã môn học');
             $grid->name('Tên môn học')->display(function ($name){
                 return  '<a href="/admin/subject/' . $this->id . '/details">'.$name.'</a>';
             });
@@ -192,8 +203,8 @@ class SemesterController extends Controller
     {
         return Admin::grid(SubjectRegister::class, function (Grid $grid) use ($idSubjects) {
             $grid->model()->whereIn('id_Subjects', $idSubjects);
-            $grid->id('ID')->sortable();
-            $grid->code_subject_register('Mã học phần');
+//            $grid->id('ID')->sortable();
+            $grid->id('Mã học phần');
             $grid->id_subjects('Môn học')->display(function ($idSubject){
                 if($idSubject){
                     return Subjects::find($idSubject)->name;

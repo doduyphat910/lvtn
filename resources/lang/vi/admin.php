@@ -29,7 +29,7 @@ return [
     'order'        => 'Order',
     'expand'       => 'Mở rộng',
     'collapse'     => 'Thu lại',
-    'filter'       => 'Bộ lọc',
+    'filter'       => 'Tìm kiếm',
     'close'        => 'Đóng',
     'show'         => 'Xem',
     'entries'      => 'Mục',
@@ -107,6 +107,6 @@ return [
         'text_empty'         => 'Danh sách trống',
         'filtered'           => '{0} / {1}',
         'filter_clear'       => 'Hiển thị tất cả',
-        'filter_placeholder' => 'Bộ lọc',
+        'filter_placeholder' => 'Tìm kiếm',
     ],
 ];

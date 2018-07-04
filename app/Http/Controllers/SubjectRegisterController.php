@@ -74,9 +74,10 @@ class SubjectRegisterController extends Controller
                 //sort follow semester
                 $field = '';
                 foreach ($subjects_id as $id) {
-                    $field .= ($id . ',');
+                    $field .= ('"'.$id.'"' . ',');
                 }
                 $field = substr($field, 0, strlen($field) - 1);
+//                dd($field);
                 //get subject user learned
                 $idSubjectRegister = ResultRegister::where('id_user_student', $user->id)->where('is_learned', 1)->pluck('id_subject_register')->toArray();
                 $idSubjectLearned = SubjectRegister::whereIn('id', $idSubjectRegister)->pluck('id_subjects')->toArray();
@@ -84,7 +85,7 @@ class SubjectRegisterController extends Controller
                 $grid->model()->whereIn('id', $subjects_id)->whereNotIn('id', $idSubjectLearned)->orderBy(DB::raw('FIELD(id, ' . $field . ')'));
             }
             //$grid->id('id');
-            $grid->subject_code('Mã môn học');
+            $grid->id('Mã môn học');
             $grid->name('Tên môn học')->display(function ($name) {
                 return '<a href="/user/subject-register/' . $this->id . '/details"  target="_blank" >' . $name . '</a>';
             });
@@ -133,7 +134,7 @@ class SubjectRegisterController extends Controller
                 return join('&nbsp;', $name);
             });
             $grid->column('Đăng ký')->display(function () {
-                return '<a href="/user/subject-register/' . $this->id . '/details" data-id='.$this->id.'  target="_blank" class="btn btn-md btnACV" ><i class="glyphicon glyphicon-pencil"></i></a>';
+                return '<a href="/user/subject-register/' . $this->id . '/details" data-id='.$this->id.' class="btn btn-md"  target="_blank" ><i class="glyphicon glyphicon-pencil"></i></a>';
             });
             $grid->disableCreateButton();
             $grid->disableExport();
@@ -200,7 +201,7 @@ SCRIPT;
             $timeRegister = TimeRegister::where('status', 1)->orderBy('id', 'DESC')->first();
             $grid->model()->where('id_subjects', $idSubjects)->where('id_time_register', $timeRegister->id);
 //            $grid->id('ID');
-            $grid->code_subject_register('Mã học phần');
+            $grid->id('Mã học phần');
             $grid->id_subjects('Môn học')->display(function ($idSubject) {
                 if ($idSubject) {
                     return Subjects::find($idSubject)->name;
@@ -289,7 +290,6 @@ SCRIPT;
                 $timeRegister = TimeRegister::where('status', 1)->orderBy('id', 'DESC')->first();
                 $idTimeRegister = $timeRegister->id;
                 $idSubjectsList=ResultRegister::where('id_subject',$idSubjects)->where('id_user_student', $idUser)->where('time_register', $idTimeRegister)->first();
-
 //                dd($arrIdSubjectsList);
 //                foreach ($arrIdResultRegister as $valueResultRegisters){
 //                    foreach ($arrIdSubjectsList as $valueSubjectRegisters){
@@ -297,10 +297,11 @@ SCRIPT;
 //                        {
 //                            $valueCK = $valueResultRegisters;
                 if($idSubjectsList) {
+                    $codeSubjectRegister = $idSubjectsList->id_subject_register;
                     $script = <<<SCRIPT
                              $('.btnRegister').each(function(){
                                 var idRegister =$(this).data('id');
-                                if(idRegister == $idSubjectsList->id_subject_register) {
+                                if(idRegister == '$codeSubjectRegister') {
 //                                    $('[data-id='+idRegister+']').hide();
                                     $('.btnCancel[data-id='+idRegister+']').css("display", "initial");
 //                                 $('.btnCancel').find('a[data-id='+idRegister+']').css("display", "initial");

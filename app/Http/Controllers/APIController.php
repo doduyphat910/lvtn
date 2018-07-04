@@ -370,8 +370,8 @@ EOT;
 
             $grid->column('Mã MH')->display(function(){
                 $subjetRegister = Subjects::find($this->id_subject);
-                if($subjetRegister->subject_code) {
-                    return $subjetRegister->subject_code;
+                if($subjetRegister->id) {
+                    return $subjetRegister->id;
                 } else {
                     return '';
                 }
@@ -473,7 +473,7 @@ EOT;
             $grid->column('Mã học phần')->display(function () {
                     $subjectRegister = SubjectRegister::where('id',$this->id_subject_register)->first();
                     if (!empty($subjectRegister)) {
-                        return $subjectRegister->code_subject_register;
+                        return $subjectRegister->id;
                     } else {
                         return '';
                     }
@@ -559,6 +559,24 @@ EOT;
                         return '';
                     }
                 });
+            $grid->column('Ngày bắt đầu')->display(function (){
+                $idSubjectRegister = $this->id_subject_register;
+                $subjectRegister = SubjectRegister::find($idSubjectRegister);
+                if($subjectRegister->date_start){
+                    return $subjectRegister->date_start;
+                } else {
+                    return '';
+                }
+            });
+            $grid->column('Ngày kết thúc')->display(function (){
+                $idSubjectRegister = $this->id_subject_register;
+                $subjectRegister = SubjectRegister::find($idSubjectRegister);
+                if($subjectRegister->date_end){
+                    return $subjectRegister->date_end;
+                } else {
+                    return '';
+                }
+            });
                 // $grid->qty_current('Số lượng hiện tại');
                 // $grid->qty_max('Số lượng tối đa');
                 // $grid->date_start('Ngày bắt đầu');

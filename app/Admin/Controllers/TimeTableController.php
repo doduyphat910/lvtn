@@ -74,14 +74,25 @@ class TimeTableController extends Controller
     {
         return Admin::grid(TimeTable::class, function (Grid $grid) {
 
-            $grid->id('ID')->sortable();
+//            $grid->id('ID')->sortable();
+            $grid->rows(function (Grid\Row $row) {
+                $row->column('number', $row->number);
+            });
+            $grid->number('STT');
             $grid->period('Tiết học')->display(function ($period) {
                 return '<a href="#" >'.$period.'</a>';
+            })->sortable();
+            $grid->time_start('Thời gian bắt đầu')->sortable();
+            $grid->time_end('Thời gian kết thúc')->sortable();
+            $grid->created_at('Tạo vào lúc')->sortable();
+            $grid->updated_at('Cập nhật vào lúc')->sortable();
+            $grid->filter(function ($filter){
+                $filter->disableIdFilter();
+                $filter->like('period', 'Tiết học');
+                $filter->between('time_start','TG bắt đầu')->time();
+                $filter->between('time_end','TG kết thúc')->time();
+                $filter->between('created_at', 'Tạo vào lúc')->datetime();
             });
-            $grid->time_start('Thời gian bắt đầu');
-            $grid->time_end('Thời gian kết thúc');
-            $grid->created_at();
-            $grid->updated_at();
         });
     }
 

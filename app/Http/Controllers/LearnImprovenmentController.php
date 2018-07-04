@@ -73,7 +73,7 @@ class LearnImprovenmentController extends Controller
                 //sort follow semester
                 $field = '';
                 foreach ($subjects_id as $id) {
-                    $field .= ($id . ',');
+                    $field .= ('"'.$id.'"' . ',');
                 }
                 $field = substr($field, 0, strlen($field) - 1);
                 //get subject user learned
@@ -83,7 +83,7 @@ class LearnImprovenmentController extends Controller
                 $grid->model()->whereIn('id', $subjects_id)->whereIn('id', $idSubjectLearned)->orderBy(DB::raw('FIELD(id, ' . $field . ')'));
             }
             //$grid->id('id');
-            $grid->subject_code('Mã môn học');
+            $grid->id('Mã môn học');
             $grid->name('Tên môn học')->display(function ($name) {
                 return '<a href="/user/subject-register/' . $this->id . '/details"  target="_blank" >' . $name . '</a>';
             });

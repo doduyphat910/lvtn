@@ -23,7 +23,6 @@ Route::group(['prefix'=>'user', 'middleware'=>'studentLogin'], function(Router $
 
     $router->resource('comments', CommentsController::class);
 
-    $router->resource('user-subject',UserSubjectController::class);
 
     $router->resource('result-register',ResultRegisterController::class);
 
@@ -35,6 +34,8 @@ Route::group(['prefix'=>'user', 'middleware'=>'studentLogin'], function(Router $
 
 
     Route::group(['middleware' => ['subjectRegister']], function (Router $router) {
+        //request register
+        $router->resource('user-subject',UserSubjectController::class);
         //subject timeable
         $router->get('subject-timetable', 'SubjectRegisterController@timetable');
         //get list subject register from API

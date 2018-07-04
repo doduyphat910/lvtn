@@ -74,7 +74,10 @@ class SubjectBeforeAfterController extends Controller
     protected function grid()
     {
         return Admin::grid(SubjectBeforeAfter::class, function (Grid $grid) {
-
+            $grid->rows(function (Grid\Row $row) {
+                $row->column('number', $row->number);
+            });
+            $grid->number('STT');
            // $grid->id('ID')->sortable();
             $grid->id_subject_before('Môn học trước')->display(function ($idSubjectBefore){
                 if($idSubjectBefore)
@@ -84,7 +87,7 @@ class SubjectBeforeAfterController extends Controller
                 } else {
                     return '';
                 }
-            });
+            })->sortable();
             $grid->id_subject_after('Môn học sau')->display(function ($idSubjectAfter){
                 if($idSubjectAfter)
                 {
@@ -93,12 +96,18 @@ class SubjectBeforeAfterController extends Controller
                 } else {
                     return '';
                 }
-            });
+            })->sortable();
             // $grid->actions(function($actions){
             //     $actions->disableEdit();
             // });
-            $grid->created_at('Tạo vào lúc');
-            $grid->updated_at('Cập nhật vào lúc');
+            $grid->created_at('Tạo vào lúc')->sortable();
+            $grid->updated_at('Cập nhật vào lúc')->sortable();
+            $grid->filter(function($filter){
+                $filter->disableIdFilter();
+                $filter->in('id_subject_before', 'Môn học trước')->multipleSelect(Subjects::all()->pluck('name', 'id'));
+                $filter->in('id_subject_sau', 'Môn học sau')->multipleSelect(Subjects::all()->pluck('name', 'id'));
+                $filter->between('created_at', 'Tạo vào lúc')->datetime();
+            });
         });
     }
 

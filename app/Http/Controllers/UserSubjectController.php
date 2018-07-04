@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Extensions\Facades\User;
 use app\Http\Extensions\LayoutUser\ContentUser;
+use App\Models\TimeRegister;
 use App\Models\UserSubject;
 use App\Models\StudentUser;
 use App\Models\Subjects;
@@ -39,11 +40,18 @@ class UserSubjectController extends Controller
             $id = Auth::User()->id;
             $form->setAction('/user/user-subject');
             $form->hidden('id_user')->value($id);
-            $form->hidden('id');
+//            $form->hidden('id');
             $form->select('id_subject', 'Môn học')->options(Subjects::all()->pluck('name', 'id'))->rules('required');
+            $form->disableReset();
+            $timeRegister = TimeRegister::where('status', 1)->orderBy('id', 'DESC')->first();
+            $idTimeRegister = $timeRegister->id;
+            $form->hidden('id_time_register');
             $form->tools(function (Form\Tools $tools) {
             $tools->disableListButton();
             $tools->disableBackButton();
+            });
+            $form->saving(function (Form $form) use ($idTimeRegister){
+                $form->id_time_register = $idTimeRegister;
             });
        });
     }

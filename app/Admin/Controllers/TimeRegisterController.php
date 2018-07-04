@@ -76,11 +76,15 @@ class TimeRegisterController extends Controller
     protected function grid()
     {
         return Admin::grid(TimeRegister::class, function (Grid $grid) {
-
-            $grid->id('ID')->sortable();
-            $grid->name('Tên');
-            $grid->time_register_start('Thời gian bắt đầu');
-            $grid->time_register_end('Thời gian kết thúc');
+            $grid->model()->orderBy('created_at', 'DESC');
+            $grid->rows(function (Grid\Row $row) {
+                $row->column('number', $row->number);
+            });
+            $grid->number('STT');
+//            $grid->id('ID')->sortable();
+            $grid->name('Tên')->sortable();
+            $grid->time_register_start('Thời gian bắt đầu')->sortable();
+            $grid->time_register_end('Thời gian kết thúc')->sortable();
             $grid->semester('Học kỳ')->display(function ($semester) {
                 switch ($semester) {
                     case 0: return "<span class='label label-info'>Học kỳ hè</span>";
@@ -92,25 +96,25 @@ class TimeRegisterController extends Controller
                     default:
                         return '';
                 }
-            });
-            $grid->credits_max('Số TC tối đa');
-            $grid->credits_min('Số TC tối thiểu');
-            $grid->school_year('Khóa được ĐK')->display(function ($schoolYears){
-                $schoolYears = array_map(function ($schoolYears){
-                    if($schoolYears == 'All') {
-                        return "<span class='label label-primary'>Tất cả</span>";
-                    } elseif ($schoolYears ) {
-//                        $arraySchoolYear = StudentUser::distinct('school_year')->orderBy('school_year', 'DESC')->limit(6)->pluck('school_year')->toArray();
-//                        array_unshift($arraySchoolYear, 'Tất cả');
-                        return "<span class='label label-primary'>{$schoolYears}</span>";
-                    }
-                    else {
-                        return '';
-                    }
-                }, $schoolYears);
-                return join('&nbsp;', $schoolYears);
-
-            });
+            })->sortable();
+            $grid->credits_max('Số TC tối đa')->sortable();
+            $grid->credits_min('Số TC tối thiểu')->sortable();
+//            $grid->school_year('Khóa được ĐK')->display(function ($schoolYears){
+//                $schoolYears = array_map(function ($schoolYears){
+//                    if($schoolYears == 'All') {
+//                        return "<span class='label label-primary'>Tất cả</span>";
+//                    } elseif ($schoolYears ) {
+////                        $arraySchoolYear = StudentUser::distinct('school_year')->orderBy('school_year', 'DESC')->limit(6)->pluck('school_year')->toArray();
+////                        array_unshift($arraySchoolYear, 'Tất cả');
+//                        return "<span class='label label-primary'>{$schoolYears}</span>";
+//                    }
+//                    else {
+//                        return '';
+//                    }
+//                }, $schoolYears);
+//                return join('&nbsp;', $schoolYears);
+//
+//            });
             $grid->status('Trạng thái')->display(function ($status){
                 if($status == 1){
                     return "<span class='label label-success'>Đang mở</span>";
@@ -118,11 +122,27 @@ class TimeRegisterController extends Controller
                     return "<span class='label label-danger'>Đang đóng</span>";
 
                 }
-            });
-            $grid->created_at('Tạo vào lúc');
-            $grid->updated_at('Cập nhật vào lúc');
+            })->sortable();
+            $grid->created_at('Tạo vào lúc')->sortable();
+            $grid->updated_at('Cập nhật vào lúc')->sortable();
             $grid->actions(function ($actions) {
                 $actions->append('<a href="/admin/time-register/'.$actions->getKey().'/details"><i class="fa fa-eye"></i></a>');
+            });
+            $grid->filter(function($filter) {
+                $filter->disableIdFilter();
+                $filter->like('name', 'Tên đợt');
+                $options = [0 => 'Học kỳ hè', 1 => 'Học kỳ 1', 2 => 'Học kỳ 2'];
+                $filter->equal('semester', 'Học kỳ')->select($options);
+                $filter->equal('credits_max', 'Số tín chỉ tối đa');
+                $filter->equal('credits_min', 'Số tín chỉ tối thiểu');
+                $filter->equal('status', 'Trạng thái')->radio([
+                    0    => 'Đang đóng',
+                    1    => 'Đang mở',
+                ]);
+                $filter->between('time_register_start', 'Thời gian bắt đầu')->datetime();
+                $filter->between('time_register_end', 'Thời gian kết thúc')->datetime();
+                $filter->between('created_at', 'Tạo vào lúc')->datetime();
+
             });
         });
     }
@@ -144,7 +164,6 @@ class TimeRegisterController extends Controller
             $schoolYear = StudentUser::distinct('school_year')->orderBy('school_year', 'DESC')->limit(6)->pluck('school_year', 'school_year')->toArray();
             $schoolYear['0'] = "Tất cả";
             ksort($schoolYear);
-//            dd($schoolYear);
             $form->multipleSelect('school_year','Khóa đăng ký')->options($schoolYear);
             $states = [
                 'on'  => ['value' => 1, 'text' => 'Mở', 'color' => 'success'],

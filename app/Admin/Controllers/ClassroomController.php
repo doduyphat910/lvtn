@@ -76,16 +76,24 @@ class ClassroomController extends Controller
     protected function grid()
     {
         return Admin::grid(Classroom::class, function (Grid $grid) {
-
-            $grid->id('ID')->sortable();
+            $grid->rows(function (Grid\Row $row) {
+                $row->column('number', $row->number);
+            });
+            $grid->number('STT');
+//            $grid->id('ID')->sortable();
             $grid->name('Tên')->display(function ($name){
                 return  '<a href="/admin/class_room/' . $this->id . '/details">'.$name.'</a>';
-            });
+            })->sortable();
             $grid->actions(function ($actions) {
                 $actions->append('<a href="/admin/class_room/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
             });
-            $grid->created_at();
-            $grid->updated_at();
+            $grid->created_at('Tạo vào lúc')->sortable();
+            $grid->updated_at('Cập nhật vào lúc')->sortable();
+            $grid->filter(function ($filter){
+                $filter->disableIdFilter();
+                $filter->like('name', 'Tên');
+                $filter->between('created_at', 'Tạo vào lúc')->datetime();
+            });
         });
     }
 
@@ -93,8 +101,8 @@ class ClassroomController extends Controller
     {
         return Admin::grid(SubjectRegister::class, function (Grid $grid) use ($idSubjectRegister) {
             $grid->model()->whereIn('id', $idSubjectRegister);
-            $grid->id('ID')->sortable();
-            $grid->code_subject_register('Mã học phần');
+//            $grid->id('ID')->sortable();
+            $grid->id('Mã học phần');
             $grid->id_subjects('Môn học')->display(function ($idSubject){
                 if($idSubject){
                     return Subjects::find($idSubject)->name;

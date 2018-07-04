@@ -74,16 +74,25 @@ class YearController extends Controller
     {
         return Admin::grid(Year::class, function (Grid $grid) {
 
-            $grid->id('ID')->sortable();
+//            $grid->id('ID')->sortable();
+            $grid->rows(function (Grid\Row $row) {
+                $row->column('number', $row->number);
+            });
+            $grid->number('STT');
             $grid->name('Tên năm')->display(function ($name){
                 return  '<a href="/admin/year/' . $this->id . '/details">'.$name.'</a>';
-            });
+            })->sortable();
 
             $grid->actions(function ($actions) {
                 $actions->append('<a href="/admin/year/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
             });
-            $grid->created_at('Tạo vào lúc');
-            $grid->updated_at('Cập nhật vào lúc');
+            $grid->created_at('Tạo vào lúc')->sortable();
+            $grid->updated_at('Cập nhật vào lúc')->sortable();
+            $grid->filter(function($filter) {
+                $filter->disableIdFilter();
+                $filter->like('name', 'Tên năm');
+                $filter->between('created_at', 'Tạo vào lúc')->datetime();
+            });
         });
     }
 

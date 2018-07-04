@@ -2,6 +2,7 @@
 $(function () {
     $('#resultRegister').change(function(e) {
             var selected = $( "#resultRegister" ).val();
+
             $.ajax({
                 type:'GET',
                 url:'/user/register-result/'+selected,
