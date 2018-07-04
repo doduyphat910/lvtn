@@ -70,6 +70,7 @@
 42. responsive
 
 */
+
 .preloader {
   width: 100%;
   height: 100%;
@@ -5393,9 +5394,9 @@ thead tr th {
   color: #455a64;
   font-weight: 500;
 }
-thead tr th:last-child {
+/*thead tr th:last-child {
   text-align: right;
-}
+}*/
 tbody tr th {
   color: #455a64;
   font-family: 'Poppins', sans-serif;
@@ -5405,9 +5406,9 @@ tbody tr td {
   font-family: 'Poppins', sans-serif;
   color: #99abb4;
 }
-tbody tr td:last-child {
+/*tbody tr td:last-child {
   text-align: right;
-}
+}*/
 .table > tbody > tr > td,
 .table > tbody > tr > th,
 .table > tfoot > tr > td,
@@ -5496,7 +5497,7 @@ tbody tr td:last-child {
   height: 75px;
 }
 .login-content {
-  margin: 100px 0;
+ 
 }
 .login-form {
   background: #ffffff;
@@ -6920,4 +6921,6 @@ tbody tr td:last-child {
   .retina-logo {
     display: inline-block !important;
   }
+}.table > tbody > tr > td:hover >a{
+  color: #5c4ac7;
 }

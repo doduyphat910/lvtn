@@ -82,8 +82,12 @@
 {{--    @include('User.partials.sidebar')--}}
 
     <div class="container-flud" id="pjax-container">
-        @yield('content')
-        {!! \App\Http\Extensions\Facades\User::script() !!}
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                    @yield('content')
+                    {!! \App\Http\Extensions\Facades\User::script() !!}
+            </div>
+        </div>
     </div>
 
     @include('User.partials.footer')

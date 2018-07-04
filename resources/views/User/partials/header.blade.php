@@ -85,6 +85,7 @@
             background-color: blue;*/
         .
         }
+        
     </style>
     <nav class="navbar navbar-default navbar-fixed-top" style="margin-left: 0px;">
       <div class="container-flud">
@@ -97,9 +98,10 @@
           </button>
             <a href="{{ url('user/student') }}" class="logo" style="width: auto;">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
-                <span class="logo-mini">{!! config('admin.logo-mini', config('admin.name')) !!}</span>
+               {{--  <span class="logo-mini"><img src="../uploads/images/logo_1.png" style="width:50px;height: 50px;"></span> --}}
+
                 <!-- logo for regular state and mobile devices -->
-                <span class="logo-lg">{!! config('admin.logo', config('admin.name')) !!}</span>
+                <span class="logo-lg"><img src="../uploads/images/logo_2.png" height="50px;"></span>
             </a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
