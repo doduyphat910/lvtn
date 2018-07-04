@@ -6,6 +6,7 @@ use App\Models\Classroom;
 
 use App\Models\SubjectRegister;
 use App\Models\Subjects;
+use App\Models\TimeRegister;
 use App\Models\TimeStudy;
 use App\Models\UserAdmin;
 use Encore\Admin\Form;
@@ -100,8 +101,13 @@ class ClassroomController extends Controller
     protected function gridSubjectRegister($idSubjectRegister)
     {
         return Admin::grid(SubjectRegister::class, function (Grid $grid) use ($idSubjectRegister) {
-            $grid->model()->whereIn('id', $idSubjectRegister);
+//            $grid->resource('admin/subject-register');
+            $grid->model()->whereIn('id', $idSubjectRegister)->orderBy('id_time_register', 'DESC');
 //            $grid->id('ID')->sortable();
+            $grid->rows(function (Grid\Row $row) {
+                $row->column('number', $row->number);
+            });
+            $grid->number('STT');
             $grid->id('Mã học phần');
             $grid->id_subjects('Môn học')->display(function ($idSubject){
                 if($idSubject){
@@ -110,13 +116,45 @@ class ClassroomController extends Controller
                     return '';
                 }
             });
-            $grid->id_classroom('Phòng học')->display(function ($id_classroom){
-                if($id_classroom){
-                    return Classroom::find($id_classroom)->name;
-                } else {
-                    return '';
-                }
-            });
+
+            $grid->column('Buổi học')->display(function () {
+                $day = TimeStudy::where('id_subject_register', $this->id)->pluck('day')->toArray();
+                $day = array_map(function ($day) {
+                    switch ($day) {
+                        case 2:
+                            $day = 'Thứ 2';
+                            break;
+                        case 3:
+                            $day = 'Thứ 3';
+                            break;
+                        case 4:
+                            $day = 'Thứ 4';
+                            break;
+                        case 5:
+                            $day = 'Thứ 5';
+                            break;
+                        case 6:
+                            $day = 'Thứ 6';
+                            break;
+                        case 7:
+                            $day = 'Thứ 7';
+                            break;
+                        case 8:
+                            $day = 'Chủ nhật';
+                            break;
+                    }
+                    return "<span class='label label-success'>{$day}</span>";
+                }, $day);
+                return join('&nbsp;', $day);
+            })->sortable();
+            $grid->column('Thời gian học')->display(function () {
+                $timeStart = TimeStudy::where('id_subject_register', $this->id)->pluck('time_study_start')->toArray();
+                $timeEnd = TimeStudy::where('id_subject_register', $this->id)->pluck('time_study_end')->toArray();
+                $time = array_map(function ($timeStart, $timeEnd) {
+                    return "<span class='label label-success'>{$timeStart} - {$timeEnd}</span>";
+                }, $timeStart, $timeEnd);
+                return join('&nbsp;', $time);
+            })->sortable();
             $grid->id_user_teacher('Giảng viên')->display(function ($id_user_teacher){
                 if($id_user_teacher){
                     $teacher = UserAdmin::find($id_user_teacher);
@@ -128,22 +166,48 @@ class ClassroomController extends Controller
                 } else {
                     return '';
                 }
-            });
-            $grid->qty_current('Số lượng hiện tại');
+            })->sortable();
+            $grid->id_time_register('Đợt đăng ký')->display(function ($idTimeRegister){
+                $timeRegister = TimeRegister::find($idTimeRegister);
+                if(!empty($timeRegister->name)){
+                    if($idTimeRegister % 2 == 0) {
+                        return "<span class='label label-info'>{$timeRegister->name}</span>";
+                    } else {
+                        return "<span class='label label-success'>{$timeRegister->name}</span>";
+                    }
+                } else {
+                    return '';
+                }
+            })->sortable();
+            $grid->qty_current('Số lượng hiện tại')->sortable();
 //            $grid->qty_min('Số lượng tối thiểu');
 //            $grid->qty_max('Số lượng tối đa');
 
-            $grid->date_start('Ngày bắt đầu');
-            $grid->date_end('Ngày kết thúc');
+            $grid->date_start('Ngày bắt đầu')->sortable();
+            $grid->date_end('Ngày kết thúc')->sortable();
 
-            $grid->created_at('Tạo vào lúc');
-            $grid->updated_at('Cập nhật vào lúc');
+            $grid->created_at('Tạo vào lúc')->sortable();
+            $grid->updated_at('Cập nhật vào lúc')->sortable();
 
             $grid->disableExport();
             $grid->disableCreation();
             $grid->disableExport();
             $grid->disableRowSelector();
-            $grid->disableFilter();
+            $grid->filter(function($filter){
+                $filter->disableIdFilter();
+                $filter->like('id', 'Mã học phần');
+//                $filter->in('id_subjects', 'Tên môn học')->multipleSelect(Subjects::all()->pluck('name', 'id'));
+                $filter->where(function ($query) {
+                    $input = $this->input;
+                    $query->whereIn('id_subjects', $input);
+                }, 'Tên môn học')->multipleSelect(Subjects::all()->pluck('name', 'id'));
+                $filter->in('id_user_teacher', 'Giảng viên')->multipleSelect(UserAdmin::where('type_user', 0)->pluck('name', 'id'));
+                $filter->in('id_time_register', 'TG Đăng ký')->multipleSelect(TimeRegister::all()->pluck('name','id'));
+                $filter->like('qty_current', 'SL hiện tại');
+                $filter->date('date_start', 'Ngày bắt đầu');
+                $filter->date('date_end', 'Ngày kết thúc');
+                $filter->between('created_at', 'Tạo vào lúc')->datetime();
+            });
             $grid->actions(function ($actions) {
                 $actions->disableEdit();
                 $actions->disableDelete();

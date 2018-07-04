@@ -7,6 +7,9 @@ use App\Models\Semester;
 use App\Models\SubjectGroup;
 
 use App\Models\Subjects;
+use App\Models\TimeRegister;
+use App\Models\UserAdmin;
+use App\Models\Year;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Facades\Admin;
@@ -142,14 +145,19 @@ class SubjectGroupController extends Controller
     protected function gridSubject($idSubject)
     {
         return Admin::grid(Subjects::class, function (Grid $grid) use ($idSubject) {
+            $grid->resource('admin/subject');
             $grid->model()->whereIn('id', $idSubject);
-            $grid->id('ID')->sortable();
-            $grid->id('Mã môn học');
+//            $grid->id('ID')->sortable();
+            $grid->rows(function (Grid\Row $row) {
+                $row->column('number', $row->number);
+            });
+            $grid->number('STT');
+            $grid->id('Mã môn học')->sortable();
             $grid->name('Tên môn học')->display(function ($name){
                 return  '<a href="/admin/subject/' . $this->id . '/details">'.$name.'</a>';
-            });
-            $grid->credits('Số tín chỉ');
-            $grid->credits_fee('Số tín chỉ học phí');
+            })->sortable();
+            $grid->credits('Số tín chỉ')->sortable();
+            $grid->credits_fee('Số tín chỉ học phí')->sortable();
             $grid->column('Học kỳ - Năm')->display(function () {
                 $id = $this->id;
                 $subject = Subjects::find($id);
@@ -158,9 +166,13 @@ class SubjectGroupController extends Controller
                     $nameSemester = Semester::find($arraySemester)->name;
                     $year = Semester::find($arraySemester)->year()->get();
                     $nameYear = $year['0']->name;
-                    return "<span class='label label-info'>{$nameSemester} - {$nameYear}</span>"  ;
+                    if($year['0']->id % 2 == 0){
+                        return "<span class='label label-info'>Học kỳ {$nameSemester} - {$nameYear}</span>"  ;
+                    } else {
+                        return "<span class='label label-success'>Học kỳ {$nameSemester} - {$nameYear}</span>"  ;
+                    }
                 }, $arraySemester);
-                return join('&nbsp;', $name);});
+                return join('&nbsp;', $name);})->sortable();
             $grid->column('Nhóm môn')->display(function () {
                 $subject = Subjects::find($this->id);
                 $nameGroup = $subject->subject_group()->pluck('name')->toArray();
@@ -172,42 +184,83 @@ class SubjectGroupController extends Controller
                     }
                 },$nameGroup);
                 return join('&nbsp;', $groupSubject);
-            });
+            })->sortable();
+
             $grid->id_rate('Tỷ lệ chuyên cần')->display(function ($rate){
                 if($rate){
                     return Rate::find($rate)->attendance;
                 } else {
                     return '';
                 }
-            });
+            })->sortable();
             $grid->column('Tỷ lệ giữa kì')->display(function (){
                 if($this->id_rate) {
-                    return Rate::find($this->id_rate)->midterm;
+                    return Rate::find($this->id_rate)->mid_term;
                 } else {
                     return '';
                 }
-            });
+            })->sortable();
             $grid->column('Tỷ lệ cuối kì')->display(function (){
                 if($this->id_rate) {
                     return Rate::find($this->id_rate)->end_term;
                 } else {
                     return '';
                 }
-            });
-            $grid->created_at('Tạo vào lúc');
-            $grid->updated_at('Cập nhật vào lúc');
+            })->sortable();
+            $grid->created_at('Tạo vào lúc')->sortable();
+            $grid->updated_at('Cập nhật vào lúc')->sortable();
             //action
             $grid->actions(function ($actions) {
                 $actions->disableEdit();
                 $actions->disableDelete();
-                $actions->append('<a href="/admin/subject/' . $actions->getKey() . '/edit"><i class="fa fa-edit" ></i></a>');
+                $actions->append('<a href="/admin/subjects/' . $actions->getKey() . '/edit"><i class="fa fa-edit" ></i></a>');
                 $actions->append('<a href="/admin/subject/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
             });
             //disable
             $grid->disableCreateButton();
             $grid->disableExport();
             $grid->disableRowSelector();
-            $grid->disableFilter();
+            $grid->filter(function($filter){
+                $filter->disableIdFilter();
+                $filter->like('id', 'Mã môn học');
+                $filter->like('name', 'Tên môn học');
+                $filter->like('credits', 'Tín chỉ');
+                $filter->like('credits_fee', 'Tín chỉ học phí');
+                $semesters = Semester::all()->toArray();
+                $optionSemesters = [];
+                foreach($semesters as $semester) {
+                    $nameYear = Year::where('id', $semester['id_year'])->first();
+                    $optionSemesters += [$semester['id'] => 'Học kỳ '. $semester['name']. ' - ' . $nameYear->name];
+                }
+                $filter->where(function ($query){
+                    $input = $this->input;
+                    $semester = Semester::where('id',$input)->first();
+                    $idSubject = $semester->subjects()->pluck('id')->toArray();
+                    $query->whereIn('id', $idSubject);
+                }, 'Học kì')->select($optionSemesters);
+                $filter->where(function ($query){
+                    $input = $this->input;
+                    $subjectGroup = SubjectGroup::where('id',$input)->first();
+                    $idSubject = $subjectGroup->subject()->pluck('id')->toArray();
+                    $query->where(function ($query) use ($idSubject) {
+                        $query->whereIn('id', $idSubject);
+                    });
+//                    $query->whereIn('id', $idSubject);
+                }, 'Nhóm môn học')->multipleSelect(SubjectGroup::all()->pluck('name', 'id'));
+                $rates = Rate::all();
+                $arrayRate = [];
+                foreach($rates as $rate) {
+                    $arrayRate += [$rate['id'] => $rate['attendance'] . '-'.  $rate['mid_term'] .'-' .$rate['end_term']];
+                }
+                $filter->where(function ($query){
+                    $input = $this->input;
+//                    $idRate = Rate::where('attendance', '%'. $input .'%')->pluck('id')->toArray();
+                    $query->whereIn('id_rate', $input);
+                }, 'Tỷ lệ điểm')->multipleSelect($arrayRate);
+//                $filter->in('id_subject1', 'Môn học trước')->multipleSelect(Subjects::all()->pluck('name', 'id'));
+//                $filter->in('id_subject2', 'Môn học song song')->multipleSelect(Subjects::all()->pluck('name', 'id'));
+                $filter->between('created_at', 'Tạo vào lúc')->datetime();
+            });
         });
     }
 }

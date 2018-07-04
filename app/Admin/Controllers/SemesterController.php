@@ -130,8 +130,12 @@ class SemesterController extends Controller
         return Admin::grid(Subjects::class, function (Grid $grid) use ($idSemester) {
             $idSubjects = SemesterSubjects::where('semester_id', $idSemester)->pluck('subjects_id');
             $grid->model()->whereIn('id', $idSubjects);
-            $grid->id('ID')->sortable();
-            $grid->id('Mã môn học');
+//            $grid->id('ID')->sortable();
+            $grid->rows(function (Grid\Row $row) {
+                $row->column('number', $row->number);
+            });
+            $grid->number('STT');
+            $grid->id('Mã môn học')->sortable();
             $grid->name('Tên môn học')->display(function ($name){
                 return  '<a href="/admin/subject/' . $this->id . '/details">'.$name.'</a>';
             });
@@ -145,7 +149,7 @@ class SemesterController extends Controller
                     $nameSemester = Semester::find($arraySemester)->name;
                     $year = Semester::find($arraySemester)->year()->get();
                     $nameYear = $year['0']->name;
-                    return "<span class='label label-info'>{$nameSemester} - {$nameYear}</span>"  ;
+                    return "<span class='label label-info'>Học kỳ {$nameSemester} - {$nameYear}</span>"  ;
                 }, $arraySemester);
                 return join('&nbsp;', $name);
             });
@@ -170,7 +174,7 @@ class SemesterController extends Controller
             });
             $grid->column('Tỷ lệ giữa kì')->display(function (){
                 if($this->id_rate) {
-                    return Rate::find($this->id_rate)->midterm;
+                    return Rate::find($this->id_rate)->mid_term;
                 } else {
                     return '';
                 }
@@ -188,8 +192,8 @@ class SemesterController extends Controller
             $grid->actions(function ($actions) {
                 $actions->disableEdit();
                 $actions->disableDelete();
-                $actions->append('<a href="/admin/subject_register/' . $actions->getKey() . '/edit"><i class="fa fa-edit" ></i></a>');
-                $actions->append('<a href="/admin/subject_register/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
+                $actions->append('<a href="/admin/subjects/' . $actions->getKey() . '/edit"><i class="fa fa-edit" ></i></a>');
+                $actions->append('<a href="/admin/subject/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
             });
             //disable
             $grid->disableCreateButton();
@@ -202,7 +206,8 @@ class SemesterController extends Controller
     protected function gridSubjectRegister($idSubjects)
     {
         return Admin::grid(SubjectRegister::class, function (Grid $grid) use ($idSubjects) {
-            $grid->model()->whereIn('id_Subjects', $idSubjects);
+            $idSubjects = $idSubjects->toArray();
+            $grid->model()->whereIn('id_subjects', $idSubjects);
 //            $grid->id('ID')->sortable();
             $grid->id('Mã học phần');
             $grid->id_subjects('Môn học')->display(function ($idSubject){
@@ -212,25 +217,25 @@ class SemesterController extends Controller
                     return '';
                 }
             });
-            $grid->id_classroom('Phòng học')->display(function ($id_classroom){
-                if($id_classroom){
-                    return Classroom::find($id_classroom)->name;
-                } else {
-                    return '';
-                }
-            });
-            $grid->id_user_teacher('Giảng viên')->display(function ($id_user_teacher){
-                if($id_user_teacher){
-                    $teacher = UserAdmin::find($id_user_teacher);
-                    if($teacher){
-                        return $teacher->name;
-                    } else {
-                        return '';
-                    }
-                } else {
-                    return '';
-                }
-            });
+//            $grid->id_classroom('Phòng học')->display(function ($id_classroom){
+//                if($id_classroom){
+//                    return Classroom::find($id_classroom)->name;
+//                } else {
+//                    return '';
+//                }
+//            });
+//            $grid->id_user_teacher('Giảng viên')->display(function ($id_user_teacher){
+//                if($id_user_teacher){
+//                    $teacher = UserAdmin::find($id_user_teacher);
+//                    if($teacher){
+//                        return $teacher->name;
+//                    } else {
+//                        return '';
+//                    }
+//                } else {
+//                    return '';
+//                }
+//            });
             $grid->qty_current('Số lượng hiện tại');
 
             // $grid->date_start('Ngày bắt đầu');
