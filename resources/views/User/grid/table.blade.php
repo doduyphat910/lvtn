@@ -15,8 +15,8 @@
 
     </div>
     <!-- /.box-header -->
-    <div class="box-body table-responsive no-padding">
-        <table class="table table-hover">
+    <div class="box-body table-responsive no-padding ">
+        <table class="table table-hover" style="background-color: red">
             <tr>
                 @foreach($grid->columns() as $column)
                 <th>{{$column->getLabel()}}{!! $column->sorter() !!}</th>

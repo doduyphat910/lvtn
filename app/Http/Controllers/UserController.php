@@ -9,7 +9,8 @@ use App\Models\Notifications;
 use App\Models\StudentUser;
 use Illuminate\Http\Request;
 use Encore\Admin\Form;
-use Encore\Admin\Grid;
+//use Encore\Admin\Grid;
+use App\Http\Extensions\GridUser;
 use Encore\Admin\Facades\Admin;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\ModelForm;
@@ -40,8 +41,7 @@ class UserController extends Controller
     }
     protected function grid()
     {
-        return User::grid(Notifications::class, function (Grid $grid) {
-
+        return User::gridUser(Notifications::class, function (GridUser $grid) {
             //$grid->id('ID')->sortable();
             $grid->name('Tên thông báo');
             $grid->description('Mô tả')->display(function ($name){
