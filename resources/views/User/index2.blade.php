@@ -70,6 +70,9 @@
         background-color: #00a657cc !important;
         font-size: 1.3rem;
     }
+    .btnTotal {
+         font-size: 1.3rem;
+    }
 </style>
 </head>
 
@@ -126,7 +129,7 @@
 {{--{!! \App\Http\Extensions\Facades\User::js() !!}--}}
 <script src="{{ admin_asset ("/vendor/laravel-admin/laravel-admin/laravel-admin.js") }}"></script>
 <script> $(".grid-refresh").hide();
-
+    $(".box-title").css("color", "white");
 </script>
 
 </body>

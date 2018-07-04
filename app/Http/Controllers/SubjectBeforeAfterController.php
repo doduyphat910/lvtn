@@ -8,7 +8,8 @@ use App\Models\SubjectBeforeAfter;
 use Illuminate\Http\Request;
 use App\Models\Subjects;
 use Encore\Admin\Form;
-use Encore\Admin\Grid;
+use App\Http\Extensions\GridUser;
+
 use Encore\Admin\Facades\Admin;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\ModelForm;
@@ -33,7 +34,7 @@ class SubjectBeforeAfterController extends Controller
     }
     protected function grid()
     {
-        return User::grid(SubjectBeforeAfter::class, function (Grid $grid) {
+        return User::GridUser(SubjectBeforeAfter::class, function (GridUser $grid) {
 
             // $grid->id('ID')->sortable();
             $grid->id_subject_before('Môn học trước')->display(function ($idSubject1){

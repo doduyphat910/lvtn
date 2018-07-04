@@ -9,8 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png">
-    <title>Ela - Bootstrap Admin Dashboard Template</title>
+    <title>Đăng nhập cho sinh viên</title>
     <base href="{{asset('')}}">
     <!-- Bootstrap Core CSS -->
     <link href="student/css/lib/bootstrap/bootstrap.min.css" rel="stylesheet">
@@ -81,7 +80,7 @@
                     <div class="col-lg-3">
                         <div class="login-content card" style="margin-right: -15px;">
                             <div class="login-form">
-                                <h4><b>Đăng nhập</b></h4>
+                                <h1 class="text-center"><b>Đăng nhập</b></h1>
 
                                 <form action="postLogin" method="POST">
                                     <input type="hidden" name="_token" value="{{csrf_token()}}">
@@ -120,14 +119,11 @@
     <!-- All Jquery -->
     <script src="student/js/lib/jquery/jquery.min.js"></script>
     <!-- Bootstrap tether Core JavaScript -->
-    <script src="student/js/lib/bootstrap/js/popper.min.js"></script>
     <script src="student/js/lib/bootstrap/js/bootstrap.min.js"></script>
     <!-- slimscrollbar scrollbar JavaScript -->
-    <script src="student/js/jquery.slimscroll.js"></script>
     <!--Menu sidebar -->
-    <script src="student/js/sidebarmenu.js"></script>
     <!--stickey kit -->
-    <script src="student/js/lib/sticky-kit-master/dist/sticky-kit.min.js"></script>
+
     <!--Custom JavaScript -->
     <script src="student/js/custom.min.js"></script>
     <script type="text/javascript">

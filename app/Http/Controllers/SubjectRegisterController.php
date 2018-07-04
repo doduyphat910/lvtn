@@ -24,7 +24,9 @@ use Encore\Admin\Widgets\Alert;
 use Encore\Admin\Widgets\Callout;
 use Illuminate\Http\Request;
 use Encore\Admin\Form;
-use Encore\Admin\Grid;
+
+use App\Http\Extensions\GridUser;
+
 use Encore\Admin\Facades\Admin;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\ModelForm;
@@ -52,7 +54,7 @@ class SubjectRegisterController extends Controller
 
     protected function grid()
     {
-        return User::grid(Subjects::class, function (Grid $grid) {
+        return User::GridUser(Subjects::class, function (GridUser $grid) {
             $grid->registerColumnDisplayer();
             $user = Auth::user();
 
@@ -134,7 +136,7 @@ class SubjectRegisterController extends Controller
                 return join('&nbsp;', $name);
             });
             $grid->column('Đăng ký')->display(function () {
-                return '<a href="/user/subject-register/' . $this->id . '/details" data-id='.$this->id.' class="btn btn-md"  target="_blank" ><i class="glyphicon glyphicon-pencil"></i></a>';
+                return '<a href="/user/subject-register/' . $this->id . '/details" data-id='.$this->id.' class="btn btn-md"  target="_blank" ><i class="fa fa-pencil fa-fw fa-1x"></i></a>';
             });
             $grid->disableCreateButton();
             $grid->disableExport();
@@ -145,7 +147,7 @@ class SubjectRegisterController extends Controller
     }
     protected function gridSubjectRegister($idSubjects)
     {
-        return User::grid(SubjectRegister::class, function (Grid $grid) use ($idSubjects) {
+        return User::GridUser(SubjectRegister::class, function (GridUser $grid) use ($idSubjects) {
              $script = <<<SCRIPT
         
     // check subject Before After
@@ -281,7 +283,7 @@ SCRIPT;
             $grid->actions(function ($actions) use ($idSubjects){
                 $actions->disableEdit();
                 $actions->disableDelete();
-                $actions->append('<a href="javascript:void(0);" data-id="' . $this->getKey() . '"  class="btn btn-danger btnCancel" style="display: none;font-size: 1.5rem"><i class="glyphicon glyphicon-trash"></i> &nbsp Hủy bỏ </a>');
+                $actions->append('<a href="javascript:void(0);" data-id="' . $this->getKey() . '"  class="btn btn-danger btnTotal btnCancel" style="display: none;"><i class="glyphicon glyphicon-trash"></i> &nbsp Hủy bỏ </a>');
 //
 //                $arrIdSubjectsList=SubjectRegister::where('id_subjects',$idSubjects)->pluck('id')->toArray();
 //                $arrIdResultRegister=ResultRegister::get()->pluck('id_subject_register')->toArray();
@@ -326,7 +328,7 @@ SCRIPT;
 //                }
 
                 //button Register (nút đăng kí)
-                $actions->append('<a href="javascript:void(0);" data-id="' . $this->getKey() . '"  class="btn btn-primary btnRegister" style="display: none;"  ><i class="glyphicon glyphicon-pencil"></i> &nbsp Đăng ký </a>');
+                $actions->append('<a href="javascript:void(0);" data-id="' . $this->getKey() . '"  class="btn btn-primary btnRegister btnTotal" style="display: none;"  ><i class="glyphicon glyphicon-pencil"></i> &nbsp Đăng ký </a>');
 
                 
 

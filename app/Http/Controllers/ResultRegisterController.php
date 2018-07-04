@@ -24,7 +24,8 @@ use Encore\Admin\Widgets\Alert;
 use Encore\Admin\Widgets\Callout;
 use Illuminate\Http\Request;
 use Encore\Admin\Form;
-use Encore\Admin\Grid;
+use App\Http\Extensions\GridUser;
+
 use Encore\Admin\Facades\Admin;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\ModelForm;
@@ -72,7 +73,7 @@ class ResultRegisterController extends Controller
     }
     protected function grid()
     {
-        return User::grid(ResultRegister::class, function (Grid $grid) {
+        return User::GridUser(ResultRegister::class, function (GridUser $grid) {
             $user = Auth::user();
             $timeRegister = TimeRegister::orderBy('id', 'DESC')->first();
             $grid->model()->where('time_register', $timeRegister->id)->where('id_user_student', $user->id);
@@ -200,7 +201,7 @@ class ResultRegisterController extends Controller
             $grid->actions(function ($actions){
                 $actions->disableEdit();
                 $actions->disableDelete();
-                $actions->append('<a href="javascript:void(0);" data-id="' . $this->row->id_subject_register . '"  class="btn btn-danger btnCancel" style="font-size: 1.5rem"><i class="glyphicon glyphicon-trash"></i> &nbsp Hủy bỏ </a>');
+                $actions->append('<a href="javascript:void(0);" data-id="' . $this->row->id_subject_register . '"  class="btn btn-danger btnTotal btnCancel"><i class="glyphicon glyphicon-trash"></i> &nbsp Hủy bỏ </a>');
             });
             $cancel = trans('Hủy bỏ');
             $cancelConfirm = trans('Bạn có chắc chắn muốn hủy không?');

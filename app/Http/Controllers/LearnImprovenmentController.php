@@ -24,7 +24,8 @@ use Encore\Admin\Widgets\Alert;
 use Encore\Admin\Widgets\Callout;
 use Illuminate\Http\Request;
 use Encore\Admin\Form;
-use Encore\Admin\Grid;
+use App\Http\Extensions\GridUser;
+
 use Encore\Admin\Facades\Admin;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\ModelForm;
@@ -51,7 +52,7 @@ class LearnImprovenmentController extends Controller
     }
     protected function grid()
     {
-        return User::grid(Subjects::class, function (Grid $grid) {
+        return User::GridUser(Subjects::class, function (GridUser $grid) {
             $grid->registerColumnDisplayer();
             $user = Auth::user();
 

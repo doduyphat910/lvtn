@@ -8,7 +8,7 @@ use App\Models\SubjectParallel;
 use Illuminate\Http\Request;
 use App\Models\Subjects;
 use Encore\Admin\Form;
-use Encore\Admin\Grid;
+use App\Http\Extensions\GridUser;
 use Encore\Admin\Facades\Admin;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\ModelForm;
@@ -31,7 +31,7 @@ class SubjectsParallelController extends Controller
     }
     protected function grid()
     {
-        return User::grid(SubjectParallel::class, function (Grid $grid) {
+        return User::GridUser(SubjectParallel::class, function (GridUser $grid) {
 
             //$grid->id('ID')->sortable();
             $grid->id_subject1('Môn học trước')->display(function ($idSubject1){

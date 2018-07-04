@@ -12,6 +12,12 @@ $(function () {
                     $('.gridResultAll').hide();
                     $('.gridTimeTable').hide();
                     $('.gridSubjectRegister').html(msg);
+                    $(".grid-refresh").hide();
+                    $("table").addClass('table-striped');
+                    $("table").addClass('table-bordered');
+                    $("th").css("background-color","#3c8dbc");
+                    $("th").css("color","white");
+                    
                 }
             });
             $.ajax({
@@ -21,6 +27,9 @@ $(function () {
                 },
                 success: function( msg ) {
                     $('.time-table').html(msg);
+                    
+                    
+
                 }
             });
     });

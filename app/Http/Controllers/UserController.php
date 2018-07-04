@@ -25,7 +25,9 @@ class UserController extends Controller
 
             $content->header('Thông báo');
             $content->description('Thông báo cho sinh viên');
-
+            $content->breadcrumb(
+                ['text' => 'Thông báo', 'url' => '../user/student']
+            );
             $content->body($this->grid());
         });
     }
