@@ -684,115 +684,116 @@ html {
    <div class="row box-body">
       <div class="col-lg-2 col-sm-6 col-md-6">
          <div class="circle-tile">
-            <a href="#">
+            <a href="/admin/student_user" target="_blank">
                <div class="circle-tile-heading dark-blue">
                   <i class="fa fa-users fa-fw fa-3x"></i>
                </div>
             </a>
             <div class="circle-tile-content dark-blue">
                <div class="circle-tile-description text-faded">
-                  Users
+                  Users SV
                </div>
                <div class="circle-tile-number text-faded">
-                  265
-                  <i class="fa fa-bar-chart" aria-hidden="true"></i>                                    
+                  {{--265--}}
+                   {{$countStudent}}
+                  <i class="fa fa-users" aria-hidden="true"></i>
                </div>
-               <a href="#" class="circle-tile-footer">More Info <i class="fa fa-chevron-circle-right"></i></a>
+               <a href="/admin/student_user" target="_blank" class="circle-tile-footer">Xem chi tiết <i class="fa fa-chevron-circle-right"></i></a>
             </div>
          </div>
       </div>
       <div class="col-lg-2 col-sm-6 col-md-6">
          <div class="circle-tile">
-            <a href="#">
+            <a  href="/admin/teacher_user" target="_blank" >
                <div class="circle-tile-heading green">
-                  <i class="fa fa-money fa-fw fa-3x"></i>
+                  <i class="fa fa-users fa-fw fa-3x"></i>
                </div>
             </a>
             <div class="circle-tile-content green">
                <div class="circle-tile-description text-faded">
-                  Revenue
+                   Users GV
                </div>
                <div class="circle-tile-number text-faded">
-                  $32,384
-                  <i class="fa fa-money" aria-hidden="true"></i>
+                   {{$countTeacher}}
+                  <i class="fa fa-users" aria-hidden="true"></i>
                </div>
-               <a href="#" class="circle-tile-footer">More Info <i class="fa fa-chevron-circle-right"></i></a>
+               <a href="/admin/teacher_user" target="_blank" class="circle-tile-footer">Xem chi tiết <i class="fa fa-chevron-circle-right"></i></a>
             </div>
          </div>
       </div>
       <div class="col-lg-2 col-sm-6 col-md-6">
          <div class="circle-tile">
-            <a href="#">
+            <a href="/admin/user_admin" target="_blank" >
                <div class="circle-tile-heading orange">
-                  <i class="fa fa-bell fa-fw fa-3x"></i>
+                  <i class="fa fa-users fa-fw fa-3x"></i>
                </div>
             </a>
             <div class="circle-tile-content orange">
                <div class="circle-tile-description text-faded">
-                  Alerts
+                  User QT
                </div>
                <div class="circle-tile-number text-faded">
-                  9 New
-                  <i class="fa fa-bell" aria-hidden="true"></i>
+                  {{$countAdmin}}
+                  <i class="fa fa-users" aria-hidden="true"></i>
                </div>
-               <a href="#" class="circle-tile-footer">More Info <i class="fa fa-chevron-circle-right"></i></a>
+               <a href="/admin/user_admin" target="_blank" class="circle-tile-footer">Xem chi tiết <i class="fa fa-chevron-circle-right"></i></a>
             </div>
          </div>
       </div>
       <div class="col-lg-2 col-sm-6 col-md-6">
          <div class="circle-tile">
-            <a href="#">
+            <a href="/admin/class" target="_blank">
                <div class="circle-tile-heading blue">
-                  <i class="fa fa-tasks fa-fw fa-3x"></i>
+                  <i class="fa fa-book fa-fw fa-3x"></i>
                </div>
             </a>
             <div class="circle-tile-content blue">
                <div class="circle-tile-description text-faded">
-                  Tasks
+                  Lớp
                </div>
                <div class="circle-tile-number text-faded">
-                  10
-                  <i class="fa fa-tasks" aria-hidden="true"></i>
+                  {{$countClass}}
+                  <i class="fa fa-book" aria-hidden="true"></i>
                </div>
-               <a href="#" class="circle-tile-footer">More Info <i class="fa fa-chevron-circle-right"></i></a>
+               <a href="/admin/class" target="_blank" class="circle-tile-footer">Xem chi tiết <i class="fa fa-chevron-circle-right"></i></a>
             </div>
          </div>
       </div>
       <div class="col-lg-2 col-sm-6 col-md-6">
          <div class="circle-tile">
-            <a href="#">
+            <a href="/admin/time-register" target="_blank">
                <div class="circle-tile-heading red">
-                  <i class="fa fa-shopping-cart fa-fw fa-3x"></i>
+                  <i class="fa fa-pencil-square-o fa-fw fa-3x"></i>
                </div>
             </a>
             <div class="circle-tile-content red">
                <div class="circle-tile-description text-faded">
-                  Orders
+                  Đợt ĐK
                </div>
                <div class="circle-tile-number text-faded">
-                  24
-                  <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                  {{$countTimeRegister}}
+                  <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                </div>
-               <a href="#" class="circle-tile-footer">More Info <i class="fa fa-chevron-circle-right"></i></a>
+               <a href="/admin/time-register" target="_blank" class="circle-tile-footer">Xem chi tiết <i class="fa fa-chevron-circle-right"></i></a>
             </div>
          </div>
       </div>
       <div class="col-lg-2 col-sm-6 col-md-6">
          <div class="circle-tile">
-            <a href="#">
+            <a href="/admin/subject_register" target="_blank">
                <div class="circle-tile-heading purple">
-                  <i class="fa fa-comments fa-fw fa-3x"></i>
+                  <i class="fa fa-bookmark fa-fw fa-3x"></i>
                </div>
             </a>
             <div class="circle-tile-content purple">
                <div class="circle-tile-description text-faded">
-                  Mentions
+                  Lớp HP
                </div>
                <div class="circle-tile-number text-faded">
-                  96
-                  <i class="fa fa-area-chart" aria-hidden="true"></i>                                  
+                  {{$countSubjectRegister}}
+                  <i class="fa fa-bookmark" aria-hidden="true"></i>
                </div>
-               <a href="#" class="circle-tile-footer">More Info <i class="fa fa-chevron-circle-right"></i></a>
+               <a href="/admin/subject_register" target="_blank" class="circle-tile-footer">Xem chi tiết <i class="fa fa-chevron-circle-right"></i></a>
             </div>
          </div>
       </div>
@@ -881,14 +882,14 @@ html {
 
         </div>
    </div>
-</div>        
+</div>
 <script>
-
 var ctx = document.getElementById("myChart").getContext('2d');
 var myChart = new Chart(ctx, {
     type: 'bar',
     data: {
-        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+        // labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+        labels: '<?php  $arrClassShow ?>',
         datasets: [{
             label: '# of Votes',
             data: [12, 19, 3, 5, 2, 3],

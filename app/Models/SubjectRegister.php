@@ -11,7 +11,9 @@ class SubjectRegister extends Model
     protected $primaryKey = 'id';
     protected $keyType  = 'string';
     protected $table = 'subject_register';
-    protected $fillable = ['qty_current'];
+    protected $fillable = ['qty_current','id'];
+    public $incrementing = false;
+
 
     public function user_subject_register() {
         return $this->hasMany(ResultRegister::class);
@@ -36,7 +38,7 @@ class SubjectRegister extends Model
 
     //learning session
     public function time_study(){
-        return $this->hasMany(TimeStudy::class, 'id_subject_register');
+        return $this->hasMany(TimeStudy::class, 'id_subject_register','id');
     }
 
 }

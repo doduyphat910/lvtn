@@ -2,6 +2,8 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Extensions\Subject\AdminMissID;
+use App\Admin\Extensions\Subject\FormID;
 use App\Models\Classroom;
 use App\Models\Rate;
 use App\Models\SubjectRegister;
@@ -214,11 +216,18 @@ class SubjectsController extends Controller
      */
     protected function form()
     {
-        return Admin::form(Subjects::class, function (Form $form) {
+        return AdminMissID::form(Subjects::class, function (FormID $form) {
 
 //            $form->display('id', 'ID');
+//            $form->text('id', 'Mã môn học')->rules(function ($form){
+//                return 'required|unique:subjects,'.$form->model()->id.',id,deleted_at,NULL';
+//            });
             $form->text('id', 'Mã môn học')->rules(function ($form){
-                return 'required|unique:subjects,'.$form->model()->id.',id,deleted_at,NULL';
+                if (!$id = $form->model()->id) {
+                    return 'required|unique:subjects,id';
+                }
+//                return 'required|unique:subjects,'.$form->model()->id.',id,deleted_at,NULL';
+
             });
             $form->text('name','Tên môn học')->rules('required');
             $form->number('credits','Tín chỉ')->rules('integer|min:1|max:6');

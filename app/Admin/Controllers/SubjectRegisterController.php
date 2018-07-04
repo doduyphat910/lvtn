@@ -2,6 +2,8 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Extensions\Subject\AdminMissID;
+use App\Admin\Extensions\Subject\FormID;
 use App\Models\Classroom;
 use App\Models\ClassSTU;
 use App\Models\ResultRegister;
@@ -83,6 +85,7 @@ class SubjectRegisterController extends Controller
     protected function grid()
     {
         return Admin::grid(SubjectRegister::class, function (Grid $grid) {
+            $grid->model()->orderBy('created_at', 'DESC');
             $grid->rows(function (Grid\Row $row) {
                 $row->column('number', $row->number);
             });
@@ -194,7 +197,7 @@ class SubjectRegisterController extends Controller
      */
     protected function form()
     {
-        return Admin::form(SubjectRegister::class, function (Form $form) {
+        return AdminMissID::form(SubjectRegister::class, function (FormID $form) {
             $script = <<<EOT
         $(function () {
             var url = window.location.href;
@@ -224,15 +227,17 @@ EOT;
             Admin::script($script);
 //            $form->display('id', 'ID');
             $form->text('id', 'Mã học phần')->rules(function ($form){
-//
-                return 'required|unique:subject_register,'.$form->model()->id.',id,deleted_at,NULL';
+                if (!$id = $form->model()->id) {
+                    return 'required|unique:subjects,id';
+                }
+//                return 'required|unique:subject_register,'.$form->model()->id.',id,deleted_at,NULL';
             });
             $form->select('id_subjects', 'Môn học')->options(Subjects::all()->pluck('name', 'id'))->rules('required');
             $form->select('id_user_teacher', 'Giảng viên')->options(UserAdmin::where('type_user', '0')->pluck('name', 'id'))->rules('required');
             $form->hidden('qty_current', 'Số lượng hiện tại')->value('0');
             $form->number('qty_min', 'Số lượng tối thiểu')->rules('integer|min:5');
             $form->number('qty_max', 'Số lượng tối đa')->rules('integer|min:10');
-            $form->select('id_time_register', 'Đợt đăng ký')->options(TimeRegister::all()->pluck('name', 'id'));
+            $form->select('id_time_register', 'Đợt đăng ký')->options(TimeRegister::all()->pluck('name', 'id'))->rules('required');
             $form->date('date_start', 'Ngày bắt đầu')->placeholder('Ngày bắt đầu')->rules('required');
             $form->date('date_end', 'Ngày kết thúc')->placeholder('Ngày kết thúc')->rules('required');
             $form->display('created_at', 'Created At');

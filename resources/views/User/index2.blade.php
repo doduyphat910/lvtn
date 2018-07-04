@@ -121,8 +121,8 @@
 
 {{--{!! \App\Http\Extensions\Facades\User::js() !!}--}}
 <script src="{{ admin_asset ("/vendor/laravel-admin/laravel-admin/laravel-admin.js") }}"></script>
-<script> $(".grid-refresh").hide();
-
+<script>
+    $(".grid-refresh").hide();
 </script>
 
 </body>

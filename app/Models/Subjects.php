@@ -11,6 +11,8 @@ class Subjects extends Model
     protected $primaryKey = 'id';
     protected $keyType  = 'string';
     protected $table = 'subjects';
+    public $incrementing = false;
+
 
     public function user_subject() {
         return $this->hasMany(UserSubject::class);
