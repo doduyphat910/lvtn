@@ -70,6 +70,9 @@
         background-color: #00a657cc !important;
         font-size: 1.3rem;
     }
+    .btnTotal {
+         font-size: 1.3rem;
+    }
 </style>
 </head>
 
@@ -82,8 +85,12 @@
 {{--    @include('User.partials.sidebar')--}}
 
     <div class="container-flud" id="pjax-container">
-        @yield('content')
-        {!! \App\Http\Extensions\Facades\User::script() !!}
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                    @yield('content')
+                    {!! \App\Http\Extensions\Facades\User::script() !!}
+            </div>
+        </div>
     </div>
 
     @include('User.partials.footer')
@@ -121,8 +128,8 @@
 
 {{--{!! \App\Http\Extensions\Facades\User::js() !!}--}}
 <script src="{{ admin_asset ("/vendor/laravel-admin/laravel-admin/laravel-admin.js") }}"></script>
-<script>
-    $(".grid-refresh").hide();
+<script> $(".grid-refresh").hide();
+    $(".box-title").css("color", "white");
 </script>
 
 </body>

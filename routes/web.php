@@ -5,9 +5,10 @@ use Illuminate\Routing\Router;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('getLogin',function(){
-	return view('User.getLogin');
-});
+ Route::get('getLogin', 'NotificationLoginController@list');
+
+
+
 Route::post('postLogin','UserController@postlogin');
 Route::get('logout', 'UserController@logout');
 Route::group(['prefix'=>'user', 'middleware'=>'studentLogin'], function(Router $router){

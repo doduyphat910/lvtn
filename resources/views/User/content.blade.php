@@ -1,8 +1,10 @@
 @extends('User.index2')
 
+    
+
 @section('content')
     <section class="content-header" style="margin-top: 50px;">
-        <h1>
+        <h1 style="font-weight: bold;font-family: Times New Roman;">
             {{ $header or trans('admin.title') }}
             <small>{{ $description or trans('admin.description') }}</small>
         </h1>
@@ -37,13 +39,13 @@
     </section>
 
     <section class="content">
-
+       
         @include('User.partials.error')
         @include('User.partials.success')
         @include('User.partials.exception')
         @include('User.partials.toastr')
 
         {!! $content !!}
-
+        
     </section>
 @endsection

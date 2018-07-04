@@ -83,8 +83,8 @@
         .navbar-default .navbar-toggle .icon-bar {background-color: white;}
         /*.active{
             background-color: blue;*/
-        .
-        }
+        .dropdown-menu>li>a{color: black;}
+        .dropdown-menu>li>a{background-color: whitesmoke;}
     </style>
     <nav class="navbar navbar-default navbar-fixed-top" style="margin-left: 0px;">
       <div class="container-flud">
@@ -97,29 +97,32 @@
           </button>
             <a href="{{ url('user/student') }}" class="logo" style="width: auto;">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
-                <span class="logo-mini">{!! config('admin.logo-mini', config('admin.name')) !!}</span>
+               {{--  <span class="logo-mini"><img src="../uploads/images/logo_1.png" style="width:50px;height: 50px;"></span> --}}
+                 <span class="logo-mini"><img src="../../../uploads/images/logo_2.png" height="50px;"></span>
                 <!-- logo for regular state and mobile devices -->
-                <span class="logo-lg">{!! config('admin.logo', config('admin.name')) !!}</span>
+                {{-- <span class="logo-lg"><img src="../uploads/images/logo_2.png" height="50px;"></span> --}}
+                <span class="logo-lg"><img src="../../../uploads/images/logo_2.png" height="50px;"></span>
+
             </a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="{{ url('user/student') }}" >Trang chủ <span class="sr-only">(current)</span></a></li>
+          <ul class="nav navbar-nav ">
+            <li class="active"><a href="{{ url('user/student') }}" ><i class="fa fa-home fa-fw fa-1x" aria-hidden="true"></i> Trang chủ <span class="sr-only">(current)</span></a></li>
                     <li class="dropdown-register">
-                         <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">Đăng ký <b class="caret"></b></a>
+                         <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><strong><i class="fa fa-pencil fa-fw fa-1x"></i> Đăng ký</strong> <b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ url('user/subject-register') }}"><i class="glyphicon glyphicon-pencil"></i>Đăng ký môn học</a></li>
-                            <li><a href="{{ url('user/learn-improvement') }}"><i class="glyphicon glyphicon-pencil"></i>Đăng ký học cải thiện, học lại</a></li>
-                            <li><a href="{{ url('user/user-subject') }}"><i class="glyphicon glyphicon-pencil"></i>Đăng ký ngoài kế hoạch</a></li>
+                            <li><a href="{{ url('user/subject-register') }}"><i class="fa fa-pencil fa-fw fa-1x"></i><strong>Đăng ký môn học</strong></a></li>
+                            <li><a href="{{ url('user/learn-improvement') }}"><i class="fa fa-pencil fa-fw fa-1x"></i><strong>Đăng ký học cải thiện, học lại</strong></a></li>
+                            <li><a href="{{ url('user/user-subject') }}"><i class="fa fa-pencil fa-fw fa-1x"></i><strong>Đăng ký ngoài kế hoạch</strong></a></li>
                             
                         </ul>
                        
                     </li>
-                    <li><a href="{{ url('user/result-register') }}">Kết quả đăng ký</a></li>
-                    <li><a href="{{ url('user/point-subject') }}">Xem điểm</a></li>
-                    <li><a href="{{ url('user/subject-parallel') }}">Xem môn song song</a></li>
-                    <li><a href="{{ url('user/subject-before-after') }}">Xem môn tiên quyết</a></li>
-                    <li><a href="{{ url('user/comments') }}">Góp ý kiến</a></li>
+                    <li><a href="{{ url('user/result-register') }}"><i class="fa fa-th-list fa-fw fa-1x" aria-hidden="true"></i> Kết quả đăng ký</a></li>
+                    <li><a href="{{ url('user/point-subject') }}"><i class="fa fa-list fa-fw fa-1x" aria-hidden="true"></i> Xem điểm</a></li>
+                    <li><a href="{{ url('user/subject-parallel') }}"><i class="fa fa-list fa-fw fa-1x" aria-hidden="true"></i> Xem môn song song</a></li>
+                    <li><a href="{{ url('user/subject-before-after') }}"><i class="fa fa-list fa-fw fa-1x" aria-hidden="true"></i> Xem môn tiên quyết</a></li>
+                    <li><a href="{{ url('user/comments') }}"><i class="fa fa-paper-plane fa-fw fa-1x" aria-hidden="true"></i> Góp ý kiến</a></li>
 
                     @if(Auth::check())
                     </ul>
@@ -130,8 +133,8 @@
                             <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Xin chào {{Auth::User()->last_name}}<img src="" class="user-image"><span class="caret"></span></a>
                              <ul class="dropdown-menu">
                                  @php $id = Auth::User()->id @endphp
-                                    <li><a href="{{ url('user/information/'. $id.'/edit') }}"><i class="glyphicon glyphicon-user"></i>Thông tin cá nhân</a></li>
-                                   <li><a href="{{ url('logout') }}"><i class="glyphicon glyphicon-log-out"></i>Đăng xuất</a></li>
+                                    <li><a href="{{ url('user/information/'. $id.'/edit') }}"><i class="fa fa-user fa-fw fa-1x" aria-hidden="true"></i>Thông tin cá nhân</a></li>
+                                   <li><a href="{{ url('logout') }}"><i class="fa fa-sign-out fa-fw fa-1x" aria-hidden="true"></i>Đăng xuất</a></li>
                             </ul>
                          </li>
                       </ul>

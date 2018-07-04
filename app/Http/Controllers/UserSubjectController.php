@@ -46,6 +46,7 @@ class UserSubjectController extends Controller
             $timeRegister = TimeRegister::where('status', 1)->orderBy('id', 'DESC')->first();
             $idTimeRegister = $timeRegister->id;
             $form->hidden('id_time_register');
+            $form->disableReset();
             $form->tools(function (Form\Tools $tools) {
             $tools->disableListButton();
             $tools->disableBackButton();

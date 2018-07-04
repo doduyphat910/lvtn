@@ -39,7 +39,7 @@ $arrPeriods = collect($arrPeriods)->map(function($x){ return (array) $x; })->toA
 
 <div class="row">
     <div class="col-sm-8">
-        <h1 class="text-center">Thời Khóa Biểu</h1>
+        <h1 class="text-center" style="font-weight: bold;font-family: Times New Roman;">Thời Khóa Biểu</h1>
 <table class="table table-bordered">
     <thead>
     <tr>
@@ -96,7 +96,7 @@ $arrPeriods = collect($arrPeriods)->map(function($x){ return (array) $x; })->toA
                         $subjectId = array_keys($arrayTable[$dayKey][$periodKey])[0];
                         $count = array_values($arrayTable[$dayKey][$periodKey])[0];
                         $nameSubject = Subjects::where("id", $subjectId)->first();
-                        echo "<td rowspan='$count' style='background-color:#ecf0f1;border-color:Gray;border-width:1px;border-style:solid;height:22px;width:110px;color:Teal;text-align:center'>$nameSubject->name</td>";
+                        echo "<td rowspan='$count' style='background-color:#ecf0f1;border-color:Gray;border-width:1px;border-style:solid;height:22px;width:110px;color:Teal;text-align:center;font-weight: bold;font-family: Times New Roman;' class='data' value='$subjectId' '>$nameSubject->name</td>";
                     } else if(is_array($arrayTable[$dayKey][$periodKey])){// nếu như là array thì render
                     echo "<td rowspan='1' class='td-object'></td>";
                 }
@@ -113,14 +113,14 @@ $arrPeriods = collect($arrPeriods)->map(function($x){ return (array) $x; })->toA
 </table>
     </div>
     <div class="col-sm-4">
-         <h1 class="text-center">Ghi Chú</h1>
+         <h1 class="text-center" style="font-weight: bold;font-family: Times New Roman;">Ghi Chú</h1>
         <ul class="list-unstyled text-center">
             <?php
                 $i=0;
                 foreach ($arrPeriods as $key => $valuePriods ){
                     //$valuePriods['time_start']." ".$valuePriods['time_end'];
             ?>
-            <li style="font-size: 20px;"> <?php echo "Tiết ". ($key + 1) . ": " .$valuePriods['time_start']." - ".$valuePriods['time_end'];?></li>
+            <li style="font-size: 20px;font-weight: bold;font-family: Times New Roman;" > <?php echo "Tiết ". ($key + 1) . ": " .$valuePriods['time_start']." - ".$valuePriods['time_end'];?></li>
             <?php
                 }
             ?>
@@ -140,4 +140,8 @@ $arrPeriods = collect($arrPeriods)->map(function($x){ return (array) $x; })->toA
         width: 200px;
     }
 </style>
-
+{{-- <script type="text/javascript">
+    $(".data").hover(function () {
+     alert($(this).attr('value'));
+});
+</script> --}}

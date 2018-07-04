@@ -19,6 +19,7 @@ use App\Models\UserAdmin;
 use App\Models\ClassSTU;
 use App\Models\Department;
 
+use App\Http\Extensions\GridUser;
 
 use App\Http\Extensions\Facades\User;
 use app\Http\Extensions\LayoutUser\ContentUser;
@@ -26,7 +27,7 @@ use Encore\Admin\Widgets\Alert;
 use Encore\Admin\Widgets\Callout;
 use Illuminate\Http\Request;
 use Encore\Admin\Form;
-use Encore\Admin\Grid;
+
 use Encore\Admin\Facades\Admin;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\ModelForm;
@@ -59,7 +60,7 @@ class PointSubjectController extends Controller
     }
    protected function grid()
     {
-        return User::grid(ResultRegister::class, function (Grid $grid) {
+        return User::GridUser(ResultRegister::class, function (GridUser $grid) {
             $user = Auth::user();
             // $timeRegister = TimeRegister::orderBy('id', 'DESC')->first();
             $grid->model()->where('id_user_student', $user->id)->orderBy('time_register', 'DESC');

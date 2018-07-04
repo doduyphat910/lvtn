@@ -13,10 +13,16 @@ $(function () {
                 success: function( msg ) {
                     $('.gridPointAll').hide();
                     $('.gridPoint').html(msg);
+                    $(".grid-refresh").hide();
+                    $("table").addClass('table-striped');
+                    $("table").addClass('table-bordered');
+                    $("th").css("background-color","#3c8dbc");
+                    $("th").css("color","white");
                 }
             });
     });
 });
+
 </script>
 <div class="gridPoint">
 </div>
