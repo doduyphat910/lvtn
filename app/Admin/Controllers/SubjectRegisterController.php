@@ -218,7 +218,7 @@ EOT;
 //            $form->display('id', 'ID');
             $form->text('code_subject_register', 'Mã học phần')->rules(function ($form){
 //
-                return 'required|unique:subject_register,code_subject_register,'.$form->model()->id.',idx';
+                return 'required|unique:subject_register,code_subject_register,'.$form->model()->code_subject_register.',code_subject_register,deleted_at,NULL';
             });
             $form->select('id_subjects', 'Môn học')->options(Subjects::all()->pluck('name', 'subject_code'))->rules('required');
             $form->select('id_user_teacher', 'Giảng viên')->options(UserAdmin::where('type_user', '0')->pluck('name', 'id'))->rules('required');
@@ -261,9 +261,9 @@ EOT;
                 //check conditions register
 //                $idSubjectRegisters = SubjectRegister::where('id_classroom', $form->id_classroom)->pluck('id');
                 $currentPath = Route::getFacadeRoot()->current()->uri();
-                $subjectToTime = SubjectRegister::where('id_time_register', $form->id_time_register)->pluck('id')->toArray();
+                $subjectToTime = SubjectRegister::where('id_time_register', $form->id_time_register)->pluck('code_subject_register')->toArray();
                 if($currentPath == "admin/subject_register/{subject_register}") {
-                    $timeStudys = TimeStudy::where('id_subject_register', '!=',$form->model()->id)->whereIn('id_subject_register', $subjectToTime)->get()->toArray();
+                    $timeStudys = TimeStudy::where('id_subject_register', '!=',$form->model()->code_subject_register)->whereIn('id_subject_register', $subjectToTime)->get()->toArray();
                 } else {
                     $timeStudys = TimeStudy::all()->whereIn('id_subject_register', $subjectToTime)->toArray();
                 }

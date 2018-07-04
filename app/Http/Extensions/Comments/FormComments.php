@@ -2,7 +2,10 @@
 
 namespace App\Http\Extensions\Comments;
 
+use App\Models\TimeRegister;
+use App\Models\UserSubject;
 use Encore\Admin\Form;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\DB;
 use Encore\Admin\Admin;
@@ -17,6 +20,10 @@ class FormComments extends Form
     {
         $data = Input::all();
         $currentPath = Route::getFacadeRoot()->current()->uri();
+        $timeRegister = TimeRegister::where('status', 1)->orderBy('id', 'DESC')->first();
+        $user = Auth::user();
+        $countUserRequest = UserSubject::where('id_time_register', $timeRegister->id)->where('id_user', $user->id)
+                            ->where('id_subject', $data['id_subject'])->count();
         if ($currentPath == "user/user-subject") {
             if (empty($data['id_subject'])) {
                 ?>
@@ -31,7 +38,21 @@ class FormComments extends Form
                     });
                 </script>
                 <?php
-            } else {
+            } elseif ($countUserRequest > 0 ) {
+                ?>
+                <script>
+                    swal({
+                        title: 'Lỗi',
+                        text: "Bạn đã yêu cầu môn học này",
+                        type: 'error',
+                        confirmButtonColor: '#3085d6',
+                    }, function () {
+                        location.reload();
+                    });
+                </script>
+                <?php
+            }
+            else {
                 // Handle validation errors.
                 if ($validationMessages = $this->validationMessages($data)) {
                     return back()->withInput()->withErrors($validationMessages);

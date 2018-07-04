@@ -61,7 +61,7 @@ $arrPeriods = collect($arrPeriods)->map(function($x){ return (array) $x; })->toA
                 $startTime = strtotime($timeStudy['time_study_start']);
                 $endTime = strtotime($timeStudy['time_study_end']);
                 if ($timeStudy['day'] == ($key + 2) && $start >= $startTime && $end <= $endTime) {
-                    $idSubject = SubjectRegister::where('id', $timeStudy['id_subject_register'])->first();
+                    $idSubject = SubjectRegister::where('code_subject_register', $timeStudy['id_subject_register'])->first();
                     if (!empty($idSubject)) {
                         $idSubject = $idSubject->id_subjects;
                         $isExisted = false;
@@ -94,7 +94,7 @@ $arrPeriods = collect($arrPeriods)->map(function($x){ return (array) $x; })->toA
                         $count = 1;
                         $subjectId = array_keys($arrayTable[$dayKey][$periodKey])[0];
                         $count = array_values($arrayTable[$dayKey][$periodKey])[0];
-                        $nameSubject = Subjects::where("id", $subjectId)->first();
+                        $nameSubject = Subjects::where("subject_code", $subjectId)->first();
                         echo "<td rowspan='$count' style='background-color:#ecf0f1;border-color:Gray;border-width:1px;border-style:solid;height:22px;width:110px;color:Teal;text-align:center'>$nameSubject->name</td>";
                     } else if(is_array($arrayTable[$dayKey][$periodKey])){// nếu như là array thì render
                     echo "<td rowspan='1' class='td-object'></td>";

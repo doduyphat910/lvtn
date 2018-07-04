@@ -41,7 +41,7 @@ class UserSubjectController extends Controller
             $form->setAction('/user/user-subject');
             $form->hidden('id_user')->value($id);
 //            $form->hidden('id');
-            $form->select('id_subject', 'Môn học')->options(Subjects::all()->pluck('name', 'id'))->rules('required');
+            $form->select('id_subject', 'Môn học')->options(Subjects::all()->pluck('name', 'subject_code'))->rules('required');
             $form->disableReset();
             $timeRegister = TimeRegister::where('status', 1)->orderBy('id', 'DESC')->first();
             $idTimeRegister = $timeRegister->id;

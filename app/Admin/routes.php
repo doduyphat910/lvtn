@@ -82,6 +82,7 @@ Route::group([
     $router->resource('time-table',TimeTableController::class);
 
     //request register
+    $router->get('request-register/{id}/details', 'RequestRegisterController@details');
     $router->resource('request-register', RequestRegisterController::class);
 
     //subject-register history

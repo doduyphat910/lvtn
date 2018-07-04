@@ -63,8 +63,9 @@ class ResultRegisterController extends Controller
             $form->registerBuiltinFields();
             $id = Auth::User()->id;
             $arrIdTimeRegiter = ResultRegister::where('id_user_student',$id)->distinct()->pluck('time_register')->toArray();
-
-            $form->select('id_time_register', 'Thời gian')->options(TimeRegister::whereIn('id',$arrIdTimeRegiter)->orderBy('id', 'DESC')->pluck('name', 'id'))->attribute(['id' => 'resultRegister']);
+            $options = ['Tất cả'];
+            $options += TimeRegister::whereIn('id',$arrIdTimeRegiter)->orderBy('id', 'DESC')->pluck('name', 'id')->toArray();
+            $form->select('id_time_register', 'Thời gian')->options($options)->attribute(['id' => 'resultRegister']);
             $form->disableReset();
             $form->disableSubmit();
 
@@ -78,7 +79,7 @@ class ResultRegisterController extends Controller
             $grid->model()->where('time_register', $timeRegister->id)->where('id_user_student', $user->id);
                // $grid->id('ID');
             $grid->column('Mã học phần')->display(function () {
-                    $subjectRegister = SubjectRegister::where('id',$this->id_subject_register)->first();
+                    $subjectRegister = SubjectRegister::where('code_subject_register',$this->id_subject_register)->first();
                     if (!empty($subjectRegister)) {
                         return $subjectRegister->code_subject_register;
                     } else {
@@ -154,7 +155,7 @@ class ResultRegisterController extends Controller
                 // });
             $grid->column('Giảng viên')->display(function () {
                     $idSubjectRegister = $this->id_subject_register;
-                    $subjectRegister = SubjectRegister::where('id',$this->id_subject_register)->first();
+                    $subjectRegister = SubjectRegister::where('code_subject_register',$this->id_subject_register)->first();
                     if (!empty($subjectRegister)) {
                         $teacher = UserAdmin::find($subjectRegister->id_user_teacher);
                         if ($teacher) {
@@ -166,6 +167,24 @@ class ResultRegisterController extends Controller
                         return '';
                     }
                 });
+            $grid->column('Ngày bắt đầu')->display(function (){
+                $idSubjectRegister = $this->id_subject_register;
+                $subjectRegister = SubjectRegister::find($idSubjectRegister);
+                if($subjectRegister->date_start){
+                    return $subjectRegister->date_start;
+                } else {
+                    return '';
+                }
+            });
+            $grid->column('Ngày kết thúc')->display(function (){
+                $idSubjectRegister = $this->id_subject_register;
+                $subjectRegister = SubjectRegister::find($idSubjectRegister);
+                if($subjectRegister->date_end){
+                    return $subjectRegister->date_end;
+                } else {
+                    return '';
+                }
+            });
                 // $grid->qty_current('Số lượng hiện tại');
                 // $grid->qty_max('Số lượng tối đa');
                 // $grid->date_start('Ngày bắt đầu');

@@ -134,7 +134,7 @@ class SubjectRegisterController extends Controller
                 return join('&nbsp;', $name);
             });
             $grid->column('Đăng ký')->display(function () {
-                return '<a href="/user/subject-register/' . $this->subject_code . '/details" data-id='.$this->id.'  target="_blank" class="btn btn-md btnACV" ><i class="glyphicon glyphicon-pencil"></i></a>';
+                return '<a href="/user/subject-register/' . $this->subject_code . '/details" data-id='.$this->subject_code.' class="btn btn-md"  target="_blank" ><i class="glyphicon glyphicon-pencil"></i></a>';
             });
             $grid->disableCreateButton();
             $grid->disableExport();
@@ -290,7 +290,6 @@ SCRIPT;
                 $timeRegister = TimeRegister::where('status', 1)->orderBy('id', 'DESC')->first();
                 $idTimeRegister = $timeRegister->id;
                 $idSubjectsList=ResultRegister::where('id_subject',$idSubjects)->where('id_user_student', $idUser)->where('time_register', $idTimeRegister)->first();
-
 //                dd($arrIdSubjectsList);
 //                foreach ($arrIdResultRegister as $valueResultRegisters){
 //                    foreach ($arrIdSubjectsList as $valueSubjectRegisters){
@@ -298,10 +297,11 @@ SCRIPT;
 //                        {
 //                            $valueCK = $valueResultRegisters;
                 if($idSubjectsList) {
+                    $codeSubjectRegister = $idSubjectsList->id_subject_register;
                     $script = <<<SCRIPT
                              $('.btnRegister').each(function(){
                                 var idRegister =$(this).data('id');
-                                if(idRegister == $idSubjectsList->id_subject_register) {
+                                if(idRegister == '$codeSubjectRegister') {
 //                                    $('[data-id='+idRegister+']').hide();
                                     $('.btnCancel[data-id='+idRegister+']').css("display", "initial");
 //                                 $('.btnCancel').find('a[data-id='+idRegister+']').css("display", "initial");

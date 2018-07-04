@@ -73,14 +73,14 @@ class LearnImprovenmentController extends Controller
                 //sort follow semester
                 $field = '';
                 foreach ($subjects_id as $id) {
-                    $field .= ($id . ',');
+                    $field .= ('"'.$id.'"' . ',');
                 }
                 $field = substr($field, 0, strlen($field) - 1);
                 //get subject user learned
                 $idSubjectRegister = ResultRegister::where('id_user_student', $user->id)->where('is_learned', 1)->pluck('id_subject_register')->toArray();
-                $idSubjectLearned = SubjectRegister::whereIn('id', $idSubjectRegister)->pluck('id_subjects')->toArray();
+                $idSubjectLearned = SubjectRegister::whereIn('code_subject_register', $idSubjectRegister)->pluck('id_subjects')->toArray();
                 //show subject not learned and subjects in semester in time register (hiển thị các môn đã học & trong đợt đăng kí đang mở)
-                $grid->model()->whereIn('id', $subjects_id)->whereIn('id', $idSubjectLearned)->orderBy(DB::raw('FIELD(id, ' . $field . ')'));
+                $grid->model()->whereIn('subject_code', $subjects_id)->whereIn('subject_code', $idSubjectLearned)->orderBy(DB::raw('FIELD(subject_code, ' . $field . ')'));
             }
             //$grid->id('id');
             $grid->subject_code('Mã môn học');
@@ -91,7 +91,7 @@ class LearnImprovenmentController extends Controller
             $grid->credits('Số tín chỉ');
             $grid->credits_fee('Số tín chỉ học phí');
             $grid->column('Nhóm môn')->display(function () {
-                $subject = Subjects::find($this->id);
+                $subject = Subjects::find($this->subject_code);
                 $nameGroup = $subject->subject_group()->pluck('name')->toArray();
                 $groupSubject = array_map(function ($nameGroup){
                     if($nameGroup) {
@@ -104,7 +104,7 @@ class LearnImprovenmentController extends Controller
 
             });
             $grid->column('Học kỳ - Năm')->display(function () {
-                $id = $this->id;
+                $id = $this->subject_code;
                 $subject = Subjects::find($id);
                 $arraySemester = $subject->semester()->pluck('id')->toArray();
                 $name = array_map(function ($arraySemester) {
@@ -126,7 +126,7 @@ class LearnImprovenmentController extends Controller
                 return join('&nbsp;', $name);
             });
             $grid->column('Đăng ký')->display(function () {
-                return '<a href="/user/subject-register/' . $this->id . '/details" data-id='.$this->id.'  target="_blank" class="btn btn-md btnACV" ><i class="glyphicon glyphicon-pencil"></i></a>';
+                return '<a href="/user/subject-register/' . $this->subject_code . '/details" data-id='.$this->subject_code.'  target="_blank" class="btn btn-md btnACV" ><i class="glyphicon glyphicon-pencil"></i></a>';
             });
             $grid->disableCreateButton();
             $grid->disableExport();
