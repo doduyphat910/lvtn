@@ -22,9 +22,9 @@ class FormComments extends Form
         $currentPath = Route::getFacadeRoot()->current()->uri();
         $timeRegister = TimeRegister::where('status', 1)->orderBy('id', 'DESC')->first();
         $user = Auth::user();
-        $countUserRequest = UserSubject::where('id_time_register', $timeRegister->id)->where('id_user', $user->id)
-                            ->where('id_subject', $data['id_subject'])->count();
         if ($currentPath == "user/user-subject") {
+            $countUserRequest = UserSubject::where('id_time_register', $timeRegister->id)->where('id_user', $user->id)
+                ->where('id_subject', $data['id_subject'])->count();
             if (empty($data['id_subject'])) {
                 ?>
                 <script>

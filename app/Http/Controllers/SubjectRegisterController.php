@@ -123,13 +123,18 @@ class SubjectRegisterController extends Controller
                         case 2:
                             $nameSemester = 'Học kì 2';
                     }
-                    $year = Semester::find($arraySemester)->year()->get();
-                    $nameYear = $year['0']->name;
+                    $year = Semester::find($arraySemester)->year()->get()->toArray();
+                    if(!empty($year)) {
+                        $nameYear = $year['0']['name'];
+
+                    } else {
+                        $nameYear = '';
+                    }
                     if(substr($nameYear,4,5) % 2 == 0)
                     {
-                        return "<span class='label label-info'>{$nameSemester} - {$nameYear}</span>";    
+                        return "<span class='label label-info'>{$nameSemester} - {$nameYear}</span>";
                     } else {
-                        return "<span class='label label-success'>{$nameSemester} - {$nameYear}</span>";    
+                        return "<span class='label label-success'>{$nameSemester} - {$nameYear}</span>";
                     }
                     
                 }, $arraySemester);

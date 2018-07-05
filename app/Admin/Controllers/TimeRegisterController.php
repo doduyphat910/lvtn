@@ -2,9 +2,12 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\ResultRegister;
 use App\Models\StudentUser;
+use App\Models\Subjects;
 use App\Models\TimeRegister;
 
+use App\Models\UserSubject;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Facades\Admin;
@@ -158,7 +161,8 @@ class TimeRegisterController extends Controller
     {
         return Admin::form(TimeRegister::class, function (Form $form) {
             $form->display('id', 'ID');
-            $form->text('name', 'Tên')->rules('required');
+            $form->text('name', 'Tên')->rules('required')
+                ->help('Bạn nên đặt tên là HK - Năm học (VD:HK2 - Năm 2018-2019 ) ');
             $form->datetimeRange('time_register_start', 'time_register_end', 'Thời gian đăng ký')
                 ->rules('required');
             $options = [0 => 'Học kỳ hè', 1 => 'Học kỳ 1', 2 => 'Học kỳ 2'];
@@ -243,10 +247,37 @@ EOT;
     protected function detailsView($id)
     {
         $form = $this->form()->view($id);
+        $arrIDSubject = UserSubject::where('id_time_register',$id)->select('id_subject')->distinct()->pluck('id_subject')->toArray();
+        $dataStudents = [];
+        foreach($arrIDSubject as $idSubject) {
+            $countStudent = UserSubject::where('id_subject',$idSubject)->count('id_user');
+            $dataStudents[$idSubject] = $countStudent;
+        }
+        arsort($dataStudents);
+        $requestRegister = array_slice($dataStudents, 0, 6);
+        $subject = json_encode(array_keys($requestRegister));
+        $nameSubjects = Subjects::whereIn('id',array_keys($requestRegister))->pluck('name', 'id')->toArray();
+        $student = json_encode(array_values($requestRegister));
+        //chart 2
+        $arrClass = StudentUser::distinct('school_year')->orderBy('school_year', 'DESC')->limit(6)->pluck('school_year')->toArray();
+        $countClass = [];
+        $arrUser = ResultRegister::where('time_register', $id)->pluck('id_user_student')->toArray();
+        foreach($arrClass as $class) {
+            $countStudentClass = StudentUser::whereIn('id', $arrUser)->where('school_year',$class)->count();
+            array_push($countClass, $countStudentClass);
+        }
+        $class = json_encode($arrClass);
+        $countClass = json_encode($countClass);
         return view('vendor.details',
             [
                 'template_body_name' => 'admin.TimeRegister.info',
                 'form' => $form,
+                'subject' => $subject,
+                'nameSubjects' => $nameSubjects,
+                'student' => $student,
+                'class' => $class,
+                'countClass' => $countClass
+
             ]
         );
     }

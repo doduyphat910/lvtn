@@ -7,10 +7,18 @@ use App\Models\TimeStudy;
 use App\Models\TimeTable;
 $idUser = Auth::user()->id;
 $time = ResultRegister::where('id_user_student', $idUser)->orderBy('time_register', 'DESC')->first();
-$timeRegister = TimeRegister::where('id', $time->time_register)->first();
-$idTimeRegister = $timeRegister->id;
-$idSubjectRegister = ResultRegister::where('id_user_student', $idUser)->where('time_register', $idTimeRegister)->pluck('id_subject_register');
-$timeStudys = TimeStudy::whereIn('id_subject_register', $idSubjectRegister)->get()->toArray();
+if(!empty($time)) {
+    $timeRegister = TimeRegister::where('id', $time->time_register)->first();
+    $idTimeRegister = $timeRegister->id;
+    $idSubjectRegister = ResultRegister::where('id_user_student', $idUser)->where('time_register', $idTimeRegister)->pluck('id_subject_register');
+    $timeStudys = TimeStudy::whereIn('id_subject_register', $idSubjectRegister)->get()->toArray();
+} else {
+    $timeRegister = [];
+    $idTimeRegister = [];
+    $idSubjectRegister = [];
+    $timeStudys = [];
+}
+
 
 $arrDays = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ nhật"];
 //$arrPeriods = [

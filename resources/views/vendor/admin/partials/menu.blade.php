@@ -6,7 +6,7 @@
             @else
                  <a href="{{ admin_base_path($item['uri']) }}">
             @endif
-                <i class="fa {{$item['icon']}}"></i>
+                &nbsp;&nbsp;<i class="fa {{$item['icon']}}"></i>
                 <span>{{$item['title']}}</span>
             </a>
         </li>
@@ -18,9 +18,9 @@
                 <i class="fa fa-angle-left pull-right"></i>
             </a>
             <ul class="treeview-menu">
-                @foreach($item['children'] as $item)
-                    @include('admin::partials.menu', $item)
-                @endforeach
+                    @foreach($item['children'] as $item)
+                        @include('admin::partials.menu', $item)
+                    @endforeach
             </ul>
         </li>
     @endif
