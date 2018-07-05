@@ -45,11 +45,17 @@ class SubjectBeforeAfterController extends Controller
                 $name = Subjects::find($idSubject2)->name;
                 return $name;
             });
+            $grid->filter(function($filter){
+                $filter->disableIdFilter();
+                $filter->in('id_subject_before', 'Môn học trước')->multipleSelect(Subjects::all()->pluck('name', 'id'));
+                $filter->in('id_subject_after', 'Môn học sau')->multipleSelect(Subjects::all()->pluck('name', 'id'));
+            });
+        
             $grid->disableActions();
             $grid->disableCreateButton();
             $grid->disableExport();
             $grid->disableRowSelector();
-            $grid->disableFilter();
+            
         });
     }
     

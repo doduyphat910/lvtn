@@ -8,4 +8,6 @@ class GridUser extends Grid
 {
     protected $view = 'User.grid.table';
 
+    
+
 }

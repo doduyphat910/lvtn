@@ -1,4 +1,4 @@
-<head>
+  <head>
     <script src="{{ admin_asset("/vendor/laravel-admin/chartjs/chart.js")}}"></script>
 </head>
 <style>
@@ -135,9 +135,9 @@ section, footer, header, aside{
 
 
 #clock{
-  width:430px;
+  width:325px;
   padding:40px;
-  margin:0px auto 21px;
+  margin:0px auto 20px;
   position:relative;
 }
 
@@ -156,9 +156,9 @@ section, footer, header, aside{
 
 #clock .display{
   text-align:center;
-  padding: 50px 20px 20px;
+  padding: 30px 0px 0px;
   border-radius:6px;
-  position:relative;
+  /*position:relative;*/
   height: 120px;
 }
 
@@ -186,10 +186,10 @@ section, footer, header, aside{
 #clock.light .digits div.dots:after{
   background-color:#272e38;
 }
-
+/*
 #clock.light .alarm{
   background:url('../img/alarm_light.jpg');
-}
+}*/
 
 #clock.light .display{
   background-color:#dddddd;
@@ -216,10 +216,10 @@ section, footer, header, aside{
   border-color:#cacaca; 
 }
 
-#clock.dark .alarm{
+/*#clock.dark .alarm{
   background:url('../img/alarm_dark.jpg');
 }
-
+*/
 #clock.dark .display{
   background-color:#0f1620;
   box-shadow:0 1px 1px rgba(0,0,0,0.08) inset, 0 1px 1px #2d3642;
@@ -465,7 +465,7 @@ section, footer, header, aside{
 
 #clock .ampm{
   position:absolute;
-  bottom:20px;
+  bottom:115px;
   right:20px;
   font-size:12px;
 }
@@ -510,16 +510,16 @@ html {
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+      font-family: 'Raleway', sans-serif";
       color: #333;
-      font-size: 1.6rem;
+      
       background-color: #FAFAFA;
       -webkit-font-smoothing: antialiased;
     }
 
     .container1 {
       width: 96%;
-      margin: 1.6rem auto;
+      /*margin: 1.6rem auto;*/
       max-width: 42rem;
       text-align: center;
     }
@@ -827,7 +827,7 @@ html {
       </div>
    </div>
    <div class="row box-body">
-        <div class="col-lg-4 col-sm-6 col-md-6">
+        <div class="col-lg-4 col-sm-3 col-md-3">
                 
   <div id="clock" class="light">
       <div class="display">
@@ -842,7 +842,7 @@ html {
       <a class="button">Đổi màu</a>
     </div>
         </div>
-         <div class="col-lg-4 col-sm-6 col-md-6">
+         <div class="col-lg-4 col-sm-3 col-md-3">
                 <div class="container1">
     <div id="v-cal">
       <div class="vcal-header">
@@ -876,10 +876,12 @@ html {
     </div>
   </div>
         </div>
-        <div class="col-lg-4 col-sm-6 col-md-6">
-           <iframe src="https://weatherfor.us/widget?unit=metric" scrolling="no" frameborder="0" allowtransparency="true" style="background: transparent; width: 520px; height: 250px; overflow: hidden;"></iframe>
-
-
+        <div class="col-lg-4 col-sm-3 col-md-3">
+         <a href="https://www.accuweather.com/vi/vn/ho-chi-minh-city/353981/weather-forecast/353981" class="aw-widget-legal">
+<!--
+By accessing and/or using this code snippet, you agree to AccuWeather’s terms and conditions (in English) which can be found at https://www.accuweather.com/en/free-weather-widgets/terms and AccuWeather’s Privacy Statement (in English) which can be found at https://www.accuweather.com/en/privacy.
+-->
+</a><div id="awcc1530794233439" class="aw-widget-current"  data-locationkey="353981" data-unit="c" data-language="vi" data-useip="false" data-uid="awcc1530794233439"></div><script type="text/javascript" src="https://oap.accuweather.com/launch.js"></script>
         </div>
    </div>
 </div>
