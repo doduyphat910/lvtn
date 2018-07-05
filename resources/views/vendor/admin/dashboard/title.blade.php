@@ -695,7 +695,7 @@ html {
                </div>
                <div class="circle-tile-number text-faded">
                   {{--265--}}
-                   {{$countStudent}}
+                   {{$countUserStudent}}
                   <i class="fa fa-users" aria-hidden="true"></i>
                </div>
                <a href="/admin/student_user" target="_blank" class="circle-tile-footer">Xem chi tiết <i class="fa fa-chevron-circle-right"></i></a>
@@ -889,10 +889,11 @@ var myChart = new Chart(ctx, {
     type: 'bar',
     data: {
         // labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-        labels: '<?php  $arrClassShow ?>',
+        labels: {{$arrClass}} ,
         datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
+            label: 'Số lượng',
+            // data: [12, 19, 3, 5, 2, 3],
+            data: {{$countStudent}},
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(54, 162, 235, 0.2)',
@@ -928,10 +929,12 @@ var myChart = new Chart(ctx, {
     var myLineChart = new Chart(ctx, {
     type: 'line',
     data: {
-        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+        // labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+        labels: <?php echo $timeRegisters; ?>,
         datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
+            label: 'Lượt đăng ký',
+            // data: [12, 19, 3, 5, 2, 3],
+            data: <?php echo $dataTimeRegister; ?>,
             backgroundColor: [
                 
                 'rgba(54, 162, 235, 0.2)'

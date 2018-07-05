@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\ClassSTU;
+use App\Models\ResultRegister;
 use App\Models\StudentUser;
 use App\Models\SubjectRegister;
 use App\Models\TimeRegister;
@@ -22,29 +23,42 @@ class HomeController extends Controller
 
             $content->header('Trang chủ');
 //            $content->description('Description...');
-            $countStudent = StudentUser::count();
+            $countUserStudent = StudentUser::count();
             $countTeacher = UserAdmin::where('type_user',0)->count();
             $countAdmin = UserAdmin::where('type_user',1)->count();
             $countClass = ClassSTU::count();
             $countTimeRegister = TimeRegister::count();
             $countSubjectRegister = SubjectRegister::count();
+            //chart 1
             $arrClass = StudentUser::distinct('school_year')->orderBy('school_year', 'DESC')->limit(6)->pluck('school_year')->toArray();
-            $arrClassShow = [];
-//            foreach($arrClass as $class) {
-//                $arrClassShow += (string)$class;
-//            }
-            $arrClassShow += array_values($arrClass);
-//            dd($arrClassShow);
+            $countStudent = [];
+            foreach($arrClass as $class) {
+                $countClass = StudentUser::where('school_year', $class)->count();
+                array_push($countStudent, $countClass);
+            }
+            //chart 2
+            $timeRegisters = TimeRegister::orderBy('id', 'DESC')->limit(5)->pluck('name')->toArray();
+            $timeRegisters2 = TimeRegister::orderBy('id', 'DESC')->limit(5)->get()->toArray();
+            $dataTimeRegister = [];
+            foreach($timeRegisters2 as $timeRegister) {
+                $countStudentRegister = ResultRegister::where('time_register', $timeRegister['id'])->count();
+                array_push($dataTimeRegister, $countStudentRegister);
+            }
             $content->row(
                 view('vendor.admin.dashboard.title',
                     [
-                        'countStudent' => $countStudent,
+                        'countUserStudent' => $countUserStudent,
                         'countTeacher' => $countTeacher,
                         'countAdmin' => $countAdmin,
                         'countClass' => $countClass,
                         'countTimeRegister' => $countTimeRegister,
                         'countSubjectRegister' => $countSubjectRegister,
-                        'arrClassShow' => $arrClassShow
+                        //chart 1
+                        'arrClass' => json_encode($arrClass),
+                        'countStudent' =>json_encode($countStudent),
+                        //chart 2
+                        'timeRegisters' => json_encode($timeRegisters),
+                        'dataTimeRegister' => json_encode($dataTimeRegister),
 
                     ]
                 )
