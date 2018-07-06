@@ -237,6 +237,13 @@ EOT;
 
     protected function details($id){
         return Admin::content(function (Content $content) use ($id) {
+            $script = <<<EOT
+            if (location.href.indexOf('reload')==-1)
+            {
+               location.href=location.href+'?reload';
+            }
+EOT;
+            Admin::script($script);
             $time = TimeRegister::findOrFail($id);
             $content->header('TG Đăng ký');
             $content->description($time->name);
@@ -250,7 +257,7 @@ EOT;
         $arrIDSubject = UserSubject::where('id_time_register',$id)->select('id_subject')->distinct()->pluck('id_subject')->toArray();
         $dataStudents = [];
         foreach($arrIDSubject as $idSubject) {
-            $countStudent = UserSubject::where('id_subject',$idSubject)->count('id_user');
+            $countStudent = UserSubject::where('id_subject',$idSubject)->where('id_time_register',$id)->count('id_user');
             $dataStudents[$idSubject] = $countStudent;
         }
         arsort($dataStudents);

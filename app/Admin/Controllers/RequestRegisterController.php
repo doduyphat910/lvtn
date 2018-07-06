@@ -113,6 +113,14 @@ class RequestRegisterController extends Controller
                 $row->column('number', $row->number);
             });
             $grid->number('STT');
+            $grid->id_user('MSSV')->display(function ($idUser){
+                $user = StudentUser::find($idUser);
+                if($user->code_number){
+                    return $user->code_number;
+                } else {
+                    return '';
+                }
+            })->sortable();
             $grid->column('Họ SV')->display(function (){
                 $user = StudentUser::find($this->id_user);
                 if($user->first_name){
@@ -120,15 +128,16 @@ class RequestRegisterController extends Controller
                 } else {
                     return '';
                 }
-            })->sortable();
-            $grid->id_user('Tên SV')->display(function ($idUser){
-                $user = StudentUser::find($idUser);
+            });
+            $grid->column('Tên SV')->display(function (){
+                $user = StudentUser::find($this->id_user);
                 if($user->last_name){
                     return $user->last_name;
                 } else {
                     return '';
                 }
-            })->sortable();
+            });
+
             $grid->id_subject('Môn học')->display(function ($idSubject) {
                 $subject = Subjects::find($idSubject);
                 if(!empty($subject->name)){

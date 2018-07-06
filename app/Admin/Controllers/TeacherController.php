@@ -588,6 +588,30 @@ EOT;
                     $idUser = StudentUser::where('id_class', $input)->pluck('id')->toArray();
                     $query->whereIn('id_user_student', $idUser);
                 }, 'Lớp')->select(ClassSTU::all()->pluck('name','id'));
+                $filter->where(function ($query) use ($idSubjectRegister) {
+                    $input = $this->input;
+                    $idResultRegister = ResultRegister::where('attendance',$input)->where('id_subject_register',$idSubjectRegister)
+                        ->pluck('id')->toArray();
+                    $query->whereIn('id', $idResultRegister);
+                }, 'Điểm CC');
+                $filter->where(function ($query) use ($idSubjectRegister) {
+                    $input = $this->input;
+                    $idResultRegister = ResultRegister::where('mid_term',$input)->where('id_subject_register',$idSubjectRegister)
+                        ->pluck('id')->toArray();
+                    $query->whereIn('id', $idResultRegister);
+                }, 'Điểm GK');
+                $filter->where(function ($query) use ($idSubjectRegister) {
+                    $input = $this->input;
+                    $idResultRegister = ResultRegister::where('end_term',$input)->where('id_subject_register',$idSubjectRegister)
+                        ->pluck('id')->toArray();
+                    $query->whereIn('id', $idResultRegister);
+                }, 'Điểm CK');
+                $filter->where(function ($query) use ($idSubjectRegister) {
+                    $input = $this->input;
+                    $idFinal = ResultRegister::whereRaw("((attendance *rate_attendance)+(mid_term*rate_mid_term)+(end_term*rate_end_term))/100 = ".$input)
+                        ->pluck('id')->toArray();
+                    $query->whereIn('id', $idFinal);
+                }, 'Điểm TK');
 //                $filter->in('time_register', 'Đợt ĐK')->select(TimeRegister::all()->pluck('name','id'));
 //                $filter->between('created_at', 'Tạo vào lúc')->datetime();
             });

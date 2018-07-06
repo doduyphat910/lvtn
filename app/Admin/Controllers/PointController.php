@@ -94,7 +94,7 @@ class PointController extends Controller
             $form->number('attendance', 'Điểm chuyên cần')->rules('numeric|min:0|max:10');
             $form->number('mid_term', 'Điểm giữa kì')->rules('numeric|min:0|max:10');
             $form->number('end_term', 'Điểm cuối kì')->rules('numeric|min:0|max:10');
-//            $form->number('final', 'Điểm tổng kết')->rules('numeric|min:0|max:10');
+            $form->number('final', 'Điểm tổng kết')->rules('numeric|min:0|max:10');
             $form->number('rate_attendance', 'Tỉ lệ điểm chuyên cần');
             $form->number('rate_mid_term', 'Tỉ lệ điểm giữa kì');
             $form->number('rate_end_term', 'Tỉ lệ điểm cuối kì');

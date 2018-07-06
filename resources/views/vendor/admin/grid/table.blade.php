@@ -16,10 +16,10 @@
     </div>
     <!-- /.box-header -->
     <div class="box-body table-responsive no-padding">
-        <table class="table table-hover">
+        <table class="table table-hover table-bordered table-striped">
             <tr>
                 @foreach($grid->columns() as $column)
-                <th>{{$column->getLabel()}}{!! $column->sorter() !!}</th>
+                <th style="background-color: #3c8dbc;color:white;">{{$column->getLabel()}}{!! $column->sorter() !!}</th>
                 @endforeach
             </tr>
 
