@@ -149,7 +149,18 @@ class PointSubjectController extends Controller
                  }
                  
             });
-
+            $grid->filter(function($filter){
+                $filter->disableIdFilter();
+                $filter->like('id', 'Mã môn học');
+                $filter->like('name', 'Tên môn học');
+                $filter->like('credits', 'Tín chỉ');
+                $filter->like('rate_attendance', '% Qúa trình');
+                $filter->like('rate_mid_term', '% Giữa kỳ');
+                $filter->like('rate_end_term', '% Cuối kỳ');
+                $filter->like('attendance', 'Điểm quá trình');
+                $filter->like('mid_term', 'Điểm giữa kỳ');
+                $filter->like('end_term', 'Điểm cuối kỳ');
+            });
             $grid->disableCreateButton();
             $grid->disableExport();
             $grid->disableRowSelector();

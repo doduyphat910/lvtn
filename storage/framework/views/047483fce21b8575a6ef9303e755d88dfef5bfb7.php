@@ -1,4 +1,4 @@
-<head>
+  <head>
     <script src="<?php echo e(admin_asset("/vendor/laravel-admin/chartjs/chart.js")); ?>"></script>
 </head>
 <style>
@@ -135,9 +135,9 @@ section, footer, header, aside{
 
 
 #clock{
-  width:430px;
+  width:325px;
   padding:40px;
-  margin:0px auto 21px;
+  margin:0px auto 20px;
   position:relative;
 }
 
@@ -156,9 +156,9 @@ section, footer, header, aside{
 
 #clock .display{
   text-align:center;
-  padding: 50px 20px 20px;
+  padding: 30px 0px 0px;
   border-radius:6px;
-  position:relative;
+  /*position:relative;*/
   height: 120px;
 }
 
@@ -186,10 +186,10 @@ section, footer, header, aside{
 #clock.light .digits div.dots:after{
   background-color:#272e38;
 }
-
+/*
 #clock.light .alarm{
   background:url('../img/alarm_light.jpg');
-}
+}*/
 
 #clock.light .display{
   background-color:#dddddd;
@@ -216,10 +216,10 @@ section, footer, header, aside{
   border-color:#cacaca; 
 }
 
-#clock.dark .alarm{
+/*#clock.dark .alarm{
   background:url('../img/alarm_dark.jpg');
 }
-
+*/
 #clock.dark .display{
   background-color:#0f1620;
   box-shadow:0 1px 1px rgba(0,0,0,0.08) inset, 0 1px 1px #2d3642;
@@ -465,7 +465,7 @@ section, footer, header, aside{
 
 #clock .ampm{
   position:absolute;
-  bottom:20px;
+  bottom:115px;
   right:20px;
   font-size:12px;
 }
@@ -510,16 +510,16 @@ html {
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+      font-family: 'Raleway', sans-serif";
       color: #333;
-      font-size: 1.6rem;
+      
       background-color: #FAFAFA;
       -webkit-font-smoothing: antialiased;
     }
 
     .container1 {
       width: 96%;
-      margin: 1.6rem auto;
+      /*margin: 1.6rem auto;*/
       max-width: 42rem;
       text-align: center;
     }
@@ -684,115 +684,122 @@ html {
    <div class="row box-body">
       <div class="col-lg-2 col-sm-6 col-md-6">
          <div class="circle-tile">
-            <a href="#">
+            <a href="/admin/student_user" target="_blank">
                <div class="circle-tile-heading dark-blue">
                   <i class="fa fa-users fa-fw fa-3x"></i>
                </div>
             </a>
             <div class="circle-tile-content dark-blue">
                <div class="circle-tile-description text-faded">
-                  Users
+                  Users SV
                </div>
                <div class="circle-tile-number text-faded">
-                  265
-                  <i class="fa fa-bar-chart" aria-hidden="true"></i>                                    
+                  
+                   <?php echo e($countUserStudent); ?>
+
+                  <i class="fa fa-users" aria-hidden="true"></i>
                </div>
-               <a href="#" class="circle-tile-footer">More Info <i class="fa fa-chevron-circle-right"></i></a>
+               <a href="/admin/student_user" target="_blank" class="circle-tile-footer">Xem chi tiết <i class="fa fa-chevron-circle-right"></i></a>
             </div>
          </div>
       </div>
       <div class="col-lg-2 col-sm-6 col-md-6">
          <div class="circle-tile">
-            <a href="#">
+            <a  href="/admin/teacher_user" target="_blank" >
                <div class="circle-tile-heading green">
-                  <i class="fa fa-money fa-fw fa-3x"></i>
+                  <i class="fa fa-users fa-fw fa-3x"></i>
                </div>
             </a>
             <div class="circle-tile-content green">
                <div class="circle-tile-description text-faded">
-                  Revenue
+                   Users GV
                </div>
                <div class="circle-tile-number text-faded">
-                  $32,384
-                  <i class="fa fa-money" aria-hidden="true"></i>
+                   <?php echo e($countTeacher); ?>
+
+                  <i class="fa fa-users" aria-hidden="true"></i>
                </div>
-               <a href="#" class="circle-tile-footer">More Info <i class="fa fa-chevron-circle-right"></i></a>
+               <a href="/admin/teacher_user" target="_blank" class="circle-tile-footer">Xem chi tiết <i class="fa fa-chevron-circle-right"></i></a>
             </div>
          </div>
       </div>
       <div class="col-lg-2 col-sm-6 col-md-6">
          <div class="circle-tile">
-            <a href="#">
+            <a href="/admin/user_admin" target="_blank" >
                <div class="circle-tile-heading orange">
-                  <i class="fa fa-bell fa-fw fa-3x"></i>
+                  <i class="fa fa-users fa-fw fa-3x"></i>
                </div>
             </a>
             <div class="circle-tile-content orange">
                <div class="circle-tile-description text-faded">
-                  Alerts
+                  User QT
                </div>
                <div class="circle-tile-number text-faded">
-                  9 New
-                  <i class="fa fa-bell" aria-hidden="true"></i>
+                  <?php echo e($countAdmin); ?>
+
+                  <i class="fa fa-users" aria-hidden="true"></i>
                </div>
-               <a href="#" class="circle-tile-footer">More Info <i class="fa fa-chevron-circle-right"></i></a>
+               <a href="/admin/user_admin" target="_blank" class="circle-tile-footer">Xem chi tiết <i class="fa fa-chevron-circle-right"></i></a>
             </div>
          </div>
       </div>
       <div class="col-lg-2 col-sm-6 col-md-6">
          <div class="circle-tile">
-            <a href="#">
+            <a href="/admin/class" target="_blank">
                <div class="circle-tile-heading blue">
-                  <i class="fa fa-tasks fa-fw fa-3x"></i>
+                  <i class="fa fa-book fa-fw fa-3x"></i>
                </div>
             </a>
             <div class="circle-tile-content blue">
                <div class="circle-tile-description text-faded">
-                  Tasks
+                  Lớp
                </div>
                <div class="circle-tile-number text-faded">
-                  10
-                  <i class="fa fa-tasks" aria-hidden="true"></i>
+                  <?php echo e($countClass); ?>
+
+                  <i class="fa fa-book" aria-hidden="true"></i>
                </div>
-               <a href="#" class="circle-tile-footer">More Info <i class="fa fa-chevron-circle-right"></i></a>
+               <a href="/admin/class" target="_blank" class="circle-tile-footer">Xem chi tiết <i class="fa fa-chevron-circle-right"></i></a>
             </div>
          </div>
       </div>
       <div class="col-lg-2 col-sm-6 col-md-6">
          <div class="circle-tile">
-            <a href="#">
+            <a href="/admin/time-register" target="_blank">
                <div class="circle-tile-heading red">
-                  <i class="fa fa-shopping-cart fa-fw fa-3x"></i>
+                  <i class="fa fa-pencil-square-o fa-fw fa-3x"></i>
                </div>
             </a>
             <div class="circle-tile-content red">
                <div class="circle-tile-description text-faded">
-                  Orders
+                  Đợt ĐK
                </div>
                <div class="circle-tile-number text-faded">
-                  24
-                  <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                  <?php echo e($countTimeRegister); ?>
+
+                  <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                </div>
-               <a href="#" class="circle-tile-footer">More Info <i class="fa fa-chevron-circle-right"></i></a>
+               <a href="/admin/time-register" target="_blank" class="circle-tile-footer">Xem chi tiết <i class="fa fa-chevron-circle-right"></i></a>
             </div>
          </div>
       </div>
       <div class="col-lg-2 col-sm-6 col-md-6">
          <div class="circle-tile">
-            <a href="#">
+            <a href="/admin/subject_register" target="_blank">
                <div class="circle-tile-heading purple">
-                  <i class="fa fa-comments fa-fw fa-3x"></i>
+                  <i class="fa fa-bookmark fa-fw fa-3x"></i>
                </div>
             </a>
             <div class="circle-tile-content purple">
                <div class="circle-tile-description text-faded">
-                  Mentions
+                  Lớp HP
                </div>
                <div class="circle-tile-number text-faded">
-                  96
-                  <i class="fa fa-area-chart" aria-hidden="true"></i>                                  
+                  <?php echo e($countSubjectRegister); ?>
+
+                  <i class="fa fa-bookmark" aria-hidden="true"></i>
                </div>
-               <a href="#" class="circle-tile-footer">More Info <i class="fa fa-chevron-circle-right"></i></a>
+               <a href="/admin/subject_register" target="_blank" class="circle-tile-footer">Xem chi tiết <i class="fa fa-chevron-circle-right"></i></a>
             </div>
          </div>
       </div>
@@ -826,7 +833,7 @@ html {
       </div>
    </div>
    <div class="row box-body">
-        <div class="col-lg-4 col-sm-6 col-md-6">
+        <div class="col-lg-4 col-sm-3 col-md-3">
                 
   <div id="clock" class="light">
       <div class="display">
@@ -841,7 +848,7 @@ html {
       <a class="button">Đổi màu</a>
     </div>
         </div>
-         <div class="col-lg-4 col-sm-6 col-md-6">
+         <div class="col-lg-4 col-sm-3 col-md-3">
                 <div class="container1">
     <div id="v-cal">
       <div class="vcal-header">
@@ -875,23 +882,26 @@ html {
     </div>
   </div>
         </div>
-        <div class="col-lg-4 col-sm-6 col-md-6">
-           <iframe src="https://weatherfor.us/widget?unit=metric" scrolling="no" frameborder="0" allowtransparency="true" style="background: transparent; width: 520px; height: 250px; overflow: hidden;"></iframe>
-
-
+        <div class="col-lg-4 col-sm-3 col-md-3">
+         <a href="https://www.accuweather.com/vi/vn/ho-chi-minh-city/353981/weather-forecast/353981" class="aw-widget-legal">
+<!--
+By accessing and/or using this code snippet, you agree to AccuWeather’s terms and conditions (in English) which can be found at https://www.accuweather.com/en/free-weather-widgets/terms and AccuWeather’s Privacy Statement (in English) which can be found at https://www.accuweather.com/en/privacy.
+-->
+</a><div id="awcc1530794233439" class="aw-widget-current"  data-locationkey="353981" data-unit="c" data-language="vi" data-useip="false" data-uid="awcc1530794233439"></div><script type="text/javascript" src="https://oap.accuweather.com/launch.js"></script>
         </div>
    </div>
-</div>        
+</div>
 <script>
-
 var ctx = document.getElementById("myChart").getContext('2d');
 var myChart = new Chart(ctx, {
     type: 'bar',
     data: {
-        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+        // labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+        labels: <?php echo e($arrClass); ?> ,
         datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
+            label: 'Số lượng',
+            // data: [12, 19, 3, 5, 2, 3],
+            data: <?php echo e($countStudent); ?>,
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(54, 162, 235, 0.2)',
@@ -927,10 +937,12 @@ var myChart = new Chart(ctx, {
     var myLineChart = new Chart(ctx, {
     type: 'line',
     data: {
-        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+        // labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+        labels: <?php echo $timeRegisters; ?>,
         datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
+            label: 'Lượt đăng ký',
+            // data: [12, 19, 3, 5, 2, 3],
+            data: <?php echo $dataTimeRegister; ?>,
             backgroundColor: [
                 
                 'rgba(54, 162, 235, 0.2)'

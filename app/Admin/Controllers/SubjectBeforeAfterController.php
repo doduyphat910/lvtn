@@ -105,7 +105,7 @@ class SubjectBeforeAfterController extends Controller
             $grid->filter(function($filter){
                 $filter->disableIdFilter();
                 $filter->in('id_subject_before', 'Môn học trước')->multipleSelect(Subjects::all()->pluck('name', 'id'));
-                $filter->in('id_subject_sau', 'Môn học sau')->multipleSelect(Subjects::all()->pluck('name', 'id'));
+                $filter->in('id_subject_after', 'Môn học sau')->multipleSelect(Subjects::all()->pluck('name', 'id'));
                 $filter->between('created_at', 'Tạo vào lúc')->datetime();
             });
         });

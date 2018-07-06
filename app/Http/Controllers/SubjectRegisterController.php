@@ -26,6 +26,7 @@ use Illuminate\Http\Request;
 use Encore\Admin\Form;
 
 use App\Http\Extensions\GridUser;
+// use App\Http\Extensions\RowUser;
 
 use Encore\Admin\Facades\Admin;
 use App\Http\Controllers\Controller;
@@ -56,6 +57,10 @@ class SubjectRegisterController extends Controller
     {
         return User::GridUser(Subjects::class, function (GridUser $grid) {
             $grid->registerColumnDisplayer();
+            //  $grid->rows(function (RowUser $row) {
+            //     $row->column('number', $row->number);
+            // });
+            // $grid->number('STT');
             $user = Auth::user();
 
             $schoolYearUser = $user->school_year;
@@ -158,6 +163,38 @@ class SubjectRegisterController extends Controller
             });
             $grid->column('Đăng ký')->display(function () {
                 return '<a href="/user/subject-register/' . $this->id . '/details" data-id='.$this->id.' class="btn btn-md"  target="_blank" ><i class="fa fa-pencil fa-fw fa-1x"></i></a>';
+            });
+                       $grid->filter(function($filter){
+                $filter->disableIdFilter();
+                $filter->like('id', 'Mã môn học');
+                $filter->like('name', 'Tên môn học');
+                $filter->like('credits', 'Tín chỉ');
+                $filter->like('credits_fee', 'Tín chỉ học phí');
+                $semesters = Semester::all()->toArray();
+                $optionSemesters = [];
+                foreach($semesters as $semester) {
+                    $nameYear = Year::where('id', $semester['id_year'])->first();
+                    $optionSemesters += [$semester['id'] => 'Học kỳ '. $semester['name']. ' - ' . $nameYear->name];
+                }
+                $filter->where(function ($query){
+                    $input = $this->input;
+                    $semester = Semester::where('id',$input)->first();
+                    $idSubject = $semester->subjects()->pluck('id')->toArray();
+                    $query->whereIn('id', $idSubject);
+                }, 'Học kì')->select($optionSemesters);
+                $filter->where(function ($query){
+                    $input = $this->input;
+                    $subjectGroup = SubjectGroup::where('id',$input)->first();
+                    $idSubject = $subjectGroup->subject()->pluck('id')->toArray();
+                    $query->where(function ($query) use ($idSubject) {
+                        $query->whereIn('id', $idSubject);
+                    });
+//                    $query->whereIn('id', $idSubject);
+                }, 'Nhóm môn học')->multipleSelect(SubjectGroup::all()->pluck('name', 'id'));
+                
+//                $filter->in('id_subject1', 'Môn học trước')->multipleSelect(Subjects::all()->pluck('name', 'id'));
+//                $filter->in('id_subject2', 'Môn học song song')->multipleSelect(Subjects::all()->pluck('name', 'id'));
+               
             });
             $grid->disableCreateButton();
             $grid->disableExport();

@@ -50,7 +50,7 @@
                                 
                                 <h1 class="text-center"><b>THÔNG BÁO</b></h1>
                                     <table class="table table-hover table-bordered">
-                                        <thead class="thead-dark">
+                                        <thead class="thead-dark" >
                                             <tr align="center">
                                                 <th>Tên thông báo</th>
                                                 <th>Mô tả thông báo</th>
