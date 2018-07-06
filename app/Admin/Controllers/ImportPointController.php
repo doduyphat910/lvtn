@@ -77,9 +77,12 @@ class ImportPointController extends Controller
         $row_add_successs = 0;
         $error_logs = [];
         foreach($data as $key => $row) {
-            if (empty($row ['mssv']) ||  empty($row ['diem_chuyen_can']) ) {
-                $row_error += 1;
-                $error_logs[$key] = $row['mssv'] . ' trống dữ liệu';
+            if($row['diem_chuyen_can'] != 0)
+            {
+                if (empty($row ['mssv']) ||  empty($row ['diem_chuyen_can']) ) {
+                    $row_error += 1;
+                    $error_logs[$key] = $row['mssv'] . ' trống dữ liệu';
+                }
             } else {
                 $idUserSubject = ResultRegister::where('id_subject_register', $idSubjectRegister)->pluck('id_user_student');
                 $arrCodeStudent = StudentUser::find($idUserSubject)->pluck('code_number')->toArray();
@@ -245,9 +248,11 @@ class ImportPointController extends Controller
         $row_add_successs = 0;
         $error_logs = [];
         foreach($data as $key => $row) {
-            if (empty($row ['mssv']) ||  empty($row ['diem_giua_ki']) ) {
+            if($row['diem_giua_ki'] != 0){
+                if (empty($row ['mssv']) ||  empty($row ['diem_giua_ki']) ) {
                 $row_error += 1;
                 $error_logs[$key] = $row['mssv'] . ' trống dữ liệu';
+                }
             } else {
                 $idUserSubject = ResultRegister::where('id_subject_register', $idSubjectRegister)->pluck('id_user_student');
                 $arrCodeStudent = StudentUser::find($idUserSubject)->pluck('code_number')->toArray();
@@ -415,9 +420,11 @@ class ImportPointController extends Controller
         $row_add_successs = 0;
         $error_logs = [];
         foreach($data as $key => $row) {
-            if (empty($row ['mssv']) ||  empty($row ['diem_cuoi_ki']) ) {
-                $row_error += 1;
-                $error_logs[$key] = $row['mssv'] . ' trống dữ liệu';
+            if($row['diem_cuoi_ki'] != 0) {
+                if (empty($row ['mssv']) || empty($row ['diem_cuoi_ki'])) {
+                    $row_error += 1;
+                    $error_logs[$key] = $row['mssv'] . ' trống dữ liệu';
+                }
             } else {
                 $idUserSubject = ResultRegister::where('id_subject_register', $idSubjectRegister)->pluck('id_user_student');
                 $arrCodeStudent = StudentUser::find($idUserSubject)->pluck('code_number')->toArray();
@@ -440,20 +447,21 @@ class ImportPointController extends Controller
                 $idUser = StudentUser::where('code_number', $row['mssv'])->pluck('id');
                 $userSubject = ResultRegister::where('id_user_student', $idUser)->where('id_subject_register',$idSubjectRegister)->first();
                 $userSubject->end_term = $row['diem_cuoi_ki'];
+                $userSubject->is_learned = 1;
                 if($userSubject->save()) {
                     $row_add_successs += 1;
-                    if($userSubject->mid_term && $userSubject->attendance) {
-                        $final = (($userSubject->attendance * $userSubject->rate_attendance) +
-                        ($userSubject->mid_term * $userSubject->rate_mid_term) +
-                        ($userSubject->end_term * $userSubject->rate_end_term))/100;
-                        if($final >= 4.5) {
-                            $userSubject->is_learned = 1;
-                            $userSubject->save();
-                        } else {
-                            $userSubject->is_learned = 0;
-                            $userSubject->save();
-                        }
-                    }
+//                    if($userSubject->mid_term && $userSubject->attendance) {
+//                        $final = (($userSubject->attendance * $userSubject->rate_attendance) +
+//                        ($userSubject->mid_term * $userSubject->rate_mid_term) +
+//                        ($userSubject->end_term * $userSubject->rate_end_term))/100;
+//                        if($final >= 4.5) {
+//                            $userSubject->is_learned = 1;
+//                            $userSubject->save();
+//                        } else {
+//                            $userSubject->is_learned = 0;
+//                            $userSubject->save();
+//                        }
+//                    }
                 }
             } else {
                 $row_error += 1;
@@ -594,9 +602,11 @@ class ImportPointController extends Controller
         $row_add_successs = 0;
         $error_logs = [];
         foreach($data as $key => $row) {
-            if (empty($row ['mssv'])||  empty($row ['diem_chuyen_can']) ||  empty($row ['diem_giua_ki']) ||   empty($row ['diem_cuoi_ki']) ) {
-                $row_error += 1;
-                $error_logs[$key] = $row['mssv'] . ' trống dữ liệu';
+            if($row ['diem_chuyen_can'] != 0 && $row ['diem_giua_ki'] != 0 && $row ['diem_cuoi_ki'] != 0 ) {
+                if (empty($row ['mssv'])||  empty($row ['diem_chuyen_can']) ||  empty($row ['diem_giua_ki']) ||   empty($row ['diem_cuoi_ki']) ) {
+                    $row_error += 1;
+                    $error_logs[$key] = $row['mssv'] . ' trống dữ liệu';
+                }
             } else {
                 $idUserSubject = ResultRegister::where('id_subject_register', $idSubjectRegister)->pluck('id_user_student');
                 $arrCodeStudent = StudentUser::find($idUserSubject)->pluck('code_number')->toArray();
@@ -658,20 +668,21 @@ class ImportPointController extends Controller
                 $userSubject->attendance = $row['diem_chuyen_can'];
                 $userSubject->mid_term = $row['diem_giua_ki'];
                 $userSubject->end_term = $row['diem_cuoi_ki'];
+                $userSubject->is_learned = 1;
                 if($userSubject->save()) {
                     $row_add_successs += 1;
-                    if($userSubject->attendance &&$userSubject->mid_term && $userSubject->end_term) {
-                        $final = (($userSubject->attendance * $userSubject->rate_attendance) +
-                                ($userSubject->mid_term * $userSubject->rate_mid_term) +
-                                ($userSubject->end_term * $userSubject->rate_end_term))/100;
-                        if($final >= 4.5) {
-                            $userSubject->is_learned = 1;
-                            $userSubject->save();
-                        } else {
-                            $userSubject->is_learned = 0;
-                            $userSubject->save();
-                        }
-                    }
+//                    if($userSubject->attendance &&$userSubject->mid_term && $userSubject->end_term) {
+//                        $final = (($userSubject->attendance * $userSubject->rate_attendance) +
+//                                ($userSubject->mid_term * $userSubject->rate_mid_term) +
+//                                ($userSubject->end_term * $userSubject->rate_end_term))/100;
+//                        if($final >= 4.5) {
+//                            $userSubject->is_learned = 1;
+//                            $userSubject->save();
+//                        } else {
+//                            $userSubject->is_learned = 0;
+//                            $userSubject->save();
+//                        }
+//                    }
                 }
             } else {
                 $row_error += 1;

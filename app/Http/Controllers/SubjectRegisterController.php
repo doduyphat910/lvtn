@@ -115,7 +115,7 @@ class SubjectRegisterController extends Controller
                     $nameSemester = Semester::find($arraySemester)->name;
                     switch ($nameSemester) {
                         case 0 :
-                            $nameSemester = 'Học kì hè';
+                            $nameSemester = 'Học kỳ hè';// học kỳ hè
                             break;
                         case 1:
                             $nameSemester = 'Học kì 1';
@@ -130,15 +130,31 @@ class SubjectRegisterController extends Controller
                     } else {
                         $nameYear = '';
                     }
-                    if(substr($nameYear,4,5) % 2 == 0)
-                    {
-                        return "<span class='label label-info'>{$nameSemester} - {$nameYear}</span>";
+//                    if($nameSemester == 0) {
+//                        return "<span class='label label-info'>Học kỳ hè</span>";
+//                    }
+//                    if(substr($nameYear,4,5) % 2 == 0)
+//                    {
+//                        return "<span class='label label-info'>{$nameSemester} - {$nameYear}</span>";
+//                    } else {
+//                        return "<span class='label label-success'>{$nameSemester} - {$nameYear}</span>";
+//                    }
+                    if(substr($nameYear,4,5) % 2 == 0){
+                        if($nameSemester == 'Học kỳ hè') {
+                            return  "<span class='label label-primary'>$nameSemester</span>"  ;
+                        } else {
+                            return "<span class='label label-info'>{$nameSemester} - {$nameYear}</span>"  ;
+                        }
                     } else {
-                        return "<span class='label label-success'>{$nameSemester} - {$nameYear}</span>";
+                        if($nameSemester == 'Học kỳ hè') {
+                            return "<span class='label label-success'>{$nameSemester}</span>";
+                        } else {
+                            return "<span class='label label-success'>{$nameSemester} - {$nameYear}</span>";
+                        }
                     }
                     
                 }, $arraySemester);
-                return join('&nbsp;', $name);
+                    return join('&nbsp;', $name);
             });
             $grid->column('Đăng ký')->display(function () {
                 return '<a href="/user/subject-register/' . $this->id . '/details" data-id='.$this->id.' class="btn btn-md"  target="_blank" ><i class="fa fa-pencil fa-fw fa-1x"></i></a>';

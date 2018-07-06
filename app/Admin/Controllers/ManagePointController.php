@@ -316,9 +316,9 @@ EOT;
             $statusImport = $timeRegister->status_import;
             $statusEditPoint = $timeRegister->status_edit_point;
             if($statusEditPoint == null || $statusEditPoint == []) {
-                $grid->attendance('Điểm chuyên cần');
-                $grid->mid_term('Điểm giữa kì');
-                $grid->end_term('Điểm cuối kì');
+                $grid->attendance('Điểm chuyên cần')->sortable();
+                $grid->mid_term('Điểm giữa kì')->sortable();
+                $grid->end_term('Điểm cuối kì')->sortable();
                 $grid->column('Điểm tổng kết')->display(function () {
                     if(!$this->attendance || !$this->mid_term || !$this->end_term) {
                         return 'X';
@@ -379,14 +379,12 @@ EOT;
                            location.reload();
                         });
                     });
-
 SCRIPT;
                         Admin::script($script);
                         return (($this->attendance * $this->rate_attendance) +
                                 ($this->mid_term * $this->rate_mid_term) +
                                 ($this->end_term * $this->rate_end_term)) / 100;
                     }
-
                 })->setAttributes(['class'=>'finalPoint']);
             }
 
@@ -394,7 +392,7 @@ SCRIPT;
 
 //            $grid->created_at('Tạo vào lúc');
 //            $grid->updated_at('Cập nhật vào lúc');
-            $grid->filter(function($filter) {
+            $grid->filter(function($filter) use ($idSubjectRegister) {
                 $filter->disableIdFilter();
                 $filter->where(function ($query){
                     $input = $this->input;
@@ -411,6 +409,24 @@ SCRIPT;
                     $idUser = StudentUser::where('id_class', $input)->pluck('id')->toArray();
                     $query->whereIn('id_user_student', $idUser);
                 }, 'Lớp')->select(ClassSTU::all()->pluck('name','id'));
+                $filter->where(function ($query) use ($idSubjectRegister) {
+                    $input = $this->input;
+                    $idResultRegister = ResultRegister::where('attendance',$input)->where('id_subject_register',$idSubjectRegister)
+                        ->pluck('id')->toArray();
+                    $query->whereIn('id', $idResultRegister);
+                }, 'Điểm CC');
+                $filter->where(function ($query) use ($idSubjectRegister) {
+                    $input = $this->input;
+                    $idResultRegister = ResultRegister::where('mid_term',$input)->where('id_subject_register',$idSubjectRegister)
+                        ->pluck('id')->toArray();
+                    $query->whereIn('id', $idResultRegister);
+                }, 'Điểm GK');
+                $filter->where(function ($query) use ($idSubjectRegister) {
+                    $input = $this->input;
+                    $idResultRegister = ResultRegister::where('end_term',$input)->where('id_subject_register',$idSubjectRegister)
+                        ->pluck('id')->toArray();
+                    $query->whereIn('id', $idResultRegister);
+                }, 'Điểm CK');
 //                $filter->in('time_register', 'Đợt ĐK')->select(TimeRegister::all()->pluck('name','id'));
 //                $filter->between('created_at', 'Tạo vào lúc')->datetime();
             });

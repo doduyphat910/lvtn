@@ -20,7 +20,13 @@ class HomeController extends Controller
     public function index()
     {
         return Admin::content(function (Content $content) {
-
+            $script = <<<EOT
+            if (location.href.indexOf('reload')==-1)
+            {
+               location.href=location.href+'?reload';
+            }
+EOT;
+            Admin::script($script);
             $content->header('Trang chủ');
 //            $content->description('Description...');
             $countUserStudent = StudentUser::count();

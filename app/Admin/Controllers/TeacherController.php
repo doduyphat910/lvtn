@@ -569,11 +569,9 @@ EOT;
 //                })->setAttributes(['class'=>'finalPoint']);
 //            }
 
-
-
 //            $grid->created_at('Tạo vào lúc');
 //            $grid->updated_at('Cập nhật vào lúc');
-            $grid->filter(function($filter) {
+            $grid->filter(function($filter)use ($idSubjectRegister) {
                 $filter->disableIdFilter();
                 $filter->where(function ($query){
                     $input = $this->input;

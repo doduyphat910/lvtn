@@ -117,15 +117,31 @@ class SubjectsController extends Controller
                             $nameSemester = '';
                             break;
                     }
-                    $year = Semester::find($arraySemester)->year()->get();
-                    $nameYear = $year['0']->name;
-                    if($year['0']->id % 2 == 0){
-                        return "<span class='label label-info'>{$nameSemester} - {$nameYear}</span>"  ;
+//                    $year = Semester::find($arraySemester)->year()->get();
+                    $year = Semester::find($arraySemester)->year()->first();
+                    if(!empty($year)) {
+                        $nameYear = $year->name;
+
                     } else {
-                        return "<span class='label label-success'>{$nameSemester} - {$nameYear}</span>"  ;
+                        $nameYear = '';
+                    }
+//                    $nameYear = $year['0']->name;
+                    if(substr($nameYear,4,5) % 2 == 0){
+                        if($nameSemester == 'Học kỳ hè') {
+                            return  "<span class='label label-primary'>$nameSemester</span>"  ;
+                        } else {
+                            return "<span class='label label-info'>{$nameSemester} - {$nameYear}</span>"  ;
+                        }
+                    } else {
+                        if($nameSemester == 'Học kỳ hè') {
+                            return  "<span class='label label-primary'>$nameSemester</span>"  ;
+                        } else {
+                            return "<span class='label label-success'>{$nameSemester} - {$nameYear}</span>";
+                        }
                     }
                 }, $arraySemester);
-                return join('&nbsp;', $name);})->sortable();
+                return join('&nbsp;', $name);
+            })->sortable();
             $grid->column('Nhóm môn')->display(function () {
                 $subject = Subjects::find($this->id);
                 $nameGroup = $subject->subject_group()->pluck('name')->toArray();
@@ -175,7 +191,7 @@ class SubjectsController extends Controller
                 $optionSemesters = [];
                 foreach($semesters as $semester) {
                     $nameYear = Year::where('id', $semester['id_year'])->first();
-                    $optionSemesters += [$semester['id'] => 'Học kỳ '. $semester['name']. ' - ' . $nameYear->name];
+//                    $optionSemesters += [$semester['id'] => 'Học kỳ '. $semester['name']. ' - ' . $nameYear->name];
                 }
                 $filter->where(function ($query){
                     $input = $this->input;
