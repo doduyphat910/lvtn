@@ -23,7 +23,7 @@ class SubjectRegisterMiddleware
         $timeRegister = TimeRegister::where('status', 1)->orderBy('id', 'DESC')->first();
         $user = Auth::user();
         $statusUser = $user->id_status;
-        $nameStatus = Status::where('ids', $statusUser)->pluck('status')->toArray();
+        $nameStatus = Status::where('id', $statusUser)->pluck('status')->toArray();
         //lấy năm vào học của user
         $schoolYearUser = $user->school_year;
         $schoolYearUser = (string) $schoolYearUser;

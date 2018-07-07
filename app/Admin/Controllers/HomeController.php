@@ -20,6 +20,13 @@ class HomeController extends Controller
     public function index()
     {
         return Admin::content(function (Content $content) {
+            $roles = Admin::user()->roles->first();
+            if($roles->slug == 'giangvien') {
+                $script = <<<EOT
+                 window.location.href = '/admin/teacher/class';
+EOT;
+                Admin::script($script);
+            }
             $script = <<<EOT
             if (location.href.indexOf('reload')==-1)
             {

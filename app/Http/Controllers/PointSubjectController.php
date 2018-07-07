@@ -107,7 +107,7 @@ class PointSubjectController extends Controller
                 return $this->rate_mid_term;
             });
             $grid->column('%CK')->display(function () {
-                return $this->rate_mid_term;
+                return $this->rate_end_term;
             });
             $grid->column('Điểm QT')->display(function () {
                 if(!empty($this->attendance))
@@ -123,10 +123,10 @@ class PointSubjectController extends Controller
                 }
                 else{ return "0"; }
             });
-            $grid->column('Điểm QT')->display(function () {
-                if(!empty($this->mid_term))
+            $grid->column('Điểm CK')->display(function () {
+                if(!empty($this->end_term))
                 {
-                    return $this->mid_term;
+                    return $this->end_term;
                 }
                 else{ return "0"; }
             });
@@ -152,14 +152,33 @@ class PointSubjectController extends Controller
             $grid->filter(function($filter){
                 $filter->disableIdFilter();
                 $filter->like('id', 'Mã môn học');
-                $filter->like('name', 'Tên môn học');
-                $filter->like('credits', 'Tín chỉ');
+                $filter->where(function ($query){
+                    $user = Auth::user();
+                    $input = $this->input;
+                    $arrSubject = Subjects::where('name', 'like', '%'.$input.'%')->pluck('id')->toArray();
+                    $idResult = ResultRegister::where('id_user_student',$user->id )->whereIn('id_subject',$arrSubject)->pluck('id')->toArray();
+                    $query->whereIn('id',$idResult);
+                }, 'Tên môn học');
+                $filter->where(function ($query){
+                    $user = Auth::user();
+                    $input = $this->input;
+                    $arrSubject = Subjects::where('credits', 'like', '%'.$input.'%')->pluck('id')->toArray();
+                    $idResult = ResultRegister::where('id_user_student',$user->id )->whereIn('id_subject',$arrSubject)->pluck('id')->toArray();
+                    $query->whereIn('id',$idResult);
+                }, 'Số tín chỉ');
                 $filter->like('rate_attendance', '% Qúa trình');
                 $filter->like('rate_mid_term', '% Giữa kỳ');
                 $filter->like('rate_end_term', '% Cuối kỳ');
                 $filter->like('attendance', 'Điểm quá trình');
                 $filter->like('mid_term', 'Điểm giữa kỳ');
                 $filter->like('end_term', 'Điểm cuối kỳ');
+                $filter->where(function ($query)  {
+                    $user = Auth::user();
+                    $input = $this->input;
+                    $idFinal = ResultRegister::where('id_user_student',$user->id )->whereRaw("((attendance *rate_attendance)+(mid_term*rate_mid_term)+(end_term*rate_end_term))/100 = ".$input)
+                        ->pluck('id')->toArray();
+                    $query->whereIn('id', $idFinal);
+                }, 'Điểm TK');
             });
             $grid->disableCreateButton();
             $grid->disableExport();

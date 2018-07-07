@@ -264,7 +264,7 @@ EOT;
                 $row->column('number', $row->number);
             });
             $grid->number('STT');
-            $grid->column('MSSV')->display(function () {
+            $grid->id_user_student('MSSV')->display(function () {
                 if (StudentUser::find($this->id_user_student)->code_number) {
                     return StudentUser::find($this->id_user_student)->code_number;
                 } else {
@@ -277,14 +277,14 @@ EOT;
                 } else {
                     return '';
                 }
-            })->sortable();
-            $grid->id_user_student('Tên')->display(function ($idStudent) {
-                if (StudentUser::find($idStudent)->last_name) {
-                    return StudentUser::find($idStudent)->last_name;
+            });
+            $grid->column('Tên')->display(function () {
+                if (StudentUser::find($this->id_user_student)->last_name) {
+                    return StudentUser::find($this->id_user_student)->last_name;
                 } else {
                     return '';
                 }
-            })->sortable();
+            });
             $grid->id_subject_register('Mã HP')->display(function ($idSubjectRegister) {
                 if (SubjectRegister::find($idSubjectRegister)->id) {
                     return SubjectRegister::find($idSubjectRegister)->id;
@@ -310,7 +310,7 @@ EOT;
                 $idClass = StudentUser::find($this->id_user_student)->id_class;
                 $name = ClassSTU::find($idClass)->name;
                 return "<span class='label label-info'>{$name}</span>";
-            })->sortable();
+            });
             $idTimeRegister = ResultRegister::where('id_subject_register', $idSubjectRegister)->pluck('time_register');
             $timeRegister = TimeRegister::find($idTimeRegister)->first();
             $statusImport = $timeRegister->status_import;
@@ -397,6 +397,11 @@ SCRIPT;
 //            $grid->updated_at('Cập nhật vào lúc');
             $grid->filter(function($filter) use ($idSubjectRegister) {
                 $filter->disableIdFilter();
+                $filter->where(function ($query){
+                    $input = $this->input;
+                    $idUser = StudentUser::where('code_number','like', '%'.$input.'%')->pluck('id')->toArray();
+                    $query->whereIn('id_user_student', $idUser);
+                }, 'MSSV');
                 $filter->where(function ($query){
                     $input = $this->input;
                     $idUser = StudentUser::where('first_name','like', '%'.$input.'%')->pluck('id')->toArray();

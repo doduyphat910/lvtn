@@ -66,6 +66,7 @@ class Kernel extends HttpKernel
         'importMidterm' => \App\Http\Middleware\ImportMidtermMiddleware::class,
         'importEndterm' => \App\Http\Middleware\ImportEndtermMiddleware::class,
         'importAll' => \App\Http\Middleware\ImportAllMiddleware::class,
+        'adminIndex' => \App\Http\Middleware\AdminIndexMiddleware::class,
 
     ];
 }

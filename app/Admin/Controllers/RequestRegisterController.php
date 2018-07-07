@@ -1,5 +1,6 @@
 <?php
 namespace App\Admin\Controllers;
+use App\Models\ClassSTU;
 use App\Models\Rate;
 
 use App\Models\Semester;
@@ -133,6 +134,17 @@ class RequestRegisterController extends Controller
                 $user = StudentUser::find($this->id_user);
                 if($user->last_name){
                     return $user->last_name;
+                } else {
+                    return '';
+                }
+            });
+            $grid->column('Lớp ')->display(function (){
+                $user = StudentUser::find($this->id_user);
+                if($user->id_class){
+                    $class = ClassSTU::find($user->id_class);
+                    if($class->name) {
+                        return "<span class='label label-info'>{$class->name}</span>";
+                    }
                 } else {
                     return '';
                 }

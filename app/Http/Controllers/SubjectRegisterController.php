@@ -342,6 +342,20 @@ SCRIPT;
             $grid->disableExport();
             $grid->disableRowSelector();
             $grid->disableFilter();
+            $grid->filter(function($filter){
+                $filter->disableIdFilter();
+                $filter->like('id', 'Mã học phần');
+//                $filter->in('id_subjects', 'Tên môn học')->multipleSelect(Subjects::all()->pluck('name', 'id'));
+                $filter->where(function ($query) {
+                    $input = $this->input;
+                    $query->whereIn('id_subjects', $input);
+                }, 'Tên môn học')->multipleSelect(Subjects::all()->pluck('name', 'id'));
+                $filter->in('id_user_teacher', 'Giảng viên')->multipleSelect(UserAdmin::where('type_user', 0)->pluck('name', 'id'));
+                $filter->like('qty_current', 'SL hiện tại');
+                $filter->date('date_start', 'Ngày bắt đầu');
+                $filter->date('date_end', 'Ngày kết thúc');
+                $filter->between('created_at', 'Tạo vào lúc')->datetime();
+            });
             $grid->actions(function ($actions) use ($idSubjects){
                 $actions->disableEdit();
                 $actions->disableDelete();

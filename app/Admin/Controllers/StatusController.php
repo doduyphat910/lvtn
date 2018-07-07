@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Admin\Controllers;
+use App\Admin\Extensions\Subject\AdminMissID;
+use App\Admin\Extensions\Subject\FormID;
 use App\Models\Status;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -74,7 +76,7 @@ class StatusController extends Controller
                 $row->column('number', $row->number);
             });
             $grid->number('STT');
-            $grid->ids('ID')->sortable();
+            $grid->id('ID')->sortable();
             $grid->status('Trạng thái')->sortable();
             $grid->created_at('Tạo vào lúc')->sortable();
             $grid->updated_at('Cập nhật vào lúc')->sortable();
@@ -83,6 +85,10 @@ class StatusController extends Controller
                 $filter->equal('ids', 'ID');
                 $filter->like('status', 'Tên trạng thái');
                 $filter->between('created_at', 'Tạo vào lúc')->datetime();
+            });
+            $grid->actions(function ($actions) {
+//                $actions->disableEdit();
+//                $actions->append('<a href="/admin/student_status/' . $actions->row->id . '/edit"><i class="fa fa-edit" ></i></a>');
             });
         });
     }
@@ -94,9 +100,9 @@ class StatusController extends Controller
      */
     protected function form()
     {
-        return Admin::form(Status::class, function (Form $form) {
+        return AdminMissID::form(Status::class, function (FormID $form) {
 
-            $form->text('ids', 'ID')->help('Chú ý: Nếu ID lớn hơn 5 thì sinh viên không được phép đăng ký')
+            $form->text('id', 'ID')->help('Chú ý: Nếu ID lớn hơn 5 thì sinh viên không được phép đăng ký')
                 ->rules('required|unique:status');
             $form->text('status', 'Tên trạng thái')->rules('required');
             $form->display('created_at', 'Tạo vào lúc');

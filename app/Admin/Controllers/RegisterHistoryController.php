@@ -85,6 +85,7 @@ class RegisterHistoryController extends Controller
                     return '';
                 }
             })->sortable();
+//            $grid->time_register('Đợt ĐK');
             $grid->created_at('Tạo vào lúc')->sortable();
             $grid->updated_at('Cập nhật vào lúc')->sortable();
             $grid->filter(function($filter) {

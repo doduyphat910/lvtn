@@ -78,6 +78,7 @@ class StudentUserController extends Controller
     protected function grid()
     {
         return Admin::grid(StudentUser::class, function (Grid $grid) {
+            $grid->model()->orderBy('created_at', 'DESC');
             $grid->rows(function (Grid\Row $row) {
                 $row->column('number', $row->number);
             });
@@ -100,6 +101,14 @@ class StudentUserController extends Controller
             })->sortable();
             $grid->school_year('Năm nhập học')->sortable();
             $grid->level('Trình độ')->sortable();
+            $grid->id_status('Trạng thái')->display(function ($idStatus){
+                $status = Status::find($idStatus);
+                if(!empty($status->status)){
+                    return $status->status;
+                } else {
+                    return '';
+                }
+            });
             $grid->created_at('Thêm vào lúc')->sortable();
             $grid->updated_at('Cập nhật vào lúc')->sortable();
             //import student
@@ -145,7 +154,7 @@ class StudentUserController extends Controller
             });
 //            $form->image('avatar', 'Avatar');
             $form->select('id_class', 'Lớp')->options(ClassSTU::all()->pluck('name', 'id'))->rules('required');
-            $form->select('id_status', 'Trạng thái')->options(Status::all()->pluck('status', 'ids'))->rules('required');
+            $form->select('id_status', 'Trạng thái')->options(Status::all()->pluck('status', 'id'))->rules('required');
             $form->year('school_year', 'Năm nhập học')->rules('required');
             $form->select('level', 'Trình độ')->options(['CD'=>'Cao đẳng', 'DH'=>'Đại học'])->rules('required');
             $form->display('created_at', 'Thêm vào lúc');
@@ -169,7 +178,7 @@ class StudentUserController extends Controller
             $form->ignore(['password_confirmation']);
             $form->image('avatar', 'Avatar');
             $form->select('id_class', 'Lớp')->options(ClassSTU::all()->pluck('name', 'id'));
-            $form->select('id_status', 'Trạng thái')->options(Status::all()->pluck('status', 'ids'));
+            $form->select('id_status', 'Trạng thái')->options(Status::all()->pluck('status', 'id'));
             $form->year('school_year', 'Năm nhập học');
             $form->select('level', 'Trình độ')->options(['CD'=>'Cao đẳng', 'DH'=>'Đại học']);
             $form->display('created_at', 'Thêm vào lúc');

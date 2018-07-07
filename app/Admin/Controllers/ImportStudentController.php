@@ -72,7 +72,7 @@ class ImportStudentController extends Controller
                         $row_error += 1;
                         $error_logs[$key] = $row['mssv'] .', cột năm nhập học sai dữ liệu';
                     }
-                    $status = Status::all()->pluck('ids')->toArray();
+                    $status = Status::all()->pluck('id')->toArray();
                     if (in_array($row['trang_thai'], $status) == false) {
                         $row_error += 1;
                         $error_logs[$key] = $row['mssv'] .', trạng thái không có trong CSDL';
