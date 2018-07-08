@@ -99,6 +99,15 @@ Route::group([
     //list class (teacher)
     $router->get('teacher/class/{id}/details','TeacherController@details');
     $router->resource('teacher/class',TeacherController::class);
+    //show information of subject register
+    $router->get('teacher/student-information/{id}/detail','InformationRegisterPointController@detail');
+    $router->get('teacher/infomation-timetable/{idTimeRegister}/{idUser}','APIAdminController@studentPoint');
+    $router->get('teacher/infomation-register/{idTimeRegister}/{idUser}','APIAdminController@studentRegister');
+    //show result point
+    $router->get('teacher/point-student/{id}/detail','InformationRegisterPointController@detailPoint');
+    $router->get('teacher/point-result/{id}/{idUser}','APIAdminController@resultPoint');
+
+
     ///list subject-register
     $router->get('teacher/subject-register/{id}/details','TeacherController@detailsSubjectRegister')->middleware('teacher');
 //    $router->get('teacher/list-subject-register/{id}','TeacherController@listSubjectRegister');

@@ -34,6 +34,7 @@ EOT;
             }
 EOT;
             Admin::script($script);
+//            header("Refresh:0");
             $content->header('Trang chủ');
 //            $content->description('Description...');
             $countUserStudent = StudentUser::count();

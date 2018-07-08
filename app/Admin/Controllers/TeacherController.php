@@ -162,12 +162,21 @@ class TeacherController extends Controller
                 $filter->in('level', 'Trình độ')->radio(['CD'=>'Cao đẳng', 'DH'=>'Đại học']);
                 $filter->between('created_at', 'Tạo vào lúc')->datetime();
             });
-            $grid->disableActions();
+//            $grid->disableActions();
+            $grid->actions(function ($actions) {
+                $actions->disableDelete();
+                $actions->disableEdit();
+                $actions->append('<a href="/admin/teacher/student-information/' . $actions->getKey() . '/detail"><i class="fa fa-eye"></i> KQDK | </a>');
+                $actions->append('<a href="/admin/teacher/point-student/' . $actions->getKey() . '/detail"><i class="fa fa-search-plus"></i> Xem điểm</a>');
+
+            });
             $grid->disableCreateButton();
             $grid->disableExport();
             $grid->disableRowSelector();
         });
     }
+
+
 
     /**
      * Make a form builder.

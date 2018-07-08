@@ -45,7 +45,7 @@ class PointSubjectController extends Controller
         return User::content(function (ContentUser $content) {
 
             $content->header('Điểm');
-            $content->description('Danh sách môn học');
+            $content->description('Danh sách điểm');
             $content->breadcrumb(
                 ['text' => 'Điểm', 'url' => '../user/point-subject']
             );
@@ -62,7 +62,6 @@ class PointSubjectController extends Controller
     {
         return User::GridUser(ResultRegister::class, function (GridUser $grid) {
             $user = Auth::user();
-            // $timeRegister = TimeRegister::orderBy('id', 'DESC')->first();
             $grid->model()->where('id_user_student', $user->id)->orderBy('time_register', 'DESC');
             $grid->column('Mã MH')->display(function(){
                 $subjetRegister = Subjects::find($this->id_subject);
