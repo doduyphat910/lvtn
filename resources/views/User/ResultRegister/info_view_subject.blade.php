@@ -44,10 +44,12 @@ $arrPeriods = collect($arrPeriods)->map(function($x){ return (array) $x; })->toA
 
 
 ?>
-
+{{-- <style type="text/css">
+    
+</style> --}}
 <div class="row">
     <div class="col-sm-8">
-        <h1 class="text-center" style="font-weight: bold;font-family: Times New Roman;">Thời Khóa Biểu</h1>
+        <h1 class="text-center indam" >Thời Khóa Biểu</h1>
 <table class="table table-bordered">
     <thead>
     <tr>
@@ -121,14 +123,14 @@ $arrPeriods = collect($arrPeriods)->map(function($x){ return (array) $x; })->toA
 </table>
     </div>
     <div class="col-sm-4">
-         <h1 class="text-center" style="font-weight: bold;font-family: Times New Roman;">Ghi Chú</h1>
+         <h1 class="text-center note">Ghi Chú</h1>
         <ul class="list-unstyled text-center">
             <?php
                 $i=0;
                 foreach ($arrPeriods as $key => $valuePriods ){
                     //$valuePriods['time_start']." ".$valuePriods['time_end'];
             ?>
-            <li style="font-size: 20px;font-weight: bold;font-family: Times New Roman;" > <?php echo "Tiết ". ($key + 1) . ": " .$valuePriods['time_start']." - ".$valuePriods['time_end'];?></li>
+            <li class="notetime"> <?php echo "Tiết ". ($key + 1) . ": " .$valuePriods['time_start']." - ".$valuePriods['time_end'];?></li>
             <?php
                 }
             ?>
@@ -147,6 +149,7 @@ $arrPeriods = collect($arrPeriods)->map(function($x){ return (array) $x; })->toA
         border-top: 1px solid #000 !important;
         width: 200px;
     }
+    
 </style>
 {{-- <script type="text/javascript">
     $(".data").hover(function () {

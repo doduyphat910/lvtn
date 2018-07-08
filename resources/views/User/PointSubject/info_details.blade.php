@@ -15,8 +15,10 @@
                     <div class="tab-pane active" id="tab-form-1" >
                             <div class="gridPointAll">
                                 @include('user.PointSubject.table_point_all')
+                               
                             </div>
                             @include('user.PointSubject.table_subject_register')
+
                     </div>
                 </div>
             </div>

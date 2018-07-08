@@ -89,6 +89,23 @@
         border: 1px solid #d2d6de;
         border-radius: 0;
     }
+    .indam{
+        font-weight: bold;
+        font-family: Times New Roman;
+    }
+    .note{
+        font-weight: bold;
+        font-family: Times New Roman;
+    }
+    .notetime{
+        font-size: 20px;
+        font-weight: bold;
+        font-family: Times New Roman;
+    }
+    .colorth{
+        background-color: #3c8dbc;
+        color: white;
+    }
 </style>
 </head>
 

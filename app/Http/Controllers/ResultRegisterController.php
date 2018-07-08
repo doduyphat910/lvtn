@@ -42,7 +42,7 @@ class ResultRegisterController extends Controller
     {
         return User::content(function (ContentUser $content) {
 
-            $content->header('Đăng ký môn học');
+            $content->header('Kết quả đăng ký môn học');
             $content->description('Danh sách môn học');
             $content->breadcrumb(
                 ['text' => 'Đăng kí môn học', 'url' => '../user/result-register']

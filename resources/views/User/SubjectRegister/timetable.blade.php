@@ -1,4 +1,4 @@
-<?php
+{{-- <?php
 $arrDay = ["Thứ 2", "Thứ 2", "Thứ 2", "Thứ 2", "Thứ 2", "Thứ 2", "Thứ 2", "Thứ 2"];
 $arrTietHoc = [
     ["start" => '6:30', 'end' => '7:15'],
@@ -62,3 +62,4 @@ $monhoc = [
     ?>
     </tbody>
 </table>
+ --}}
