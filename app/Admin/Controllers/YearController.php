@@ -122,8 +122,8 @@ class YearController extends Controller
             $grid->id_year('Tên năm')->display(function ($idyear) {
                 return Year::find($idyear)->name;
             });
-            $grid->time_start('Thời gian bắt đầu');
-            $grid->time_end('Thời gian kết thúc');
+//            $grid->time_start('Thời gian bắt đầu');
+//            $grid->time_end('Thời gian kết thúc');
             $grid->actions(function ($actions) {
                 $actions->disableEdit();
                 $actions->disableDelete();

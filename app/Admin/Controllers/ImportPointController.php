@@ -77,13 +77,11 @@ class ImportPointController extends Controller
         $row_add_successs = 0;
         $error_logs = [];
         foreach($data as $key => $row) {
-            if($row['diem_chuyen_can'] != 0)
-            {
-                if (empty($row ['mssv']) ||  empty($row ['diem_chuyen_can']) ) {
+                if (empty($row ['mssv']) ||  (empty($row ['diem_chuyen_can'])&& $row ['diem_chuyen_can'] != 0) ) {
                     $row_error += 1;
                     $error_logs[$key] = $row['mssv'] . ' trống dữ liệu';
                 }
-            } else {
+             else {
                 $idUserSubject = ResultRegister::where('id_subject_register', $idSubjectRegister)->pluck('id_user_student');
                 $arrCodeStudent = StudentUser::find($idUserSubject)->pluck('code_number')->toArray();
                 if (!in_array($row['mssv'], $arrCodeStudent)) {
@@ -248,13 +246,16 @@ class ImportPointController extends Controller
         $row_add_successs = 0;
         $error_logs = [];
         foreach($data as $key => $row) {
-            if($row['diem_giua_ki'] != 0){
-                if (empty($row ['mssv']) ||  empty($row ['diem_giua_ki']) ) {
+                if (empty($row ['mssv']) ||  (empty($row ['diem_giua_ki'])&& $row ['diem_giua_ki'] != 0) ) {
                 $row_error += 1;
                 $error_logs[$key] = $row['mssv'] . ' trống dữ liệu';
                 }
-            } else {
+             else {
                 $idUserSubject = ResultRegister::where('id_subject_register', $idSubjectRegister)->pluck('id_user_student');
+                if(!$idUserSubject) {
+                    $row_error += 1;
+                    $error_logs[$key] = $row['mssv'] .', không tồn tại';
+                }
                 $arrCodeStudent = StudentUser::find($idUserSubject)->pluck('code_number')->toArray();
                 if (!in_array($row['mssv'], $arrCodeStudent)) {
                     $row_error += 1;
@@ -286,7 +287,7 @@ class ImportPointController extends Controller
         $subjectRegister = SubjectRegister::find($idSubjectRegister);
         $codeSubjectRegister = $subjectRegister->id;
         return Admin::content(function (Content $content) use ($row_error, $error_logs, $row_add_successs, $codeSubjectRegister) {
-            $content->header('Điểm chuyên cần');
+            $content->header('Điểm giữa kì');
             $content->description('Import '. $codeSubjectRegister);
             $content->body(view('admin.ImportPoint.import_parse',
                 [
@@ -420,12 +421,11 @@ class ImportPointController extends Controller
         $row_add_successs = 0;
         $error_logs = [];
         foreach($data as $key => $row) {
-            if($row['diem_cuoi_ki'] != 0) {
-                if (empty($row ['mssv']) || empty($row ['diem_cuoi_ki'])) {
+                if (empty($row ['mssv']) || (empty($row ['diem_cuoi_ki'])&& $row ['diem_cuoi_ki'] != 0)) {
                     $row_error += 1;
                     $error_logs[$key] = $row['mssv'] . ' trống dữ liệu';
                 }
-            } else {
+             else {
                 $idUserSubject = ResultRegister::where('id_subject_register', $idSubjectRegister)->pluck('id_user_student');
                 $arrCodeStudent = StudentUser::find($idUserSubject)->pluck('code_number')->toArray();
                 if (!in_array($row['mssv'], $arrCodeStudent)) {
@@ -602,12 +602,13 @@ class ImportPointController extends Controller
         $row_add_successs = 0;
         $error_logs = [];
         foreach($data as $key => $row) {
-            if($row ['diem_chuyen_can'] != 0 && $row ['diem_giua_ki'] != 0 && $row ['diem_cuoi_ki'] != 0 ) {
-                if (empty($row ['mssv'])||  empty($row ['diem_chuyen_can']) ||  empty($row ['diem_giua_ki']) ||   empty($row ['diem_cuoi_ki']) ) {
+                if (empty($row ['mssv'])||  (empty($row ['diem_chuyen_can'])&& $row ['diem_chuyen_can'] != 0) ||
+                    (empty($row ['diem_giua_ki'])&& $row ['diem_giua_ki'] != 0) ||
+                    (empty($row ['diem_cuoi_ki'])&& $row ['diem_cuoi_ki'] != 0) ) {
                     $row_error += 1;
                     $error_logs[$key] = $row['mssv'] . ' trống dữ liệu';
                 }
-            } else {
+             else {
                 $idUserSubject = ResultRegister::where('id_subject_register', $idSubjectRegister)->pluck('id_user_student');
                 $arrCodeStudent = StudentUser::find($idUserSubject)->pluck('code_number')->toArray();
                 if (!in_array($row['mssv'], $arrCodeStudent)) {

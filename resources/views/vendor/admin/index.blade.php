@@ -38,7 +38,12 @@
     <![endif]-->
 
 </head>
+<style>
+    /*.fa-fw {*/
+        /*color: white;*/
+    /*}*/
 
+</style>
 <body class="hold-transition {{config('admin.skin')}} {{join(' ', config('admin.layout'))}}">
 <div class="wrapper">
 
@@ -73,6 +78,13 @@
 </body>
 <style>
     body {
+        font-family: "Times New Roman";
+    }
+    .fontchuindam{
+        font-family: "Times New Roman";
+        font-weight: bold;
+    }
+    .sweet-alert h2{
         font-family: "Times New Roman";
     }
 </style>

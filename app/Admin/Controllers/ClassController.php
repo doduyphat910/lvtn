@@ -117,28 +117,42 @@ class ClassController extends Controller
     {
         return Admin::grid(StudentUser::class, function (Grid $grid) use ($idClass) {
             $grid->model()->where('id_class', $idClass);
-            $grid->id('ID')->sortable();
+            $grid->rows(function (Grid\Row $row) {
+                $row->column('number', $row->number);
+            });
+            $grid->number('STT');
+//            $grid->id('ID')->sortable();
 //            $grid->avatar('Avatar')->image();
-            $grid->first_name('Họ');
+            $grid->code_number('Mã số sinh viên')->sortable();
+            $grid->first_name('Họ')->sortable();
             $grid->last_name('Tên')->display(function ($name){
                 return  '<a href="/admin/student_user/' . $this->id . '/details">'.$name.'</a>';
-            });
-            $grid->code_number('Mã số sinh viên');
-            $grid->email('Email');
+            })->sortable();
+            $grid->email('Email')->sortable();
             $grid->id_class('Lớp')->display(function ($idClass){
                 if($idClass){
                     return ClassSTU::find($idClass)->name;
                 } else {
                     return 'Không có';
                 }
-            });
-            $grid->school_year('Năm nhập học');
-            $grid->level('Trình độ');
-            $grid->created_at('Thêm vào lúc');
-            $grid->updated_at('Cập nhật vào lúc');
+            })->sortable();
+            $grid->school_year('Năm nhập học')->sortable();
+            $grid->level('Trình độ')->sortable();
+            $grid->created_at('Thêm vào lúc')->sortable();
+            $grid->updated_at('Cập nhật vào lúc')->sortable();
             //import student
-            $grid->tools(function ($tools) {
-                $tools->append("<a href='/admin/import_student' class='btn btn-info btn-sm '><i class='fa fa-sign-in'></i> Import DS sinh viên</a>");
+//            $grid->tools(function ($tools) {
+//                $tools->append("<a href='/admin/import_student' class='btn btn-info btn-sm '><i class='fa fa-sign-in'></i> Import DS sinh viên</a>");
+//            });
+            $grid->filter(function ($filter){
+                $filter->disableIdFilter();
+                $filter->like('code_number', 'MSSV');
+                $filter->like('first_name', 'Họ');
+                $filter->like('last_name', 'Tên');
+                $filter->like('email', 'Email');
+                $filter->equal('school_year', 'Năm nhập học')->year();
+                $filter->in('level', 'Trình độ')->radio(['CD'=>'Cao đẳng', 'DH'=>'Đại học']);
+                $filter->between('created_at', 'Tạo vào lúc')->datetime();
             });
             $grid->disableCreateButton();
             $grid->disableExport();

@@ -81,6 +81,7 @@ class TeacherController extends Controller
     protected function grid()
     {
         return Admin::grid(ClassSTU::class, function (Grid $grid) {
+            $grid->model()->orderBy('created_at', 'DESC');
             $user = Admin::user();
             $idUser = $user->id;
             $grid->model()->where('id_user_teacher', $idUser);
@@ -104,8 +105,8 @@ class TeacherController extends Controller
                 $actions->disableDelete();
                 $actions->append('<a href="/admin/teacher/class/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
             });
-            $grid->created_at('Tạo vào lúc')->sortable();
-            $grid->updated_at('Cập nhật vào lúc')->sortable();
+//            $grid->created_at('Tạo vào lúc')->sortable();
+//            $grid->updated_at('Cập nhật vào lúc')->sortable();
             $grid->filter(function ($filter){
                 $filter->disableIdFilter();
                 $filter->like('name', 'Tên');
@@ -122,26 +123,31 @@ class TeacherController extends Controller
     {
         return Admin::grid(StudentUser::class, function (Grid $grid) use ($idClass) {
             $grid->model()->where('id_class', $idClass);
-//            $grid->id('ID')->sortable();
-            $grid->code_number('Mã số sinh viên');
-//            $grid->avatar('Avatar')->image();
-            $grid->first_name('Họ');
-            $grid->last_name('Tên')->display(function ($name) {
-                return '<a href="/admin/student_user/' . $this->id . '/details">' . $name . '</a>';
+            $grid->rows(function (Grid\Row $row) {
+                $row->column('number', $row->number);
             });
+            $grid->number('STT');
+//            $grid->id('ID')->sortable();
+            $grid->code_number('Mã số sinh viên')->sortable();
+//            $grid->avatar('Avatar')->image();
+            $grid->first_name('Họ')->sortable();
+//            $grid->last_name('Tên')->display(function ($name) {
+//                return '<a href="/admin/student_user/' . $this->id . '/details">' . $name . '</a>';
+//            });
+            $grid->last_name('Tên')->sortable();
 //            $grid->username('Tên đăng nhập');
-            $grid->email('Email');
+            $grid->email('Email')->sortable();
             $grid->id_class('Lớp')->display(function ($idClass) {
                 if ($idClass) {
                     return ClassSTU::find($idClass)->name;
                 } else {
                     return 'Không có';
                 }
-            });
-            $grid->school_year('Năm nhập học');
-            $grid->level('Trình độ');
-            $grid->created_at('Thêm vào lúc');
-            $grid->updated_at('Cập nhật vào lúc');
+            })->sortable();
+            $grid->school_year('Năm nhập học')->sortable();
+            $grid->level('Trình độ')->sortable();
+//            $grid->created_at('Thêm vào lúc');
+//            $grid->updated_at('Cập nhật vào lúc');
             //import student
 //            $grid->tools(function ($tools) {
 //                $tools->append("<a href='/admin/import_student' class='btn btn-info btn-sm '><i class='fa fa-sign-in'></i> Import DS sinh viên</a>");
@@ -156,12 +162,21 @@ class TeacherController extends Controller
                 $filter->in('level', 'Trình độ')->radio(['CD'=>'Cao đẳng', 'DH'=>'Đại học']);
                 $filter->between('created_at', 'Tạo vào lúc')->datetime();
             });
-            $grid->disableActions();
+//            $grid->disableActions();
+            $grid->actions(function ($actions) {
+                $actions->disableDelete();
+                $actions->disableEdit();
+                $actions->append('<a href="/admin/teacher/student-information/' . $actions->getKey() . '/detail"><i class="fa fa-eye"></i> KQDK | </a>');
+                $actions->append('<a href="/admin/teacher/point-student/' . $actions->getKey() . '/detail"><i class="fa fa-search-plus"></i> Xem điểm</a>');
+
+            });
             $grid->disableCreateButton();
             $grid->disableExport();
             $grid->disableRowSelector();
         });
     }
+
+
 
     /**
      * Make a form builder.
@@ -271,7 +286,7 @@ class TeacherController extends Controller
                     return "<span class='label label-success'>{$classRoom}</span>";
                 }, $classRoom);
                 return join('&nbsp;', $classRoom);
-            })->sortable();
+            });
             $grid->column('Buổi học')->display(function () {
                 $day = TimeStudy::where('id_subject_register', $this->id)->pluck('day')->toArray();
                 $day = array_map(function ($day) {
@@ -301,7 +316,7 @@ class TeacherController extends Controller
                     return "<span class='label label-success'>{$day}</span>";
                 }, $day);
                 return join('&nbsp;', $day);
-            })->sortable();
+            });
             $grid->column('Thời gian học')->display(function () {
                 $timeStart = TimeStudy::where('id_subject_register', $this->id)->pluck('time_study_start')->toArray();
                 $timeEnd = TimeStudy::where('id_subject_register', $this->id)->pluck('time_study_end')->toArray();
@@ -309,7 +324,7 @@ class TeacherController extends Controller
                     return "<span class='label label-success'>{$timeStart} - {$timeEnd}</span>";
                 }, $timeStart, $timeEnd);
                 return join('&nbsp;', $time);
-            })->sortable();
+            });
             $grid->id_user_teacher('Giảng viên')->display(function ($id_user_teacher) {
                 if ($id_user_teacher) {
                     $teacher = UserAdmin::find($id_user_teacher);
@@ -321,15 +336,15 @@ class TeacherController extends Controller
                 } else {
                     return '';
                 }
-            })->sortable();
+            });
             $grid->qty_current('Số lượng hiện tại')->sortable();
 //            $grid->qty_min('Số lượng tối thiểu');
 //            $grid->qty_max('Số lượng tối đa');
 
             $grid->date_start('Ngày bắt đầu')->sortable();
             $grid->date_end('Ngày kết thúc')->sortable();
-            $grid->created_at('Tạo vào lúc')->sortable();
-            $grid->updated_at('Cập nhật vào lúc')->sortable();
+//            $grid->created_at('Tạo vào lúc')->sortable();
+//            $grid->updated_at('Cập nhật vào lúc')->sortable();
 
             //action
             $grid->actions(function ($actions) {
@@ -430,7 +445,7 @@ EOT;
                 $row->column('number', $row->number);
             });
             $grid->number('STT');
-            $grid->column('MSSV')->display(function () {
+            $grid->id_user_student('MSSV')->display(function () {
                 if (StudentUser::find($this->id_user_student)->code_number) {
                     return StudentUser::find($this->id_user_student)->code_number;
                 } else {
@@ -443,14 +458,14 @@ EOT;
                 } else {
                     return '';
                 }
-            })->sortable();
-            $grid->id_user_student('Tên')->display(function ($idStudent) {
-                if (StudentUser::find($idStudent)->last_name) {
-                    return StudentUser::find($idStudent)->last_name;
+            });
+            $grid->column('Tên')->display(function () {
+                if (StudentUser::find($this->id_user_student)->last_name) {
+                    return StudentUser::find($this->id_user_student)->last_name;
                 } else {
                     return '';
                 }
-            })->sortable();
+            });
             $grid->id_subject_register('Mã HP')->display(function ($idSubjectRegister) {
                 if (SubjectRegister::find($idSubjectRegister)->id) {
                     return SubjectRegister::find($idSubjectRegister)->id;
@@ -464,7 +479,7 @@ EOT;
                 } else {
                     return '';
                 }
-            })->sortable();
+            });
 //            $grid->time_register('Đợt đăng kí')->display(function ($timeRegister){
 //                if(TimeRegister::find($timeRegister)->name) {
 //                    return TimeRegister::find($timeRegister)->name;
@@ -476,7 +491,7 @@ EOT;
                 $idClass = StudentUser::find($this->id_user_student)->id_class;
                 $name = ClassSTU::find($idClass)->name;
                 return "<span class='label label-info'>{$name}</span>";
-            })->sortable();
+            });
             $grid->attendance('Điểm chuyên cần')->sortable();
                 $grid->mid_term('Điểm giữa kì')->sortable();
                 $grid->end_term('Điểm cuối kì')->sortable();
@@ -575,6 +590,11 @@ EOT;
                 $filter->disableIdFilter();
                 $filter->where(function ($query){
                     $input = $this->input;
+                    $idUser = StudentUser::where('code_number','like', '%'.$input.'%')->pluck('id')->toArray();
+                    $query->whereIn('id_user_student', $idUser);
+                }, 'MSSV');
+                $filter->where(function ($query){
+                    $input = $this->input;
                     $idUser = StudentUser::where('first_name','like', '%'.$input.'%')->pluck('id')->toArray();
                     $query->whereIn('id_user_student', $idUser);
                 }, 'Họ SV');
@@ -588,6 +608,30 @@ EOT;
                     $idUser = StudentUser::where('id_class', $input)->pluck('id')->toArray();
                     $query->whereIn('id_user_student', $idUser);
                 }, 'Lớp')->select(ClassSTU::all()->pluck('name','id'));
+                $filter->where(function ($query) use ($idSubjectRegister) {
+                    $input = $this->input;
+                    $idResultRegister = ResultRegister::where('attendance',$input)->where('id_subject_register',$idSubjectRegister)
+                        ->pluck('id')->toArray();
+                    $query->whereIn('id', $idResultRegister);
+                }, 'Điểm CC');
+                $filter->where(function ($query) use ($idSubjectRegister) {
+                    $input = $this->input;
+                    $idResultRegister = ResultRegister::where('mid_term',$input)->where('id_subject_register',$idSubjectRegister)
+                        ->pluck('id')->toArray();
+                    $query->whereIn('id', $idResultRegister);
+                }, 'Điểm GK');
+                $filter->where(function ($query) use ($idSubjectRegister) {
+                    $input = $this->input;
+                    $idResultRegister = ResultRegister::where('end_term',$input)->where('id_subject_register',$idSubjectRegister)
+                        ->pluck('id')->toArray();
+                    $query->whereIn('id', $idResultRegister);
+                }, 'Điểm CK');
+                $filter->where(function ($query) use ($idSubjectRegister) {
+                    $input = $this->input;
+                    $idFinal = ResultRegister::whereRaw("((attendance *rate_attendance)+(mid_term*rate_mid_term)+(end_term*rate_end_term))/100 = ".$input)
+                        ->pluck('id')->toArray();
+                    $query->whereIn('id', $idFinal);
+                }, 'Điểm TK');
 //                $filter->in('time_register', 'Đợt ĐK')->select(TimeRegister::all()->pluck('name','id'));
 //                $filter->between('created_at', 'Tạo vào lúc')->datetime();
             });

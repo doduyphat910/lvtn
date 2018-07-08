@@ -190,8 +190,12 @@ class SubjectsController extends Controller
                 $semesters = Semester::all()->toArray();
                 $optionSemesters = [];
                 foreach($semesters as $semester) {
-                    $nameYear = Year::where('id', $semester['id_year'])->first();
-//                    $optionSemesters += [$semester['id'] => 'Học kỳ '. $semester['name']. ' - ' . $nameYear->name];
+                    if($semester['name'] == 0) {
+                        $optionSemesters += [$semester['id'] => 'Học kỳ hè'];
+                    } else {
+                        $nameYear = Year::where('id', $semester['id_year'])->first();
+                        $optionSemesters += [$semester['id'] => 'Học kỳ '. $semester['name']. ' - ' . $nameYear->name];
+                    }
                 }
                 $filter->where(function ($query){
                     $input = $this->input;

@@ -164,15 +164,45 @@ class SubjectGroupController extends Controller
                 $arraySemester = $subject->semester()->pluck('id')->toArray();
                 $name = array_map( function ($arraySemester){
                     $nameSemester = Semester::find($arraySemester)->name;
-                    $year = Semester::find($arraySemester)->year()->get();
-                    $nameYear = $year['0']->name;
-                    if($year['0']->id % 2 == 0){
-                        return "<span class='label label-info'>Học kỳ {$nameSemester} - {$nameYear}</span>"  ;
+                    switch ($nameSemester) {
+                        case 0:
+                            $nameSemester = 'Học kỳ hè';
+                            break;
+                        case 1:
+                            $nameSemester = 'Học kỳ 1';
+                            break;
+                        case 2:
+                            $nameSemester = 'Học kỳ 2';
+                            break;
+                        default:
+                            $nameSemester = '';
+                            break;
+                    }
+//                    $year = Semester::find($arraySemester)->year()->get();
+                    $year = Semester::find($arraySemester)->year()->first();
+                    if(!empty($year)) {
+                        $nameYear = $year->name;
+
                     } else {
-                        return "<span class='label label-success'>Học kỳ {$nameSemester} - {$nameYear}</span>"  ;
+                        $nameYear = '';
+                    }
+//                    $nameYear = $year['0']->name;
+                    if(substr($nameYear,4,5) % 2 == 0){
+                        if($nameSemester == 'Học kỳ hè') {
+                            return  "<span class='label label-primary'>$nameSemester</span>"  ;
+                        } else {
+                            return "<span class='label label-info'>{$nameSemester} - {$nameYear}</span>"  ;
+                        }
+                    } else {
+                        if($nameSemester == 'Học kỳ hè') {
+                            return  "<span class='label label-primary'>$nameSemester</span>"  ;
+                        } else {
+                            return "<span class='label label-success'>{$nameSemester} - {$nameYear}</span>";
+                        }
                     }
                 }, $arraySemester);
-                return join('&nbsp;', $name);})->sortable();
+                return join('&nbsp;', $name);
+            });
             $grid->column('Nhóm môn')->display(function () {
                 $subject = Subjects::find($this->id);
                 $nameGroup = $subject->subject_group()->pluck('name')->toArray();
@@ -229,8 +259,12 @@ class SubjectGroupController extends Controller
                 $semesters = Semester::all()->toArray();
                 $optionSemesters = [];
                 foreach($semesters as $semester) {
-                    $nameYear = Year::where('id', $semester['id_year'])->first();
-                    $optionSemesters += [$semester['id'] => 'Học kỳ '. $semester['name']. ' - ' . $nameYear->name];
+                    if($semester['name'] == 0) {
+                        $optionSemesters += [$semester['id'] => 'Học kỳ hè'];
+                    } else {
+                        $nameYear = Year::where('id', $semester['id_year'])->first();
+                        $optionSemesters += [$semester['id'] => 'Học kỳ '. $semester['name']. ' - ' . $nameYear->name];
+                    }
                 }
                 $filter->where(function ($query){
                     $input = $this->input;

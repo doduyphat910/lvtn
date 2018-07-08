@@ -2,9 +2,9 @@
 
 @section('content')
     <section class="content-header">
-        <h1>
+        <h1 class="fontchuindam">
             {{ $header or trans('admin.title') }}
-            <small>{{ $description or trans('admin.description') }}</small>
+            <small class="fontchuindam">{{ $description or trans('admin.description') }}</small>
         </h1>
 
         <!-- breadcrumb start -->

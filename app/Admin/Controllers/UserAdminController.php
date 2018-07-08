@@ -117,7 +117,10 @@ class UserAdminController extends UserController
             $grid->updated_at(trans('admin.updated_at'))->sortable();
 
             $grid->actions(function (Grid\Displayers\Actions $actions) {
-                if ($actions->getKey() == 1) {
+                $user = UserAdmin::find($actions->getKey());
+                $roleUser = $user->roles()->first();
+                $role = $roleUser->slug;
+                if ($role == "administrator") {
                     $actions->disableDelete();
                 }
             });
