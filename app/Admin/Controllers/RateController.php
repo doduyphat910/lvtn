@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Admin\Controllers;
+use App\Admin\Extensions\ModelFormCustom;
 use App\Models\Rate;
 
 use App\Models\Semester;
@@ -17,7 +18,7 @@ use Illuminate\Support\MessageBag;
 
 class RateController extends Controller
 {
-    use ModelForm;
+    use ModelFormCustom;
 
     /**
      * Index interface.

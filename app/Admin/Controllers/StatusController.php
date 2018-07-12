@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Admin\Controllers;
+use App\Admin\Extensions\ModelFormCustom;
 use App\Admin\Extensions\Subject\AdminMissID;
 use App\Admin\Extensions\Subject\FormID;
 use App\Models\Status;
@@ -13,7 +14,7 @@ use Encore\Admin\Controllers\ModelForm;
 
 class StatusController extends Controller
 {
-    use ModelForm;
+    use ModelFormCustom;
 
     /**
      * Index interface.

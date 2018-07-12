@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Extensions\ModelFormCustom;
 use App\Admin\Extensions\Subject\AdminMissID;
 use App\Admin\Extensions\Subject\FormID;
 use App\Models\Classroom;
@@ -24,7 +25,7 @@ use App\Models\SubjectGroup;
 
 class SubjectsController extends Controller
 {
-    use ModelForm;
+    use ModelFormCustom;
 
     /**
      * Index interface.

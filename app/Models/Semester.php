@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\SemesterSubject;
 class Semester extends Model
 {
-    use SoftDeletes;
+//    use SoftDeletes;
 
     protected $table = 'semester';
 

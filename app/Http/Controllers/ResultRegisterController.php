@@ -170,7 +170,7 @@ class ResultRegisterController extends Controller
             $grid->column('Ngày bắt đầu')->display(function (){
                 $idSubjectRegister = $this->id_subject_register;
                 $subjectRegister = SubjectRegister::find($idSubjectRegister);
-                if($subjectRegister->date_start){
+                if(!empty($subjectRegister->date_start)){
                     return $subjectRegister->date_start;
                 } else {
                     return '';
@@ -179,16 +179,12 @@ class ResultRegisterController extends Controller
             $grid->column('Ngày kết thúc')->display(function (){
                 $idSubjectRegister = $this->id_subject_register;
                 $subjectRegister = SubjectRegister::find($idSubjectRegister);
-                if($subjectRegister->date_end){
+                if(!empty($subjectRegister->date_end)){
                     return $subjectRegister->date_end;
                 } else {
                     return '';
                 }
             });
-                // $grid->qty_current('Số lượng hiện tại');
-                // $grid->qty_max('Số lượng tối đa');
-                // $grid->date_start('Ngày bắt đầu');
-                // $grid->date_end('Ngày kết thúc');
 
             $grid->disableExport();
             $grid->disableCreation();

@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Extensions\ModelFormCustom;
 use App\Models\Classroom;
 use App\Models\Rate;
 use App\Models\Semester;
@@ -23,7 +24,7 @@ use Illuminate\Support\MessageBag;
 
 class SemesterController extends Controller
 {
-    use ModelForm;
+    use ModelFormCustom;
 
     /**
      * Index interface.
@@ -36,7 +37,13 @@ class SemesterController extends Controller
 
             $content->header('Năm, học kỳ');
             $content->description('Danh sách học kỳ');
-
+            $script = <<<EOT
+            if (location.href.indexOf('reload')==-1)
+            {
+               location.href=location.href+'?reload';
+            }
+EOT;
+            Admin::script($script);
             $content->body($this->grid());
         });
     }

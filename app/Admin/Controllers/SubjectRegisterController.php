@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Extensions\ModelFormCustom;
 use App\Admin\Extensions\Subject\AdminMissID;
 use App\Admin\Extensions\Subject\FormID;
 use App\Models\Classroom;
@@ -26,7 +27,7 @@ use Illuminate\Support\MessageBag;
 
 class SubjectRegisterController extends Controller
 {
-    use ModelForm;
+    use ModelFormCustom;
 
     /**
      * Index interface.
@@ -39,7 +40,13 @@ class SubjectRegisterController extends Controller
 
             $content->header('Học phần');
             $content->description('Danh sách học phần');
-
+            $script = <<<EOT
+            if (location.href.indexOf('reload')==-1)
+            {
+               location.href=location.href+'?reload';
+            }
+EOT;
+            Admin::script($script);
             $content->body($this->grid());
         });
     }
@@ -251,12 +258,12 @@ EOT;
                 $form->select('time_study_start', 'Giờ học bắt đầu')->options($timeStart);
                 $form->select('time_study_end', 'Giờ học kết thúc')->options($timeEnd);
             })->rules('required');
-            $form->hidden('id_semester');
+//            $form->hidden('id_semester');
             $form->saving(function (Form $form){
                 //add more semester
-                $subject = Subjects::find($form->id_subjects);
-                $idSemester = $subject->semester()->pluck('id')->toArray();
-                $form->id_semester = $idSemester['0'] ;
+//                $subject = Subjects::find($form->id_subjects);
+//                $idSemester = $subject->semester()->pluck('id')->toArray();
+//                $form->id_semester = $idSemester['0'] ;
                 //check time study
                 if($form->time_study) {
                     foreach($form->time_study as $timeStudy) {

@@ -164,7 +164,7 @@ class SubjectRegisterController extends Controller
             $grid->column('Đăng ký')->display(function () {
                 return '<a href="/user/subject-register/' . $this->id . '/details" data-id='.$this->id.' class="btn btn-md"  target="_blank" ><i class="fa fa-pencil fa-fw fa-1x"></i></a>';
             });
-                       $grid->filter(function($filter){
+            $grid->filter(function($filter){
                 $filter->disableIdFilter();
                 $filter->like('id', 'Mã môn học');
                 $filter->like('name', 'Tên môn học');

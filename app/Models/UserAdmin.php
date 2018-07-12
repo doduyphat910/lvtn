@@ -16,7 +16,7 @@ class UserAdmin extends Model implements AuthenticatableContract
     use Authenticatable, AdminBuilder, HasPermissions;
 
     protected $fillable = ['email', 'id_class', 'type_user', 'username', 'password', 'name', 'avatar'];
-    use SoftDeletes;
+//    use SoftDeletes;
 
 //    protected $table = 'student_user';
 

@@ -84,7 +84,7 @@ class StudentUserController extends Controller
             });
             $grid->number('STT');
 //            $grid->id('ID')->sortable();
-//            $grid->avatar('Avatar')->image();
+            $grid->avatar('Avatar')->image();
             $grid->code_number('Mã số sinh viên')->sortable();
             $grid->first_name('Họ')->sortable();
             $grid->last_name('Tên')->display(function ($name){
@@ -94,7 +94,11 @@ class StudentUserController extends Controller
             $grid->email('Email');
             $grid->id_class('Lớp')->display(function ($idClass){
                 if($idClass){
-                    return ClassSTU::find($idClass)->name;
+                    if( ClassSTU::find($idClass)) {
+                        return ClassSTU::find($idClass)->name;
+                    } else {
+                        return '';
+                    }
                 } else {
                     return 'Không có';
                 }
@@ -152,7 +156,7 @@ class StudentUserController extends Controller
             $form->saving(function (Form $form) {
                 $form->password = $form->code_number;
             });
-//            $form->image('avatar', 'Avatar');
+            $form->image('avatar', 'Avatar');
             $form->select('id_class', 'Lớp')->options(ClassSTU::all()->pluck('name', 'id'))->rules('required');
             $form->select('id_status', 'Trạng thái')->options(Status::all()->pluck('status', 'id'))->rules('required');
             $form->year('school_year', 'Năm nhập học')->rules('required');

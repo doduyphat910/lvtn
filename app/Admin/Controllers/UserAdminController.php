@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Extensions\ModelFormCustom;
 use App\Models\ClassSTU;
 use App\Models\UserAdmin;
 use App\Models\SubjectGroup;
@@ -19,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 
 class UserAdminController extends UserController
 {
-    use ModelForm;
+    use ModelFormCustom;
 
     /**
      * Index interface.
@@ -119,10 +120,14 @@ class UserAdminController extends UserController
             $grid->actions(function (Grid\Displayers\Actions $actions) {
                 $user = UserAdmin::find($actions->getKey());
                 $roleUser = $user->roles()->first();
-                $role = $roleUser->slug;
-                if ($role == "administrator") {
-                    $actions->disableDelete();
+//                $role = ;
+                if(!empty($roleUser->slug)) {
+                    $role = $roleUser->slug;
+                    if ($role == "administrator") {
+                        $actions->disableDelete();
+                    }
                 }
+
             });
 
             $grid->tools(function (Grid\Tools $tools) {
@@ -199,7 +204,7 @@ EOT;
 //                ->setElementClass('id_class');
             $form->multipleSelect('roles', trans('admin.roles'))->options(Role::all()->pluck('name', 'id'));
             $form->multipleSelect('permissions', trans('admin.permissions'))->options(Permission::all()->pluck('name', 'id'));
-            $form->hidden('code_number');
+//            $form->hidden('code_number');
             $form->display('created_at', trans('admin.created_at'));
             $form->display('updated_at', trans('admin.updated_at'));
 //            $form->saving(function (Form $form) {

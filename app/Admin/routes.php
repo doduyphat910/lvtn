@@ -88,6 +88,10 @@ Route::group([
     //subject-register history
     $router->resource('history-subject-register', RegisterHistoryController::class);
 
+    //comment
+    $router->get('comment/{id}/details', 'CommentController@details');
+    $router->resource('comment', CommentController::class);
+
     //router teacher
     //point
     $router->resource('teacher/point',PointController::class);
