@@ -39,7 +39,7 @@ class TimeRegisterController extends Controller
                location.href=location.href+'?reload';
             }
 EOT;
-            Admin::script($script);
+//            Admin::script($script);
             $content->body($this->grid());
         });
     }
