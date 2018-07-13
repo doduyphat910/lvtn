@@ -24,6 +24,6 @@ $(function () {
 });
 
 </script>
-<div class="gridPoint">
+<div class="gridPoint" >
 </div>
 

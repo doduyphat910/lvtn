@@ -8,7 +8,7 @@
                             @foreach($grid->columnNames as $name)
                                 @if($name == 'Sô tín chỉ hiện tại' && $show == 0)
                                 <?php $show++; ?>
-                                    Sô TC hiện tại: {!! $row->column($name) !!}
+                                    Tổng số TC: {!! $row->column($name) !!}
                                 @endif
                             @endforeach
                     @endforeach
@@ -31,7 +31,7 @@
                 <table class="table table-hover table-striped table-bordered tableColor">
                     <tr >
                         @foreach($grid->columns() as $column)
-                            @if($column->getLabel() != 'Sô tín chỉ hiện tại')
+                            @if($column->getLabel() != 'Sô tín chỉ hiện tại' && $column->getLabel() != 'Điểm TK ALL' )
                         <th class="colorth" style="background-color: #3c8dbc;color: white;"><b>{{$column->getLabel()}}{!! $column->sorter() !!}</b></th>
                             @endif
                         @endforeach
@@ -40,7 +40,7 @@
                     @foreach($grid->rows() as $row)
                     <tr {!! $row->getRowAttributes() !!}>
                         @foreach($grid->columnNames as $name)
-                            @if($name != 'Sô tín chỉ hiện tại')
+                            @if($name != 'Sô tín chỉ hiện tại' && $name != 'Điểm TK ALL')
                         <td {!! $row->getColumnAttributes($name) !!}>
                             {!! $row->column($name) !!}
                         </td>
@@ -54,7 +54,18 @@
                 </table>
             </div>
             <div class="box-footer clearfix">
-                {!! $grid->paginator() !!}
+                {!! $grid->paginator() !!} <br><br>
+                <div class="pull-left">
+                    <?php $showPoint = 0; ?>
+                    @foreach($grid->rows() as $row)
+                        @foreach($grid->columnNames as $name)
+                            @if($name == 'Điểm TK ALL' && $showPoint == 0)
+                                <?php $showPoint++; ?>
+                                Điểm TK: {!! $row->column($name) !!}
+                            @endif
+                        @endforeach
+                    @endforeach
+                </div>
             </div>
             <!-- /.box-body -->
         </div>

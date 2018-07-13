@@ -42,7 +42,7 @@ class ResultRegisterController extends Controller
     {
         return User::content(function (ContentUser $content) {
 
-            $content->header('Đăng ký môn học');
+            $content->header('Kết quả đăng ký môn học');
             $content->description('Danh sách môn học');
             $content->breadcrumb(
                 ['text' => 'Đăng kí môn học', 'url' => '../user/result-register']
@@ -184,6 +184,17 @@ class ResultRegisterController extends Controller
                 } else {
                     return '';
                 }
+            });
+            $grid->column('Sô tín chỉ hiện tại')->display(function () use ( $timeRegister){
+                $idUser = Auth::user()->id;
+                $idSubject = ResultRegister::where('id_user_student', $idUser)->where('time_register',  $timeRegister->id)->pluck('id_subject');
+                $subjects = Subjects::find($idSubject);
+                $sumCredit = 0;
+                foreach ($subjects as $subject){
+                    $sumCredit+=$subject->credits;
+                }
+                return $sumCredit;
+
             });
 
             $grid->disableExport();

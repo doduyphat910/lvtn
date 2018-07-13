@@ -171,6 +171,16 @@ class InformationRegisterPointController extends Controller
                     return '';
                 }
             });
+            $grid->column('Sô tín chỉ hiện tại')->display(function () use ($id, $timeRegister){
+                $idSubject = ResultRegister::where('id_user_student', $id)->where('time_register',  $timeRegister->id)->pluck('id_subject');
+                $subjects = Subjects::find($idSubject);
+                $sumCredit = 0;
+                foreach ($subjects as $subject){
+                    $sumCredit+=$subject->credits;
+                }
+                return $sumCredit;
+
+            });
             $grid->disableExport();
             $grid->disableCreation();
             $grid->disableExport();
@@ -298,6 +308,16 @@ class InformationRegisterPointController extends Controller
                 {
                     return "<b>Đạt</b>";
                 }
+
+            });
+            $grid->column('Sô tín chỉ hiện tại')->display(function () use ($id){
+                $idSubject = ResultRegister::where('id_user_student', $id)->pluck('id_subject');
+                $subjects = Subjects::find($idSubject);
+                $sumCredit = 0;
+                foreach ($subjects as $subject){
+                    $sumCredit+=$subject->credits;
+                }
+                return $sumCredit;
 
             });
             $grid->filter(function($filter){

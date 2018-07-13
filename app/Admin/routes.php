@@ -97,6 +97,7 @@ Route::group([
     $router->resource('teacher/point',PointController::class);
 
     //manage point
+    $router->get('teacher/list-manage-point/{id}','APIAdminController@gridManagePoint');
     $router->get('teacher/manage-point/{id}/details','ManagePointController@details');
     $router->resource('teacher/manage-point',ManagePointController::class);
 

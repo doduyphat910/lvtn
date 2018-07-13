@@ -4,7 +4,7 @@ $(function () {
             var selected = $( ".id_time_register option:selected" ).val();
             $.ajax({
                 type:'GET',
-                url:'/admin/teacher/list-subject/'+selected,
+                url:'/admin/teacher/list-manage-point/'+selected,
                 data:{_token: "{{ csrf_token() }}"
                 },
                 success: function( msg ) {

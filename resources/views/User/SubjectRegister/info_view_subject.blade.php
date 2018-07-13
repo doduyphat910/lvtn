@@ -38,7 +38,7 @@ $arrPeriods = collect($arrPeriods)->map(function($x){ return (array) $x; })->toA
 </div>
 <div class="row">
     <div class="col-sm-8">
-        <h1 class="text-center">Thời Khóa Biểu</h1>
+        <h1 class="text-center indam">Thời Khóa Biểu</h1>
 <table class="table table-bordered">
     <thead>
     <tr>
@@ -112,14 +112,14 @@ $arrPeriods = collect($arrPeriods)->map(function($x){ return (array) $x; })->toA
 </table>
     </div>
     <div class="col-sm-4">
-         <h1 class="text-center">Ghi Chú</h1>
+         <h1 class="text-center note">Ghi Chú</h1>
         <ul class="list-unstyled text-center">
             <?php
                 $i=0;
                 foreach ($arrPeriods as $key => $valuePriods ){
                     //$valuePriods['time_start']." ".$valuePriods['time_end'];
             ?>
-            <li style="font-size: 20px;"> <?php echo "Tiết ". ($key + 1) . ": " .$valuePriods['time_start']." - ".$valuePriods['time_end'];?></li>
+            <li class="notetime"> <?php echo "Tiết ". ($key + 1) . ": " .$valuePriods['time_start']." - ".$valuePriods['time_end'];?></li>
             <?php
                 }
             ?>

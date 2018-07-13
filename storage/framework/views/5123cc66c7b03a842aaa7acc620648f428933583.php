@@ -1,3 +1,4 @@
+
 <?php if(Session::has('error')): ?>
     <?php $error = Session::get('error');?>
     <div class="alert alert-danger alert-dismissable">

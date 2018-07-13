@@ -39,7 +39,12 @@
     <![endif]-->
 
 </head>
+<style>
+/*    .fa-fw {
+        color: white;
+    }*/
 
+</style>
 <body class="hold-transition <?php echo e(config('admin.skin')); ?> <?php echo e(join(' ', config('admin.layout'))); ?>">
 <div class="wrapper">
 
@@ -76,6 +81,13 @@
 </body>
 <style>
     body {
+        font-family: "Times New Roman";
+    }
+    .fontchuindam{
+        font-family: "Times New Roman";
+        font-weight: bold;
+    }
+    .sweet-alert h2{
         font-family: "Times New Roman";
     }
 </style>

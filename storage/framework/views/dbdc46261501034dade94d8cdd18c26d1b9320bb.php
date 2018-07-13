@@ -25,7 +25,9 @@
 <body class="hold-transition login-page">
 <div class="login-box">
   <div class="login-logo">
-    <a href="<?php echo e(admin_base_path('/')); ?>"><b><?php echo e(config('admin.name')); ?></b></a>
+   
+   <span class="logo-mini"><img src="../../../uploads/images/logo_2.png" height="100px;"></span>
+        
   </div>
   <!-- /.login-logo -->
   <div class="login-box-body">

@@ -41,9 +41,9 @@
 
 </head>
 <style>
-    /*.fa-fw {*/
-        /*color: white;*/
-    /*}*/
+/*    .fa-fw {
+        color: white;
+    }*/
 
 </style>
 <body class="hold-transition {{config('admin.skin')}} {{join(' ', config('admin.layout'))}}">

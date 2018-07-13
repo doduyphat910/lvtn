@@ -17,7 +17,15 @@ $(function () {
                     $("table").addClass('table-bordered');
                     $("th").css("background-color","#3c8dbc");
                     $("th").css("color","white");
-                    
+                    $(".th-object:first-child").css("background-color","white");
+                    $('h1').css({
+                        'font-weight': 'bold',
+                        'font-family': 'Times New Roman'
+                    });
+                    $('li').css({
+                        'font-weight': 'bold',
+                        'font-family': 'Times New Roman'
+                    });
                 }
             });
             $.ajax({
@@ -28,15 +36,14 @@ $(function () {
                 success: function( msg ) {
                     $('.time-table').html(msg);
                     
-                    
-
-                }
+                 }
             });
     });
 });
 </script>
 <div class="gridSubjectRegister">
 </div>
+
 <div class="time-table ">
 </div>
 

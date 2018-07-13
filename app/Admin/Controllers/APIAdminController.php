@@ -343,7 +343,16 @@ class APIAdminController extends Controller
                     return '';
                 }
             });
+            $grid->column('Sô tín chỉ hiện tại')->display(function () use ($idUser, $idTimeRegister){
+                $idSubject = ResultRegister::where('id_user_student', $idUser)->where('time_register',  $idTimeRegister)->pluck('id_subject');
+                $subjects = Subjects::find($idSubject);
+                $sumCredit = 0;
+                foreach ($subjects as $subject){
+                    $sumCredit+=$subject->credits;
+                }
+                return $sumCredit;
 
+            });
 
             $grid->disableExport();
             $grid->disableCreation();
@@ -472,7 +481,105 @@ class APIAdminController extends Controller
         </style>
         <?php
     }
-
+    protected function gridManagePoint(Request $request)
+    {
+        $idTimeRegister = $request->id;
+        return Admin::grid(SubjectRegister::class, function (Grid $grid) use ($idTimeRegister)  {
+            $user = Admin::user();
+            $idUser = $user->id;
+            $grid->model()->where('id_time_register', $idTimeRegister)->where('id_user_teacher', $idUser);
+            $grid->rows(function (Grid\Row $row) {
+                $row->column('number', $row->number);
+            });
+            $grid->number('STT');
+            $grid->id('Mã học phần')->display(function ($name) {
+                return '<a href="/admin/teacher/manage-point/' . $this->id . '/details">' . $name . '</a>';
+            })->sortable();
+            $grid->id_subjects('Môn học')->display(function ($idSubject) {
+                if ($idSubject) {
+                    $name = Subjects::find($idSubject)->name;
+                    return "<span class='label label-info'>{$name}</span>";
+                } else {
+                    return '';
+                }
+            })->sortable();
+            $grid->column('Phòng')->display(function () {
+                $idClassroom = TimeStudy::where('id_subject_register', $this->id)->pluck('id_classroom')->toArray();
+                $classRoom = Classroom::whereIn('id', $idClassroom)->pluck('name')->toArray();
+                $classRoom = array_map(function ($classRoom) {
+                    return "<span class='label label-success'>{$classRoom}</span>";
+                }, $classRoom);
+                return join('&nbsp;', $classRoom);
+            })->sortable();
+            $grid->column('Buổi học')->display(function () {
+                $day = TimeStudy::where('id_subject_register', $this->id)->pluck('day')->toArray();
+                $day = array_map(function ($day) {
+                    switch ($day) {
+                        case 2:
+                            $day = 'Thứ 2';
+                            break;
+                        case 3:
+                            $day = 'Thứ 3';
+                            break;
+                        case 4:
+                            $day = 'Thứ 4';
+                            break;
+                        case 5:
+                            $day = 'Thứ 5';
+                            break;
+                        case 6:
+                            $day = 'Thứ 6';
+                            break;
+                        case 7:
+                            $day = 'Thứ 7';
+                            break;
+                        case 8:
+                            $day = 'Chủ nhật';
+                            break;
+                    }
+                    return "<span class='label label-success'>{$day}</span>";
+                }, $day);
+                return join('&nbsp;', $day);
+            })->sortable();
+            $grid->column('Thời gian học')->display(function () {
+                $timeStart = TimeStudy::where('id_subject_register', $this->id)->pluck('time_study_start')->toArray();
+                $timeEnd = TimeStudy::where('id_subject_register', $this->id)->pluck('time_study_end')->toArray();
+                $time = array_map(function ($timeStart, $timeEnd) {
+                    return "<span class='label label-success'>{$timeStart} - {$timeEnd}</span>";
+                }, $timeStart, $timeEnd);
+                return join('&nbsp;', $time);
+            })->sortable();
+            $grid->id_user_teacher('Giảng viên')->display(function ($id_user_teacher) {
+                if ($id_user_teacher) {
+                    $teacher = UserAdmin::find($id_user_teacher);
+                    if ($teacher) {
+                        return $teacher->name;
+                    } else {
+                        return '';
+                    }
+                } else {
+                    return '';
+                }
+            })->sortable();
+            $grid->qty_current('Số lượng hiện tại')->sortable();
+            //            $grid->qty_min('Số lượng tối thiểu');
+            //            $grid->qty_max('Số lượng tối đa');
+            $grid->date_start('Ngày bắt đầu')->sortable();
+            $grid->date_end('Ngày kết thúc')->sortable();
+            $grid->created_at('Tạo vào lúc')->sortable();
+            $grid->updated_at('Cập nhật vào lúc')->sortable();
+            //action
+            $grid->actions(function ($actions) {
+                $actions->disableEdit();
+                $actions->disableDelete();
+                $actions->append('<a href="/admin/teacher/manage-point/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
+            });
+            $grid->disableCreateButton();
+            $grid->disableExport();
+            $grid->disableRowSelector();
+            $grid->disableFilter();
+        });
+    }
     public function resultPoint(Request $request){
         $script = <<<EOT
         $(function () {
@@ -572,6 +679,32 @@ EOT;
                     return "<b>Đạt</b>";
                 }
 
+            });
+            $grid->column('Sô tín chỉ hiện tại')->display(function () use ($idUser, $idTimeRegister){
+                $idSubject = ResultRegister::where('id_user_student', $idUser)->where('time_register', $idTimeRegister)->pluck('id_subject');
+                $subjects = Subjects::find($idSubject);
+                $sumCredit = 0;
+                foreach ($subjects as $subject){
+                    $sumCredit+=$subject->credits;
+                }
+                return $sumCredit;
+
+            });
+            $grid->column('Điểm TK ALL')->display(function ()use ($idUser, $idTimeRegister){
+                $resultUsers = ResultRegister::where('id_user_student', $idUser)->where('time_register', $idTimeRegister)->get()->toArray();
+                $sum = 0;
+                $countCredit = 0;
+                foreach ($resultUsers as $resultUser){
+                    $credits = Subjects::find($resultUser['id_subject'])->credits;
+                    $countCredit += $credits;
+                }
+                foreach ($resultUsers as $resultUser){
+                    $credits = Subjects::find($resultUser['id_subject'])->credits;
+                    $sum += ((($resultUser['attendance'] * $resultUser['rate_attendance']) +
+                                ($resultUser['mid_term'] * $resultUser['rate_mid_term']) +
+                                ($resultUser['end_term'] * $resultUser['rate_end_term'])) / 100)*$credits;
+                }
+                return round($sum/$countCredit, 2);
             });
 
             $grid->disableCreateButton();
