@@ -1,3 +1,9 @@
+<style>
+    .fa-fw {
+        color: white;
+    }
+
+</style>
 <div class="box">
     <div class="box-header">
 

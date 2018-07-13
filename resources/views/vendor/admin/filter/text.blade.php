@@ -1,3 +1,8 @@
+{{-- <style>
+    .fa-fw {
+        color: black;
+    }
+</style> --}}
 <div class="input-group">
     <div class="input-group-addon">
         <i class="fa fa-{{ $icon }}"></i>

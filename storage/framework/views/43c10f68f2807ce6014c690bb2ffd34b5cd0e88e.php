@@ -1,9 +1,9 @@
 <?php $__env->startSection('content'); ?>
     <section class="content-header">
-        <h1>
+        <h1 class="fontchuindam">
             <?php echo e(isset($header) ? $header : trans('admin.title')); ?>
 
-            <small><?php echo e(isset($description) ? $description : trans('admin.description')); ?></small>
+            <small class="fontchuindam"><?php echo e(isset($description) ? $description : trans('admin.description')); ?></small>
         </h1>
 
         <!-- breadcrumb start -->

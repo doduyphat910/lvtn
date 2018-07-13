@@ -3,10 +3,12 @@
 
     <!-- Logo -->
     <a href="{{ admin_base_path('/') }}" class="logo">
-        <!-- mini logo for sidebar mini 50x50 pixels -->
+        {{-- <!-- mini logo for sidebar mini 50x50 pixels -->
         <span class="logo-mini">{!! config('admin.logo-mini', config('admin.name')) !!}</span>
         <!-- logo for regular state and mobile devices -->
-        <span class="logo-lg">{!! config('admin.logo', config('admin.name')) !!}</span>
+        <span class="logo-lg">{!! config('admin.logo', config('admin.name')) !!}</span> --}}
+         <span class="logo-mini"><img src="../../../uploads/images/logo_2.png" height="50px;"></span>
+         <span class="logo-lg"><img src="../../../uploads/images/logo_2.png" height="50px;"></span>
     </a>
 
     <!-- Header Navbar -->
