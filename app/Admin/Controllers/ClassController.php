@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Extensions\ModelFormCustom;
 use App\Models\ClassSTU;
 
 use App\Models\Department;
@@ -16,7 +17,7 @@ use Encore\Admin\Controllers\ModelForm;
 
 class ClassController extends Controller
 {
-    use ModelForm;
+    use ModelFormCustom;
 
     /**
      * Index interface.
@@ -85,8 +86,12 @@ class ClassController extends Controller
             })->sortable();
             $grid->id_user_teacher('GV cố vấn')->display(function ($idTeacher){
                 if(!empty($idTeacher)){
-                    $nameTeacher = UserAdmin::find($idTeacher)->name;
-                    return "<span class='label label-success'>{$nameTeacher}</span>";
+                    $nameTeacher = UserAdmin::find($idTeacher);
+                    if(!empty($nameTeacher)) {
+                        return "<span class='label label-success'>{$nameTeacher->name}</span>";
+                    } else {
+                        return '';
+                    }
                 } else {
                     return $idTeacher = '';
                 }

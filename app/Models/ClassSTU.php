@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ClassSTU extends Model
 {
-    use SoftDeletes;
+//    use SoftDeletes;
 
     protected $table = 'class';
 

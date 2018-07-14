@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Extensions\ModelFormCustom;
 use App\Models\Semester;
 use App\Models\Year;
 
@@ -14,7 +15,7 @@ use Encore\Admin\Controllers\ModelForm;
 
 class YearController extends Controller
 {
-    use ModelForm;
+    use ModelFormCustom;
 
     /**
      * Index interface.
@@ -27,7 +28,13 @@ class YearController extends Controller
 
             $content->header('Năm, học kỳ');
             $content->description('Danh sách năm');
-
+            $script = <<<EOT
+            if (location.href.indexOf('reload')==-1)
+            {
+               location.href=location.href+'?reload';
+            }
+EOT;
+            Admin::script($script);
             $content->body($this->grid());
         });
     }

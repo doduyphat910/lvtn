@@ -78,7 +78,7 @@ class ResultRegisterController extends Controller
             $timeRegister = TimeRegister::orderBy('id', 'DESC')->first();
             $grid->model()->where('time_register', $timeRegister->id)->where('id_user_student', $user->id);
                // $grid->id('ID');
-            $grid->column('Mã học phần')->display(function () {
+            $grid->column('Mã học phần')->style("text-align: center;")->display(function () {
                     $subjectRegister = SubjectRegister::where('id',$this->id_subject_register)->first();
                     if (!empty($subjectRegister)) {
                         return $subjectRegister->id;
@@ -94,7 +94,7 @@ class ResultRegisterController extends Controller
                         return '';
                     }
                 });
-            $grid->column('Phòng')->display(function () {
+            $grid->column('Phòng')->style("text-align: center;")->display(function () {
                     $idClassroom = TimeStudy::where('id_subject_register', $this->id_subject_register)->pluck('id_classroom')->toArray();
                     $classRoom = Classroom::whereIn('id', $idClassroom)->pluck('name')->toArray();
                     $classRoom = array_map(function ($classRoom) {
@@ -102,7 +102,7 @@ class ResultRegisterController extends Controller
                     }, $classRoom);
                     return join('&nbsp;', $classRoom);
                 });
-            $grid->column('Buổi học')->display(function () {
+            $grid->column('Buổi học')->style("text-align: center;")->display(function () {
                     $day = TimeStudy::where('id_subject_register', $this->id_subject_register)->pluck('day')->toArray();
                     $day = array_map(function ($day) {
                         switch ($day) {
@@ -133,7 +133,7 @@ class ResultRegisterController extends Controller
                     }, $day);
                     return join('&nbsp;', $day);
                 });
-            $grid->column('Thời gian học')->display(function () {
+            $grid->column('Thời gian học')->style("text-align: center;")->display(function () {
                     $timeStart = TimeStudy::where('id_subject_register', $this->id_subject_register)->pluck('time_study_start')->toArray();
                     $timeEnd = TimeStudy::where('id_subject_register', $this->id_subject_register)->pluck('time_study_end')->toArray();
                     $time = array_map(function ($timeStart, $timeEnd) {
@@ -167,28 +167,24 @@ class ResultRegisterController extends Controller
                         return '';
                     }
                 });
-            $grid->column('Ngày bắt đầu')->display(function (){
+            $grid->column('Ngày bắt đầu')->style("text-align: center;")->display(function (){
                 $idSubjectRegister = $this->id_subject_register;
                 $subjectRegister = SubjectRegister::find($idSubjectRegister);
-                if($subjectRegister->date_start){
+                if(!empty($subjectRegister->date_start)){
                     return $subjectRegister->date_start;
                 } else {
                     return '';
                 }
             });
-            $grid->column('Ngày kết thúc')->display(function (){
+            $grid->column('Ngày kết thúc')->style("text-align: center;")->display(function (){
                 $idSubjectRegister = $this->id_subject_register;
                 $subjectRegister = SubjectRegister::find($idSubjectRegister);
-                if($subjectRegister->date_end){
+                if(!empty($subjectRegister->date_end)){
                     return $subjectRegister->date_end;
                 } else {
                     return '';
                 }
             });
-                // $grid->qty_current('Số lượng hiện tại');
-                // $grid->qty_max('Số lượng tối đa');
-                // $grid->date_start('Ngày bắt đầu');
-                // $grid->date_end('Ngày kết thúc');
 
             $grid->disableExport();
             $grid->disableCreation();
@@ -201,7 +197,7 @@ class ResultRegisterController extends Controller
             $grid->actions(function ($actions){
                 $actions->disableEdit();
                 $actions->disableDelete();
-                $actions->append('<a href="javascript:void(0);" data-id="' . $this->row->id_subject_register . '"  class="btn btn-danger btnTotal btnCancel"><i class="glyphicon glyphicon-trash"></i> &nbsp Hủy bỏ </a>');
+                $actions->append('<a href="javascript:void(0);" data-id="' . $this->row->id_subject_register . '" style="display:block;"  class="btn btn-danger btnTotal btnCancel" ><i class="glyphicon glyphicon-trash"></i> &nbsp Hủy bỏ </a>');
             });
             $cancel = trans('Hủy bỏ');
             $cancelConfirm = trans('Bạn có chắc chắn muốn hủy không?');
@@ -248,6 +244,5 @@ SCRIPT;
                 User::script($script);
         });
     }
-
 
 }

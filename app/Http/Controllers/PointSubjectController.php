@@ -63,7 +63,7 @@ class PointSubjectController extends Controller
         return User::GridUser(ResultRegister::class, function (GridUser $grid) {
             $user = Auth::user();
             $grid->model()->where('id_user_student', $user->id)->orderBy('time_register', 'DESC');
-            $grid->column('Mã MH')->display(function(){
+            $grid->column('Mã MH')->style("text-align: center;")->display(function(){
                 $subjetRegister = Subjects::find($this->id_subject);
                 if($subjetRegister->id) {
                     return $subjetRegister->id;
@@ -80,7 +80,7 @@ class PointSubjectController extends Controller
             	}
             });
 
-            $grid->column('Số tín chỉ')->display(function () {
+            $grid->column('Số tín chỉ')->style("text-align: center;")->display(function () {
             	$subject = Subjects::find($this->id_subject);
             	if($subject->credits) {
             		return $subject->credits;
@@ -89,7 +89,7 @@ class PointSubjectController extends Controller
             	}
             });
 
-            $grid->column('Năm')->display(function () {
+            $grid->column('Năm')->style("text-align: center;")->display(function () {
                 $subject = TimeRegister::find($this->time_register);
                 $id = $subject->id;
                if($id % 2 == 0)
@@ -99,43 +99,43 @@ class PointSubjectController extends Controller
                         return "<span class='label label-success'>{$subject->name}</span>";    
                     }
             });
-            $grid->column('%QT')->display(function () {
+            $grid->column('%QT')->style("text-align: center;")->display(function () {
                 return $this->rate_attendance;
             });
-            $grid->column('%GK')->display(function () {
+            $grid->column('%GK')->style("text-align: center;")->display(function () {
                 return $this->rate_mid_term;
             });
-            $grid->column('%CK')->display(function () {
+            $grid->column('%CK')->style("text-align: center;")->display(function () {
                 return $this->rate_end_term;
             });
-            $grid->column('Điểm QT')->display(function () {
+            $grid->column('Điểm QT')->style("text-align: center;")->display(function () {
                 if(!empty($this->attendance))
                 {
                     return $this->attendance;
                 }
                 else{ return "0"; }
             });
-            $grid->column('Điểm GK')->display(function () {
+            $grid->column('Điểm GK')->style("text-align: center;")->display(function () {
                 if(!empty($this->mid_term))
                 {
                     return $this->mid_term;
                 }
                 else{ return "0"; }
             });
-            $grid->column('Điểm CK')->display(function () {
+            $grid->column('Điểm CK')->style("text-align: center;")->display(function () {
                 if(!empty($this->end_term))
                 {
                     return $this->end_term;
                 }
                 else{ return "0"; }
             });
-            $grid->column('Điểm TK')->display(function () {
+            $grid->column('Điểm TK')->style("text-align: center;")->display(function () {
                  $final = (($this->attendance * $this->rate_attendance) +
                                 ($this->mid_term * $this->rate_mid_term) +
                                 ($this->end_term * $this->rate_end_term)) / 100;
                  return "<b>{$final}</b>";
             });
-            $grid->column('Kết quả')->display(function () {
+            $grid->column('Kết quả')->style("text-align: center;")->display(function () {
                  $final = (($this->attendance * $this->rate_attendance) +
                                 ($this->mid_term * $this->rate_mid_term) +
                                 ($this->end_term * $this->rate_end_term)) / 100;

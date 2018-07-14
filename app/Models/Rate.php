@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Rate extends Model
 {
-    use SoftDeletes;
+//    use SoftDeletes;
 
     protected $table = 'rate';
 }

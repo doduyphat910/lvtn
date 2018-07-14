@@ -84,13 +84,13 @@ class LearnImprovenmentController extends Controller
                 $grid->model()->whereIn('id', $subjects_id)->whereIn('id', $idSubjectLearned)->orderBy(DB::raw('FIELD(id, ' . $field . ')'));
             }
             //$grid->id('id');
-            $grid->id('Mã môn học');
+            $grid->id('Mã môn học')->style("text-align: center;");
             $grid->name('Tên môn học')->display(function ($name) {
                 return '<a href="/user/subject-register/' . $this->id . '/details"  target="_blank" >' . $name . '</a>';
             });
 
-            $grid->credits('Số tín chỉ');
-            $grid->credits_fee('Số tín chỉ học phí');
+            $grid->credits('Số tín chỉ')->style("text-align: center;");
+            $grid->credits_fee('Số tín chỉ học phí')->style("text-align: center;");
             $grid->column('Nhóm môn')->display(function () {
                 $subject = Subjects::find($this->id);
                 $nameGroup = $subject->subject_group()->pluck('name')->toArray();
@@ -104,7 +104,7 @@ class LearnImprovenmentController extends Controller
                 return join('&nbsp;', $groupSubject);
 
             });
-            $grid->column('Học kỳ - Năm')->display(function () {
+            $grid->column('Học kỳ - Năm')->style("text-align: center;")->display(function () {
                 $id = $this->id;
                 $subject = Subjects::find($id);
                 $arraySemester = $subject->semester()->pluck('id')->toArray();
@@ -126,14 +126,49 @@ class LearnImprovenmentController extends Controller
                 }, $arraySemester);
                 return join('&nbsp;', $name);
             });
-            $grid->column('Đăng ký')->display(function () {
-                return '<a href="/user/subject-register/' . $this->id . '/details" data-id='.$this->id.'  target="_blank" class="btn btn-md btnACV" ><i class="glyphicon glyphicon-pencil"></i></a>';
+            $grid->column('Đăng ký')->style("text-align: center;")->display(function () {
+                return '<a href="/user/subject-register/' . $this->id . '/details" data-id='.$this->id.'  target="_blank" class="btn btn-md" ><i class="fa fa-pencil-square"></i></a>';
             });
             $grid->disableCreateButton();
             $grid->disableExport();
             $grid->disableRowSelector();
-
             $grid->disableActions();
+            $grid->filter(function($filter){
+                $filter->disableIdFilter();
+                $filter->like('id', 'Mã môn học');
+                $filter->like('name', 'Tên môn học');
+                $filter->like('credits', 'Tín chỉ');
+                $filter->like('credits_fee', 'Tín chỉ học phí');
+                $semesters = Semester::all()->toArray();
+                $optionSemesters = [];
+                foreach($semesters as $semester) {
+                    if($semester['name'] == 0) {
+                        $optionSemesters += [$semester['id'] => 'Học kỳ hè'];
+                    } else {
+                        $nameYear = Year::where('id', $semester['id_year'])->first();
+                        $optionSemesters += [$semester['id'] => 'Học kỳ '. $semester['name']. ' - ' . $nameYear->name];
+                    }
+                }
+                $filter->where(function ($query){
+                    $input = $this->input;
+                    $semester = Semester::where('id',$input)->first();
+                    $idSubject = $semester->subjects()->pluck('id')->toArray();
+                    $query->whereIn('id', $idSubject);
+                }, 'Học kì')->select($optionSemesters);
+                $filter->where(function ($query){
+                    $input = $this->input;
+                    $subjectGroup = SubjectGroup::where('id',$input)->first();
+                    $idSubject = $subjectGroup->subject()->pluck('id')->toArray();
+                    $query->where(function ($query) use ($idSubject) {
+                        $query->whereIn('id', $idSubject);
+                    });
+//                    $query->whereIn('id', $idSubject);
+                }, 'Nhóm môn học')->multipleSelect(SubjectGroup::all()->pluck('name', 'id'));
+
+//                $filter->in('id_subject1', 'Môn học trước')->multipleSelect(Subjects::all()->pluck('name', 'id'));
+//                $filter->in('id_subject2', 'Môn học song song')->multipleSelect(Subjects::all()->pluck('name', 'id'));
+
+            });
         });
     }
 }

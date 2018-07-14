@@ -21,8 +21,28 @@
   <script src="//oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
   <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
+  <style type="text/css">
+    #video-background {
+/*  making the video fullscreen  */
+    position: fixed;
+    right: 0;
+    bottom: -5%;
+    min-width: 100%; 
+    min-height: 100%;
+    z-index: -100;
+    
+}
+.login-box, .register-box {
+    width: 360px;
+    margin: 11% auto;
+}
+  </style>
 </head>
-<body class="hold-transition login-page">
+<body class="hold-transition login-page" >
+
+  <video height="" autoplay loop id="video-background" muted plays-inline>
+  <source src="../../../uploads/images/video STU.mp4" type="video/mp4">
+</video>
 <div class="login-box">
   <div class="login-logo">
    
@@ -30,7 +50,7 @@
         
   </div>
   <!-- /.login-logo -->
-  <div class="login-box-body">
+  <div class="login-box-body" style="border-radius:20px;">
     <p class="login-box-msg"><?php echo e(trans('admin.login')); ?></p>
 
     <form action="<?php echo e(admin_base_path('auth/login')); ?>" method="post">

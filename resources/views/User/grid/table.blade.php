@@ -20,14 +20,14 @@
                 <table class="table table-hover table-striped table-bordered tableColor">
                     <tr >
                         @foreach($grid->columns() as $column)
-                        <th class="colorth" style="background-color: #3c8dbc;color: white;"><b>{{$column->getLabel()}}{!! $column->sorter() !!}</b></th>
+                        <th class="colorth" style="text-align:center;background-color: #3c8dbc;color: white;"><b>{{$column->getLabel()}}{!! $column->sorter() !!}</b></th>
                         @endforeach
                     </tr>
 
                     @foreach($grid->rows() as $row)
                     <tr {!! $row->getRowAttributes() !!}>
                         @foreach($grid->columnNames as $name)
-                        <td {!! $row->getColumnAttributes($name) !!}>
+                        <td  {!! $row->getColumnAttributes($name) !!}>
                             {!! $row->column($name) !!}
                         </td>
                         @endforeach

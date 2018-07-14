@@ -33,7 +33,13 @@ class TimeRegisterController extends Controller
 
             $content->header('TG Đăng ký');
             $content->description('DS TG Đăng ký');
-
+            $script = <<<EOT
+            if (location.href.indexOf('reload')==-1)
+            {
+               location.href=location.href+'?reload';
+            }
+EOT;
+            Admin::script($script);
             $content->body($this->grid());
         });
     }
@@ -237,14 +243,14 @@ EOT;
 
     protected function details($id){
         return Admin::content(function (Content $content) use ($id) {
-           $script = <<<EOT
-           if (location.href.indexOf('reload')==-1)
-           {
-              location.href=location.href+'?reload';
-           }
+            $script = <<<EOT
+            if (location.href.indexOf('reload')==-1)
+            {
+               location.href=location.href+'?reload';
+            }
 EOT;
-           Admin::script($script);
-            // header("Refresh:0");
+            Admin::script($script);
+//            header("Refresh:0");
             $time = TimeRegister::findOrFail($id);
             $content->header('TG Đăng ký');
             $content->description($time->name);
