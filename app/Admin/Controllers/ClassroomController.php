@@ -46,8 +46,9 @@ class ClassroomController extends Controller
     {
         return Admin::content(function (Content $content) use ($id) {
 
-            $content->header('header');
-            $content->description('description');
+            $classRoom = Classroom::findOrFail($id);
+            $content->header('Phòng học');
+            $content->description($classRoom->name);
 
             $content->body($this->form()->edit($id));
         });

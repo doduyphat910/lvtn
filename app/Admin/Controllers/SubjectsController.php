@@ -53,8 +53,9 @@ class SubjectsController extends Controller
     {
         return Admin::content(function (Content $content) use ($id) {
 
-            $content->header('header');
-            $content->description('description');
+            $subject = Subjects::findOrFail($id);
+            $content->header('Môn học');
+            $content->description($subject->name);
 
             $content->body($this->form()->edit($id));
         });
@@ -85,7 +86,7 @@ class SubjectsController extends Controller
     {
         return Admin::grid(Subjects::class, function (Grid $grid) {
 
-            $grid->model()->orderBy('created_at','DESC');
+//            $grid->model()->orderBy('created_at','DESC');
             $grid->rows(function (Grid\Row $row) {
                 $row->column('number', $row->number);
             });
@@ -129,20 +130,20 @@ class SubjectsController extends Controller
 //                    $nameYear = $year['0']->name;
                     if(substr($nameYear,4,5) % 2 == 0){
                         if($nameSemester == 'Học kỳ hè') {
-                            return  "<span class='label label-primary'>$nameSemester</span>"  ;
+//                            return  "<span class='label label-primary'>$nameSemester</span>"  ;
                         } else {
                             return "<span class='label label-info'>{$nameSemester} - {$nameYear}</span>"  ;
                         }
                     } else {
                         if($nameSemester == 'Học kỳ hè') {
-                            return  "<span class='label label-primary'>$nameSemester</span>"  ;
+//                            return  "<span class='label label-primary'>$nameSemester</span>"  ;
                         } else {
                             return "<span class='label label-success'>{$nameSemester} - {$nameYear}</span>";
                         }
                     }
                 }, $arraySemester);
                 return join('&nbsp;', $name);
-            })->sortable();
+            });
             $grid->column('Nhóm môn')->display(function () {
                 $subject = Subjects::find($this->id);
                 $nameGroup = $subject->subject_group()->pluck('name')->toArray();
@@ -154,28 +155,28 @@ class SubjectsController extends Controller
                     }
                 },$nameGroup);
                 return join('&nbsp;', $groupSubject);
-            })->sortable();
-            $grid->id_rate('Tỷ lệ chuyên cần')->display(function ($rate){
-                if($rate){
-                    return Rate::find($rate)->attendance;
-                } else {
-                    return '';
-                }
-            })->sortable();
-            $grid->column('Tỷ lệ giữa kì')->display(function (){
-                if($this->id_rate) {
-                    return Rate::find($this->id_rate)->mid_term;
-                } else {
-                    return '';
-                }
-            })->sortable();
-            $grid->column('Tỷ lệ cuối kì')->display(function (){
-                if($this->id_rate) {
-                    return Rate::find($this->id_rate)->end_term;
-                } else {
-                    return '';
-                }
-            })->sortable();
+            });
+//            $grid->id_rate('Tỷ lệ chuyên cần')->display(function ($rate){
+//                if($rate){
+//                    return Rate::find($rate)->attendance;
+//                } else {
+//                    return '';
+//                }
+//            })->sortable();
+//            $grid->column('Tỷ lệ giữa kì')->display(function (){
+//                if($this->id_rate) {
+//                    return Rate::find($this->id_rate)->mid_term;
+//                } else {
+//                    return '';
+//                }
+//            })->sortable();
+//            $grid->column('Tỷ lệ cuối kì')->display(function (){
+//                if($this->id_rate) {
+//                    return Rate::find($this->id_rate)->end_term;
+//                } else {
+//                    return '';
+//                }
+//            })->sortable();
             $grid->created_at('Tạo vào lúc')->sortable();
             $grid->updated_at('Cập nhật vào lúc')->sortable();
             //action
@@ -290,7 +291,7 @@ class SubjectsController extends Controller
                     return "<span class='label label-success'>{$classRoom}</span>";
                 }, $classRoom);
                 return join('&nbsp;', $classRoom);
-            })->sortable();
+            });
             $grid->column('Buổi học')->display(function () {
                 $day = TimeStudy::where('id_subject_register', $this->id)->pluck('day')->toArray();
                 $day = array_map(function ($day) {
@@ -320,7 +321,7 @@ class SubjectsController extends Controller
                     return "<span class='label label-success'>{$day}</span>";
                 }, $day);
                 return join('&nbsp;', $day);
-            })->sortable();
+            });
             $grid->column('Thời gian học')->display(function () {
                 $timeStart = TimeStudy::where('id_subject_register', $this->id)->pluck('time_study_start')->toArray();
                 $timeEnd = TimeStudy::where('id_subject_register', $this->id)->pluck('time_study_end')->toArray();
@@ -328,7 +329,7 @@ class SubjectsController extends Controller
                     return "<span class='label label-success'>{$timeStart} - {$timeEnd}</span>";
                 }, $timeStart, $timeEnd);
                 return join('&nbsp;', $time);
-            })->sortable();
+            });
             $grid->id_user_teacher('Giảng viên')->display(function ($id_user_teacher){
                 if($id_user_teacher){
                     $teacher = UserAdmin::find($id_user_teacher);

@@ -47,8 +47,9 @@ class StudentUserController extends Controller
     {
         return Admin::content(function (Content $content) use ($id) {
 
-            $content->header('header');
-            $content->description('description');
+            $studentUser = StudentUser::findOrFail($id);
+            $content->header('Sinh viên');
+            $content->description($studentUser->last_name);
 
             $content->body($this->formEdit()->edit($id));
         });
@@ -84,14 +85,14 @@ class StudentUserController extends Controller
             });
             $grid->number('STT');
 //            $grid->id('ID')->sortable();
-            $grid->avatar('Avatar')->image();
+//            $grid->avatar('Avatar')->image();
             $grid->code_number('Mã số sinh viên')->sortable();
             $grid->first_name('Họ')->sortable();
             $grid->last_name('Tên')->display(function ($name){
                 return  '<a href="/admin/student_user/' . $this->id . '/details">'.$name.'</a>';
             })->sortable();
 //            $grid->username('Tên đăng nhập');
-            $grid->email('Email');
+            $grid->email('Email')->sortable();
             $grid->id_class('Lớp')->display(function ($idClass){
                 if($idClass){
                     if( ClassSTU::find($idClass)) {
@@ -104,7 +105,7 @@ class StudentUserController extends Controller
                 }
             })->sortable();
             $grid->school_year('Năm nhập học')->sortable();
-            $grid->level('Trình độ')->sortable();
+//            $grid->level('Trình độ')->sortable();
             $grid->id_status('Trạng thái')->display(function ($idStatus){
                 $status = Status::find($idStatus);
                 if(!empty($status->status)){
@@ -180,7 +181,7 @@ class StudentUserController extends Controller
                         return $form->model()->password;
                     });
             $form->ignore(['password_confirmation']);
-            $form->image('avatar', 'Avatar');
+//            $form->image('avatar', 'Avatar');
             $form->select('id_class', 'Lớp')->options(ClassSTU::all()->pluck('name', 'id'));
             $form->select('id_status', 'Trạng thái')->options(Status::all()->pluck('status', 'id'));
             $form->year('school_year', 'Năm nhập học');
@@ -194,7 +195,7 @@ class StudentUserController extends Controller
         return Admin::content(function (Content $content) use ($id) {
             $studentUser = StudentUser::findOrFail($id);
             $content->header('Sinh viên');
-            $content->description($studentUser->name);
+            $content->description($studentUser->last_name);
             $content->body($this->detailsView($id));
         });
     }

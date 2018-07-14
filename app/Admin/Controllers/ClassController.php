@@ -45,8 +45,9 @@ class ClassController extends Controller
     {
         return Admin::content(function (Content $content) use ($id) {
 
-            $content->header('header');
-            $content->description('description');
+            $class = ClassSTU::findOrFail($id);
+            $content->header('Lớp');
+            $content->description($class->name);
 
             $content->body($this->form()->edit($id));
         });

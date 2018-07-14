@@ -41,9 +41,9 @@ class TimeTableController extends Controller
     public function edit($id)
     {
         return Admin::content(function (Content $content) use ($id) {
-
-            $content->header('header');
-            $content->description('description');
+            $timeTable = TimeTable::find($id);
+            $content->header('Tiết học');
+            $content->description($timeTable->period);
 
             $content->body($this->form()->edit($id));
         });
@@ -79,9 +79,7 @@ class TimeTableController extends Controller
                 $row->column('number', $row->number);
             });
             $grid->number('STT');
-            $grid->period('Tiết học')->display(function ($period) {
-                return '<a href="#" >'.$period.'</a>';
-            })->sortable();
+            $grid->period('Tiết học')->sortable();
             $grid->time_start('Thời gian bắt đầu')->sortable();
             $grid->time_end('Thời gian kết thúc')->sortable();
             $grid->created_at('Tạo vào lúc')->sortable();
@@ -104,8 +102,7 @@ class TimeTableController extends Controller
     protected function form()
     {
         return Admin::form(TimeTable::class, function (Form $form) {
-
-            $form->display('id', 'ID');
+//            $form->display('id', 'ID');
             $form->number('period', 'Tiết học')->rules('integer|min:1');
             $form->timeRange('time_start', 'time_end', 'Thời gian');
             $form->saving(function (Form $form) {

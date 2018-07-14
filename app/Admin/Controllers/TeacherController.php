@@ -33,7 +33,7 @@ class TeacherController extends Controller
     {
         return Admin::content(function (Content $content) {
 
-            $content->header('Khoa, lớp');
+            $content->header('Giảng viên');
             $content->description('Danh sách lớp');
 
             $content->body($this->grid());
@@ -46,32 +46,32 @@ class TeacherController extends Controller
      * @param $id
      * @return Content
      */
-    public function edit($id)
-    {
-        return Admin::content(function (Content $content) use ($id) {
-
-            $content->header('header');
-            $content->description('description');
-
-            $content->body($this->form()->edit($id));
-        });
-    }
+//    public function edit($id)
+//    {
+//        return Admin::content(function (Content $content) use ($id) {
+//
+//            $content->header('header');
+//            $content->description('description');
+//
+//            $content->body($this->form()->edit($id));
+//        });
+//    }
 
     /**
      * Create interface.
      *
      * @return Content
      */
-    public function create()
-    {
-        return Admin::content(function (Content $content) {
-
-            $content->header('Lớp');
-            $content->description('Thêm lớp');
-
-            $content->body($this->form());
-        });
-    }
+//    public function create()
+//    {
+//        return Admin::content(function (Content $content) {
+//
+//            $content->header('Lớp');
+//            $content->description('Thêm lớp');
+//
+//            $content->body($this->form());
+//        });
+//    }
 
     /**
      * Make a grid builder.
@@ -270,7 +270,7 @@ class TeacherController extends Controller
             $grid->number('STT');
             $grid->id('Mã học phần')->display(function ($name) {
                 return '<a href="/admin/teacher/subject-register/' . $this->id . '/details">' . $name . '</a>';
-            })->sortable();
+            });
             $grid->id_subjects('Môn học')->display(function ($idSubject) {
                 if ($idSubject) {
                     $name = Subjects::find($idSubject)->name;
@@ -278,7 +278,7 @@ class TeacherController extends Controller
                 } else {
                     return '';
                 }
-            })->sortable();
+            });
             $grid->column('Phòng')->display(function () {
                 $idClassroom = TimeStudy::where('id_subject_register', $this->id)->pluck('id_classroom')->toArray();
                 $classRoom = Classroom::whereIn('id', $idClassroom)->pluck('name')->toArray();
@@ -337,12 +337,12 @@ class TeacherController extends Controller
                     return '';
                 }
             });
-            $grid->qty_current('Số lượng hiện tại')->sortable();
+            $grid->qty_current('Số lượng hiện tại');
 //            $grid->qty_min('Số lượng tối thiểu');
 //            $grid->qty_max('Số lượng tối đa');
 
-            $grid->date_start('Ngày bắt đầu')->sortable();
-            $grid->date_end('Ngày kết thúc')->sortable();
+            $grid->date_start('Ngày bắt đầu');
+            $grid->date_end('Ngày kết thúc');
 //            $grid->created_at('Tạo vào lúc')->sortable();
 //            $grid->updated_at('Cập nhật vào lúc')->sortable();
 

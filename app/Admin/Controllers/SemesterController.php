@@ -58,8 +58,9 @@ EOT;
     {
         return Admin::content(function (Content $content) use ($id) {
 
-            $content->header('header');
-            $content->description('description');
+            $semester = Semester::findOrFail($id);
+            $content->header('Học kỳ');
+            $content->description($semester->name);
 
             $content->body($this->form()->edit($id));
         });
@@ -192,7 +193,7 @@ EOT;
                     }
                 }, $arraySemester);
                 return join('&nbsp;', $name);
-            })->sortable();
+            });
             $grid->column('Nhóm môn')->display(function () {
                 $subject = Subjects::find($this->id);
                 $nameGroup = $subject->subject_group()->pluck('name')->toArray();
@@ -310,7 +311,7 @@ EOT;
             $form->display('id', 'ID');
             $form->select('name', 'Tên học kì')->options(['0'=>' Học kỳ hè', '1' => 'Học kì 1', '2' => 'Học kì 2'])->rules('required');
             $form->select('id_year', 'Năm')->options(Year::all()->pluck('name', 'id'));
-//            $currentPath = Route::getFacadeRoot()->current()->uri();
+            $currentPath = Route::getFacadeRoot()->current()->uri();
 //            if($currentPath == 'admin/semester/{semester}/edit') {
 //                $form->number('credits_max', 'Số tín chỉ lớn nhất')->rules('integer|max:28');
 //                $form->number('credits_min', 'Số tín chỉ nhỏ nhất')->rules('integer|min:1');
@@ -325,9 +326,12 @@ EOT;
 //                'off' => ['value' => 0, 'text' => 'Đóng', 'color' => 'danger'],
 //            ];
 //            $form->switch('status', 'Trạng thái đăng ký môn')->states($states)->default('0');
-            $form->listbox('subjects', 'Môn học')->options(Subjects::all()->pluck('name', 'id'));
+            if($currentPath != "admin/semester/{id}/details") {
+                $form->listbox('subjects', 'Môn học')->options(Subjects::all()->pluck('name', 'id'));
+            }
             $form->display('created_at', 'Tạo vào lúc');
             $form->display('updated_at', 'Cập nhật vào lúc');
+            $form->disableReset();
 //            $form->saving(function (Form $form) use ($currentPath) {
             $form->saving(function (Form $form)  {
                 if(($form->name == 1 || $form->name == 2) && $form->id_year == null )

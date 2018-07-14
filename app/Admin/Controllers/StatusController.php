@@ -42,8 +42,9 @@ class StatusController extends Controller
     {
         return Admin::content(function (Content $content) use ($id) {
 
-            $content->header('header');
-            $content->description('description');
+            $content->header('Trạng thái');
+            $status = Status::find($id);
+            $content->description($status->status);
 
             $content->body($this->form()->edit($id));
         });

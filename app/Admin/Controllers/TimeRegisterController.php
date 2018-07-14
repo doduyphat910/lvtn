@@ -48,8 +48,9 @@ class TimeRegisterController extends Controller
     {
         return Admin::content(function (Content $content) use ($id) {
 
-            $content->header('header');
-            $content->description('description');
+            $time = TimeRegister::findOrFail($id);
+            $content->header('TG Đăng ký');
+            $content->description($time->name);
 
             $content->body($this->form()->edit($id));
         });
@@ -244,7 +245,7 @@ EOT;
            }
 EOT;
            Admin::script($script);
-            // header("Refresh:0");
+//             header("Refresh:0");
             $time = TimeRegister::findOrFail($id);
             $content->header('TG Đăng ký');
             $content->description($time->name);
@@ -255,17 +256,17 @@ EOT;
     protected function detailsView($id)
     {
         $form = $this->form()->view($id);
-        $arrIDSubject = UserSubject::where('id_time_register',$id)->select('id_subject')->distinct()->pluck('id_subject')->toArray();
-        $dataStudents = [];
-        foreach($arrIDSubject as $idSubject) {
-            $countStudent = UserSubject::where('id_subject',$idSubject)->where('id_time_register',$id)->count('id_user');
-            $dataStudents[$idSubject] = $countStudent;
-        }
-        arsort($dataStudents);
-        $requestRegister = array_slice($dataStudents, 0, 6);
-        $subject = json_encode(array_keys($requestRegister));
-        $nameSubjects = Subjects::whereIn('id',array_keys($requestRegister))->pluck('name', 'id')->toArray();
-        $student = json_encode(array_values($requestRegister));
+            $arrIDSubject = UserSubject::where('id_time_register',$id)->select('id_subject')->distinct()->pluck('id_subject')->toArray();
+            $dataStudents = [];
+            foreach($arrIDSubject as $idSubject) {
+                $countStudent = UserSubject::where('id_subject',$idSubject)->where('id_time_register',$id)->count('id_user');
+                $dataStudents[$idSubject] = $countStudent;
+            }
+            arsort($dataStudents);
+            $requestRegister = array_slice($dataStudents, 0, 6);
+            $subject = json_encode(array_keys($requestRegister));
+            $nameSubjects = Subjects::whereIn('id',array_keys($requestRegister))->pluck('name', 'id')->toArray();
+            $student = json_encode(array_values($requestRegister));
         //chart 2
         $arrClass = StudentUser::distinct('school_year')->orderBy('school_year', 'DESC')->limit(6)->pluck('school_year')->toArray();
         $countClass = [];

@@ -43,8 +43,9 @@ class DepartmentController extends Controller
     {
         return Admin::content(function (Content $content) use ($id) {
 
-            $content->header('header');
-            $content->description('description');
+            $department = Department::findOrFail($id);
+            $content->header('Khoa');
+            $content->description($department->name);
 
             $content->body($this->form()->edit($id));
         });

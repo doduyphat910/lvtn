@@ -90,7 +90,7 @@ class ManagePointController extends Controller
             $grid->number('STT');
             $grid->id('Mã học phần')->display(function ($name) {
                 return '<a href="/admin/teacher/manage-point/' . $this->id . '/details">' . $name . '</a>';
-            })->sortable();
+            });
             $grid->id_subjects('Môn học')->display(function ($idSubject) {
                 if ($idSubject) {
                     $name = Subjects::find($idSubject)->name;
@@ -98,7 +98,7 @@ class ManagePointController extends Controller
                 } else {
                     return '';
                 }
-            })->sortable();
+            });
             $grid->column('Phòng')->display(function () {
                 $idClassroom = TimeStudy::where('id_subject_register', $this->id)->pluck('id_classroom')->toArray();
                 $classRoom = Classroom::whereIn('id', $idClassroom)->pluck('name')->toArray();
@@ -106,7 +106,7 @@ class ManagePointController extends Controller
                     return "<span class='label label-success'>{$classRoom}</span>";
                 }, $classRoom);
                 return join('&nbsp;', $classRoom);
-            })->sortable();
+            });
             $grid->column('Buổi học')->display(function () {
                 $day = TimeStudy::where('id_subject_register', $this->id)->pluck('day')->toArray();
                 $day = array_map(function ($day) {
@@ -136,7 +136,7 @@ class ManagePointController extends Controller
                     return "<span class='label label-success'>{$day}</span>";
                 }, $day);
                 return join('&nbsp;', $day);
-            })->sortable();
+            });
             $grid->column('Thời gian học')->display(function () {
                 $timeStart = TimeStudy::where('id_subject_register', $this->id)->pluck('time_study_start')->toArray();
                 $timeEnd = TimeStudy::where('id_subject_register', $this->id)->pluck('time_study_end')->toArray();
@@ -144,7 +144,7 @@ class ManagePointController extends Controller
                     return "<span class='label label-success'>{$timeStart} - {$timeEnd}</span>";
                 }, $timeStart, $timeEnd);
                 return join('&nbsp;', $time);
-            })->sortable();
+            });
             $grid->id_user_teacher('Giảng viên')->display(function ($id_user_teacher) {
                 if ($id_user_teacher) {
                     $teacher = UserAdmin::find($id_user_teacher);
@@ -156,15 +156,15 @@ class ManagePointController extends Controller
                 } else {
                     return '';
                 }
-            })->sortable();
-            $grid->qty_current('Số lượng hiện tại')->sortable();
+            });
+            $grid->qty_current('Số lượng hiện tại');
 //            $grid->qty_min('Số lượng tối thiểu');
 //            $grid->qty_max('Số lượng tối đa');
 
-            $grid->date_start('Ngày bắt đầu')->sortable();
-            $grid->date_end('Ngày kết thúc')->sortable();
-            $grid->created_at('Tạo vào lúc')->sortable();
-            $grid->updated_at('Cập nhật vào lúc')->sortable();
+            $grid->date_start('Ngày bắt đầu');
+            $grid->date_end('Ngày kết thúc');
+            $grid->created_at('Tạo vào lúc');
+            $grid->updated_at('Cập nhật vào lúc');
 
             //action
             $grid->actions(function ($actions) {

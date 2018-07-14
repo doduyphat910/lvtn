@@ -43,8 +43,8 @@ class SubjectBeforeAfterController extends Controller
     {
         return Admin::content(function (Content $content) use ($id) {
 
-            $content->header('header');
-            $content->description('description');
+            $content->header('Môn học tiên quyết');
+//            $content->description('description');
 
             $content->body($this->form()->edit($id));
         });
