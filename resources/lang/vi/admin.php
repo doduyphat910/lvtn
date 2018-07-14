@@ -84,7 +84,7 @@ return [
     'role'       => 'Vai trò',
     'permission' => 'Quyền',
     'route'      => 'Route',
-    'confirm'    => 'Xác nhận',
+    'confirm'    => 'Chấp nhận',
     'cancel'     => 'Hủy bỏ',
 
     'http' => [

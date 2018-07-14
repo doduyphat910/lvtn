@@ -30,7 +30,7 @@ class ClassController extends Controller
 
             $content->header('Khoa, lớp');
             $content->description('Danh sách lớp');
-
+            header("Content-Type: text/html; charset=UTF-8");
             $content->body($this->grid());
         });
     }

@@ -106,28 +106,47 @@
         background-color: #3c8dbc;
         color: white;
     }
+    #backtotop{
+        position: fixed;
+        width: 50px;
+        height: 50px;
+        background-color: #00a657cc;
+        right: 1%;
+        bottom: 5%;
+        border-radius: 50%;
+        cursor: pointer;
+        display: none;
+    }
+    .iconbacktop {
+    position: absolute;
+    top: 10%;
+    left: 17%;
+    font-size: 2.5rem;
+    color: white;
+    padding: 5px;
+}
 </style>
 </head>
 
-<body class="hold-transition {{config('admin.skin')}} {{join(' ', config('admin.layout'))}}" style="margin-left: 150px;
-    margin-right: 150px;">
+<body class="hold-transition {{config('admin.skin')}} {{join(' ', config('admin.layout'))}}">
 {{--<div class="wrapper ">--}}
 
     @include('User.partials.header')
 
 {{--    @include('User.partials.sidebar')--}}
 
-    <div class="container-flud" id="pjax-container">
+    <div class="container-fluid" id="pjax-container">
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
                     @yield('content')
                     {!! \App\Http\Extensions\Facades\User::script() !!}
             </div>
         </div>
+        <div id="backtotop"><i class="fa fa-arrow-up iconbacktop" aria-hidden="true"></i></div>
     </div>
 
     @include('User.partials.footer')
-
+    
 {{--</div>--}}
 
 <!-- ./wrapper -->
@@ -164,6 +183,20 @@
 <script> $(".grid-refresh").hide();
     $(".box-title").css("color", "white");
 </script>
-
+<script type="text/javascript">
+    $(window).scroll(function(event) {
+        /* Act on the event */
+        console.log('Hello');
+        if($(this).scrollTop() >= 100){
+            $('#backtotop').fadeIn(150);        
+        }
+        else{
+            $('#backtotop').fadeOut(150);
+        }
+    });
+    $('#backtotop').on('click', function(){
+                $('html, body').animate({scrollTop: 0}, 1000 );
+            });
+</script>
 </body>
 </html>

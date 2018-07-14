@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use App\Http\Extensions\Facades\User;
+use App\Http\Extensions\GridUser;
 use app\Http\Extensions\LayoutUser\ContentUser;
 use Encore\Admin\Widgets\Alert;
 use Encore\Admin\Widgets\Callout;
@@ -361,7 +362,7 @@ class APIController extends Controller {
 EOT;
             User::script($script);
         $idTimeRegister = $request->id;
-        return User::grid(ResultRegister::class, function (Grid $grid)  use($idTimeRegister) {
+        return User::GridUser(ResultRegister::class, function (GridUser $grid)  use($idTimeRegister) {
             $user = Auth::user();
             // $timeRegister = TimeRegister::orderBy('id', 'DESC')->first();
             // $timeRegister = TimeRegister::where('id', $idTimeRegister)->first();
@@ -453,7 +454,34 @@ EOT;
                  }
                  
             });
+            $grid->column('Số tín chỉ hiện tại')->display(function () use ($idTimeRegister){
+                $idUser = Auth::user()->id;
+                $idSubject = ResultRegister::where('id_user_student', $idUser)->where('time_register', $idTimeRegister)->pluck('id_subject');
+                $subjects = Subjects::find($idSubject);
+                $sumCredit = 0;
+                foreach ($subjects as $subject){
+                    $sumCredit+=$subject->credits;
+                }
+                return $sumCredit;
 
+            });
+            $grid->column('Điểm TK ALL')->display(function ()use ($idTimeRegister){
+                $idUser = Auth::user()->id;
+                $resultUsers = ResultRegister::where('id_user_student', $idUser)->where('time_register', $idTimeRegister)->get()->toArray();
+                $sum = 0;
+                $countCredit = 0;
+                foreach ($resultUsers as $resultUser){
+                    $credits = Subjects::find($resultUser['id_subject'])->credits;
+                    $countCredit += $credits;
+                }
+                foreach ($resultUsers as $resultUser){
+                    $credits = Subjects::find($resultUser['id_subject'])->credits;
+                    $sum += ((($resultUser['attendance'] * $resultUser['rate_attendance']) +
+                        ($resultUser['mid_term'] * $resultUser['rate_mid_term']) +
+                        ($resultUser['end_term'] * $resultUser['rate_end_term'])) / 100)*$credits;
+                }
+                return round($sum/$countCredit, 2);
+            });
             $grid->disableCreateButton();
             $grid->disableExport();
             $grid->disableRowSelector();
@@ -465,7 +493,7 @@ EOT;
 
     public function resultTimeRegister (Request $request){
         $idTimeRegister = $request->id;
-        return User::grid(ResultRegister::class, function (Grid $grid) use($idTimeRegister) {
+        return User::gridUser(ResultRegister::class, function (GridUser $grid) use($idTimeRegister) {
             $user = Auth::user();
             $timeRegister = TimeRegister::find($idTimeRegister)->first();
             $grid->model()->where('time_register', $idTimeRegister)->where('id_user_student', $user->id);
@@ -581,7 +609,17 @@ EOT;
                 // $grid->qty_max('Số lượng tối đa');
                 // $grid->date_start('Ngày bắt đầu');
                 // $grid->date_end('Ngày kết thúc');
+            $grid->column('Số tín chỉ hiện tại')->display(function () use ($idTimeRegister){
+                $idUser = Auth::user()->id;
+                $idSubject = ResultRegister::where('id_user_student', $idUser)->where('time_register', $idTimeRegister)->pluck('id_subject');
+                $subjects = Subjects::find($idSubject);
+                $sumCredit = 0;
+                foreach ($subjects as $subject){
+                    $sumCredit+=$subject->credits;
+                }
+                return $sumCredit;
 
+            });
             $grid->disableExport();
             $grid->disableCreation();
             $grid->disableExport();

@@ -40,13 +40,6 @@ class SubjectRegisterController extends Controller
 
             $content->header('Học phần');
             $content->description('Danh sách học phần');
-            $script = <<<EOT
-            if (location.href.indexOf('reload')==-1)
-            {
-               location.href=location.href+'?reload';
-            }
-EOT;
-            Admin::script($script);
             $content->body($this->grid());
         });
     }

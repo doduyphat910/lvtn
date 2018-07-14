@@ -183,7 +183,7 @@ class PointSubjectController extends Controller
             $grid->disableExport();
             $grid->disableRowSelector();
             $grid->disableActions();
- 			
+
     	});
     }
     protected function form()
@@ -197,6 +197,10 @@ class PointSubjectController extends Controller
             $form->select('id_time_register', 'Thời gian')->options($options)->attribute(['id' => 'resultPoint']);
             $form->disableReset();
             $form->disableSubmit();
+            $form->tools(function (Form\Tools $tools) {
+           
+            $tools->disableListButton();
+            });
 
         });
     }

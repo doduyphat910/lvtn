@@ -15,34 +15,18 @@
   <!-- iCheck -->
   <link rel="stylesheet" href="<?php echo e(admin_asset("/vendor/laravel-admin/AdminLTE/plugins/iCheck/square/blue.css")); ?>">
 
+  <link rel="stylesheet" href="<?php echo e(admin_asset("/vendor/laravel-admin/custom/styleloginadmin.css")); ?>">
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
   <script src="//oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
   <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
-  <style type="text/css">
-    #video-background {
-/*  making the video fullscreen  */
-    position: fixed;
-    right: 0;
-    bottom: -5%;
-    min-width: 100%; 
-    min-height: 100%;
-    z-index: -100;
-    
-}
-.login-box, .register-box {
-    width: 360px;
-    margin: 11% auto;
-}
-  </style>
-</head>
-<body class="hold-transition login-page" >
 
-  <video height="" autoplay loop id="video-background" muted plays-inline>
-  <source src="../../../uploads/images/video STU.mp4" type="video/mp4">
-</video>
+</head>
+<body class="hold-transition login-page" style="background-image: url(../../../uploads/images/STUR.jpg);background-size:cover;background-repeat: no-repeat;">
+
+  
 <div class="login-box">
   <div class="login-logo">
    
