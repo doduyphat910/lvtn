@@ -141,7 +141,7 @@ $arrPeriods = collect($arrPeriods)->map(function($x){ return (array) $x; })->toA
 <style type="text/css">
     th.th-object.th-object, td.td-object:first-child, td.td-object:last-child{
         text-align: center;
-        background-color: #6699CC;
+        background-color: #3c8dbc;
         color: #fff;
     }
     th.th-object.th-object,.table-bordered>tbody>tr>td.td-object{

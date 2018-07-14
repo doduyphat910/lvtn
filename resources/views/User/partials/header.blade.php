@@ -109,11 +109,11 @@
           <ul class="nav navbar-nav ">
             <li class="active"><a href="{{ url('user/student') }}" ><i class="fa fa-home fa-fw fa-1x" aria-hidden="true"></i> Trang chủ <span class="sr-only">(current)</span></a></li>
                     <li class="dropdown-register">
-                         <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><strong><i class="fa fa-pencil fa-fw fa-1x"></i> Đăng ký</strong> <b class="caret"></b></a>
+                         <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><strong><i class="fa fa-pencil-square-o fa-fw fa-1x"></i> Đăng ký</strong> <b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ url('user/subject-register') }}"><i class="fa fa-pencil fa-fw fa-1x"></i><strong>Đăng ký môn học</strong></a></li>
-                            <li><a href="{{ url('user/learn-improvement') }}"><i class="fa fa-pencil fa-fw fa-1x"></i><strong>Đăng ký học cải thiện, học lại</strong></a></li>
-                            <li><a href="{{ url('user/user-subject') }}"><i class="fa fa-pencil fa-fw fa-1x"></i><strong>Đăng ký ngoài kế hoạch</strong></a></li>
+                            <li><a href="{{ url('user/subject-register') }}"><i class="fa fa-pencil-square-o fa-1x"></i><strong>Đăng ký môn học</strong></a></li>
+                            <li><a href="{{ url('user/learn-improvement') }}"><i class="fa fa-pencil-square fa-1x"></i><strong>Đăng ký học cải thiện, học lại</strong></a></li>
+                            <li><a href="{{ url('user/user-subject') }}"><i class="fa fa-pencil fa-1x"></i><strong>Đăng ký ngoài kế hoạch</strong></a></li>
                             
                         </ul>
                        
@@ -133,8 +133,8 @@
                             <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Xin chào {{Auth::User()->last_name}}<img src="" class="user-image"><span class="caret"></span></a>
                              <ul class="dropdown-menu">
                                  @php $id = Auth::User()->id @endphp
-                                    <li><a href="{{ url('user/information/'. $id.'/edit') }}"><i class="fa fa-user fa-fw fa-1x" aria-hidden="true"></i>Thông tin cá nhân</a></li>
-                                   <li><a href="{{ url('logout') }}"><i class="fa fa-sign-out fa-fw fa-1x" aria-hidden="true"></i>Đăng xuất</a></li>
+                                    <li><a href="{{ url('user/information/'. $id.'/edit') }}"><i class="fa fa-user fa-1x" aria-hidden="true"></i>Thông tin cá nhân</a></li>
+                                   <li><a href="{{ url('logout') }}"><i class="fa fa-sign-out fa-1x" aria-hidden="true"></i>Đăng xuất</a></li>
                             </ul>
                          </li>
                       </ul>

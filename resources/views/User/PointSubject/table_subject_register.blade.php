@@ -18,8 +18,12 @@ $(function () {
                     $("table").addClass('table-bordered');
                     $("th").css("background-color","#3c8dbc");
                     $("th").css("color","white");
+                    $("td").addClass('text-center');
+                    $("td:nth-last-child(11)").css('text-align','left');
+                    $("th").addClass('text-center');
                 }
             });
+            
     });
 });
 

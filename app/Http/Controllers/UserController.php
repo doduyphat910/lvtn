@@ -53,13 +53,17 @@ class UserController extends Controller
 //            $grid->URL('Đường dẫn')->display(function ($name){
 //                return  '<a href="' . $this->URL . '" target="_blank" >'.$name.'</a>';
 //            });
+           $grid->filter(function($filter){
+                $filter->disableIdFilter();
+                 $filter->like('name', 'Tên thông báo');                               
+            }); 
             $grid->created_at('Tạo vào lúc');
             $grid->disableCreateButton();
             //$grid->disableCreateButton();
             $grid->disableActions();
             $grid->disableExport();
             $grid->disableRowSelector();
-            $grid->disableFilter();
+            
         });
     }
 

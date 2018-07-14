@@ -92,13 +92,13 @@ class SubjectRegisterController extends Controller
                 $grid->model()->whereIn('id', $subjects_id)->whereNotIn('id', $idSubjectLearned)->orderBy(DB::raw('FIELD(id, ' . $field . ')'));
             }
             //$grid->id('id');
-            $grid->id('Mã môn học');
+            $grid->id('Mã môn học')->style("text-align: center;");
             $grid->name('Tên môn học')->display(function ($name) {
                 return '<a href="/user/subject-register/' . $this->id . '/details"  target="_blank" >' . $name . '</a>';
             });
 
-            $grid->credits('Số tín chỉ');
-            $grid->credits_fee('Số tín chỉ học phí');
+            $grid->credits('Số tín chỉ')->style("text-align: center;");
+            $grid->credits_fee('Số tín chỉ học phí')->style("text-align: center;");
             $grid->column('Nhóm môn')->display(function () {
                 $subject = Subjects::find($this->id);
                 $nameGroup = $subject->subject_group()->pluck('name')->toArray();
@@ -112,7 +112,7 @@ class SubjectRegisterController extends Controller
                 return join('&nbsp;', $groupSubject);
 
             });
-            $grid->column('Học kỳ - Năm')->display(function () {
+            $grid->column('Học kỳ - Năm')->style("text-align: center;")->display(function () {
                 $id = $this->id;
                 $subject = Subjects::find($id);
                 $arraySemester = $subject->semester()->pluck('id')->toArray();
@@ -161,8 +161,8 @@ class SubjectRegisterController extends Controller
                 }, $arraySemester);
                     return join('&nbsp;', $name);
             });
-            $grid->column('Đăng ký')->display(function () {
-                return '<a href="/user/subject-register/' . $this->id . '/details" data-id='.$this->id.' class="btn btn-md"  target="_blank" ><i class="fa fa-pencil fa-fw fa-1x"></i></a>';
+            $grid->column('Đăng ký')->style("text-align: center;")->display(function () {
+                return '<a href="/user/subject-register/' . $this->id . '/details" data-id='.$this->id.' class="btn btn-md"  target="_blank" ><i class="fa fa-pencil-square-o fa-fw fa-1x"></i></a>';
             });
             $grid->filter(function($filter){
                 $filter->disableIdFilter();
@@ -265,7 +265,7 @@ SCRIPT;
             $timeRegister = TimeRegister::where('status', 1)->orderBy('id', 'DESC')->first();
             $grid->model()->where('id_subjects', $idSubjects)->where('id_time_register', $timeRegister->id);
 //            $grid->id('ID');
-            $grid->id('Mã học phần');
+            $grid->id('Mã học phần')->style("text-align: center;");
             $grid->id_subjects('Môn học')->display(function ($idSubject) {
                 if ($idSubject) {
                     return Subjects::find($idSubject)->name;
@@ -273,7 +273,7 @@ SCRIPT;
                     return '';
                 }
             });
-            $grid->column('Phòng')->display(function () {
+            $grid->column('Phòng')->style("text-align: center;")->display(function () {
                 $idClassroom = TimeStudy::where('id_subject_register', $this->id)->pluck('id_classroom')->toArray();
                 $classRoom = Classroom::whereIn('id', $idClassroom)->pluck('name')->toArray();
                 $classRoom = array_map(function ($classRoom) {
@@ -281,7 +281,7 @@ SCRIPT;
                 }, $classRoom);
                 return join('&nbsp;', $classRoom);
             });
-            $grid->column('Buổi học')->display(function () {
+            $grid->column('Buổi học')->style("text-align: center;")->display(function () {
                 $day = TimeStudy::where('id_subject_register', $this->id)->pluck('day')->toArray();
                 $day = array_map(function ($day) {
                     switch ($day) {
@@ -312,7 +312,7 @@ SCRIPT;
                 }, $day);
                 return join('&nbsp;', $day);
             });
-            $grid->column('Thời gian học')->display(function () {
+            $grid->column('Thời gian học')->style("text-align: center;")->display(function () {
                 $timeStart = TimeStudy::where('id_subject_register', $this->id)->pluck('time_study_start')->toArray();
                 $timeEnd = TimeStudy::where('id_subject_register', $this->id)->pluck('time_study_end')->toArray();
                 $time = array_map(function ($timeStart, $timeEnd) {
@@ -332,10 +332,10 @@ SCRIPT;
                     return '';
                 }
             });
-            $grid->qty_current('Số lượng hiện tại');
-            $grid->qty_max('Số lượng tối đa');
-            $grid->date_start('Ngày bắt đầu');
-            $grid->date_end('Ngày kết thúc');
+            $grid->qty_current('Số lượng hiện tại')->style("text-align: center;");
+            $grid->qty_max('Số lượng tối đa')->style("text-align: center;");
+            $grid->date_start('Ngày bắt đầu')->style("text-align: center;");
+            $grid->date_end('Ngày kết thúc')->style("text-align: center;");
 
             $grid->disableExport();
             $grid->disableCreation();
@@ -359,7 +359,7 @@ SCRIPT;
             $grid->actions(function ($actions) use ($idSubjects){
                 $actions->disableEdit();
                 $actions->disableDelete();
-                $actions->append('<a href="javascript:void(0);" data-id="' . $this->getKey() . '"  class="btn btn-danger btnTotal btnCancel" style="display: none;"><i class="glyphicon glyphicon-trash"></i> &nbsp Hủy bỏ </a>');
+                $actions->append('<a href="javascript:void(0);" data-id="' . $this->getKey() . '"  class="btn btn-danger btnTotal btnCancel" style="display: none;text-align:center;"><i class="glyphicon glyphicon-trash"></i> &nbsp Hủy bỏ </a>');
 //
 //                $arrIdSubjectsList=SubjectRegister::where('id_subjects',$idSubjects)->pluck('id')->toArray();
 //                $arrIdResultRegister=ResultRegister::get()->pluck('id_subject_register')->toArray();
@@ -381,18 +381,18 @@ SCRIPT;
                                 var idRegister =$(this).data('id');
                                 if(idRegister == '$codeSubjectRegister') {
 //                                    $('[data-id='+idRegister+']').hide();
-                                    $('.btnCancel[data-id='+idRegister+']').css("display", "initial");
-//                                 $('.btnCancel').find('a[data-id='+idRegister+']').css("display", "initial");
+                                    $('.btnCancel[data-id='+idRegister+']').css("display", "block");
+//                                 $('.btnCancel').find('a[data-id='+idRegister+']').css("display", "block");
                                 }
                                 else {
-                                    $('.btnRegister[data-id='+idRegister+']').css("display", "initial");
+                                    $('.btnRegister[data-id='+idRegister+']').css("display", "block");
                                 }
                              });
 SCRIPT;
                     User::script($script);
                 } else {
                     $script = <<<SCRIPT
-                                    $('.btnRegister').css("display", "initial");
+                                    $('.btnRegister').css("display", "block");
 
 SCRIPT;
                     User::script($script);
@@ -404,9 +404,8 @@ SCRIPT;
 //                }
 
                 //button Register (nút đăng kí)
-                $actions->append('<a href="javascript:void(0);" data-id="' . $this->getKey() . '"  class="btn btn-primary btnRegister btnTotal" style="display: none;"  ><i class="glyphicon glyphicon-pencil"></i> &nbsp Đăng ký </a>');
+                $actions->append('<a href="javascript:void(0);" data-id="' . $this->getKey() . '"  class="btn btn-primary btnRegister btnTotal" style="display: none;text-align:center;"  ><i class="fa fa-pencil-square-o"></i> &nbsp Đăng ký </a>');
 
-                
 
             });
 

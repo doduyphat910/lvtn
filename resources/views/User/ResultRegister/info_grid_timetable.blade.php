@@ -20,12 +20,17 @@ $(function () {
                     $(".th-object:first-child").css("background-color","white");
                     $('h1').css({
                         'font-weight': 'bold',
-                        'font-family': 'Times New Roman'
+                        
                     });
                     $('li').css({
                         'font-weight': 'bold',
-                        'font-family': 'Times New Roman'
+                        
                     });
+                    $(".td-object:first-child").css("background-color","#3c8dbc");
+                    $(".td-object:last-child").css("background-color","#3c8dbc");
+                    $("th").addClass('text-center');
+                    $("td").addClass('text-center');
+                 
                 }
             });
             $.ajax({
@@ -35,6 +40,10 @@ $(function () {
                 },
                 success: function( msg ) {
                     $('.time-table').html(msg);
+                    $('td').css({
+                        'font-weight': 'bold',
+                        
+                    });
                     
                  }
             });

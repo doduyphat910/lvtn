@@ -84,13 +84,13 @@ class LearnImprovenmentController extends Controller
                 $grid->model()->whereIn('id', $subjects_id)->whereIn('id', $idSubjectLearned)->orderBy(DB::raw('FIELD(id, ' . $field . ')'));
             }
             //$grid->id('id');
-            $grid->id('Mã môn học');
+            $grid->id('Mã môn học')->style("text-align: center;");
             $grid->name('Tên môn học')->display(function ($name) {
                 return '<a href="/user/subject-register/' . $this->id . '/details"  target="_blank" >' . $name . '</a>';
             });
 
-            $grid->credits('Số tín chỉ');
-            $grid->credits_fee('Số tín chỉ học phí');
+            $grid->credits('Số tín chỉ')->style("text-align: center;");
+            $grid->credits_fee('Số tín chỉ học phí')->style("text-align: center;");
             $grid->column('Nhóm môn')->display(function () {
                 $subject = Subjects::find($this->id);
                 $nameGroup = $subject->subject_group()->pluck('name')->toArray();
@@ -104,7 +104,7 @@ class LearnImprovenmentController extends Controller
                 return join('&nbsp;', $groupSubject);
 
             });
-            $grid->column('Học kỳ - Năm')->display(function () {
+            $grid->column('Học kỳ - Năm')->style("text-align: center;")->display(function () {
                 $id = $this->id;
                 $subject = Subjects::find($id);
                 $arraySemester = $subject->semester()->pluck('id')->toArray();
@@ -126,8 +126,8 @@ class LearnImprovenmentController extends Controller
                 }, $arraySemester);
                 return join('&nbsp;', $name);
             });
-            $grid->column('Đăng ký')->display(function () {
-                return '<a href="/user/subject-register/' . $this->id . '/details" data-id='.$this->id.'  target="_blank" class="btn btn-md btnACV" ><i class="glyphicon glyphicon-pencil"></i></a>';
+            $grid->column('Đăng ký')->style("text-align: center;")->display(function () {
+                return '<a href="/user/subject-register/' . $this->id . '/details" data-id='.$this->id.'  target="_blank" class="btn btn-md" ><i class="fa fa-pencil-square"></i></a>';
             });
             $grid->disableCreateButton();
             $grid->disableExport();

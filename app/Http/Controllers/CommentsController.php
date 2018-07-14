@@ -46,6 +46,7 @@ class CommentsController extends Controller
                 $tools->disableBackButton();
                 $tools->disableListButton();
             });
+            $form->disableReset();
        });
     }
     
