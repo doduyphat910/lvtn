@@ -84,10 +84,10 @@ class ManagePointController extends Controller
             } else {
                 $grid->model()->where('id', '-1');
             }
-            $grid->rows(function (Grid\Row $row) {
-                $row->column('number', $row->number);
-            });
-            $grid->number('STT');
+//            $grid->rows(function (Grid\Row $row) {
+//                $row->column('number', $row->number);
+//            });
+//            $grid->number('STT');
             $grid->id('Mã học phần')->display(function ($name) {
                 return '<a href="/admin/teacher/manage-point/' . $this->id . '/details">' . $name . '</a>';
             });
@@ -260,10 +260,10 @@ EOT;
             $idUser = $user->id;
             $grid->model()->where('id_subject_register', $idSubjectRegister);
 //            $grid->id('ID')->sortable();
-            $grid->rows(function (Grid\Row $row) {
-                $row->column('number', $row->number);
-            });
-            $grid->number('STT');
+//            $grid->rows(function (Grid\Row $row) {
+//                $row->column('number', $row->number);
+//            });
+//            $grid->number('STT');
             $grid->id_user_student('MSSV')->display(function () {
                 if (StudentUser::find($this->id_user_student)->code_number) {
                     return StudentUser::find($this->id_user_student)->code_number;

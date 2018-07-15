@@ -78,11 +78,11 @@ class RateController extends Controller
     protected function grid()
     {
         return Admin::grid(Rate::class, function (Grid $grid) {
-            $grid->rows(function (Grid\Row $row) {
-                $row->column('number', $row->number);
-            });
-            $grid->number('STT');
-//            $grid->id('ID')->sortable();
+//            $grid->rows(function (Grid\Row $row) {
+//                $row->column('number', $row->number);
+//            });
+//            $grid->number('STT');
+            $grid->id('ID')->sortable();
             $grid->name('Tỷ lệ')->display(function ($name){
                 return  '<a href="/admin/rate/' . $this->id . '/details">'.$name.'</a>';
             })->sortable();
@@ -130,6 +130,7 @@ class RateController extends Controller
                     return back()->with(compact('error'));
                 }
             });
+            $form->disableReset();
         });
     }
 
@@ -162,10 +163,10 @@ class RateController extends Controller
         return Admin::grid(Subjects::class, function (Grid $grid) use ($idRate) {
             $grid->model()->where('id_rate',$idRate);
 //            $grid->id('ID')->sortable();
-            $grid->rows(function (Grid\Row $row) {
-                $row->column('number', $row->number);
-            });
-            $grid->number('STT');
+//            $grid->rows(function (Grid\Row $row) {
+//                $row->column('number', $row->number);
+//            });
+//            $grid->number('STT');
             $grid->id('Mã môn học')->sortable();
             $grid->name('Tên môn học')->display(function ($name){
                 return  '<a href="/admin/subject/' . $this->id . '/details">'.$name.'</a>';

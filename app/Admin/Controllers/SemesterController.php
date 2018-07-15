@@ -37,13 +37,6 @@ class SemesterController extends Controller
 
             $content->header('Năm, học kỳ');
             $content->description('Danh sách học kỳ');
-            $script = <<<EOT
-            if (location.href.indexOf('reload')==-1)
-            {
-               location.href=location.href+'?reload';
-            }
-EOT;
-            Admin::script($script);
             $content->body($this->grid());
         });
     }
@@ -90,11 +83,11 @@ EOT;
     protected function grid()
     {
         return Admin::grid(Semester::class, function (Grid $grid) {
-            $grid->rows(function (Grid\Row $row) {
-                $row->column('number', $row->number);
-            });
-            $grid->number('STT');
-//            $grid->id('ID')->sortable();
+//            $grid->rows(function (Grid\Row $row) {
+//                $row->column('number', $row->number);
+//            });
+//            $grid->number('STT');
+            $grid->id('ID')->sortable();
             $grid->name('Tên')->display(function ($name){
                 if($name == 0) {
                     $name = 'Học kỳ hè';
@@ -140,10 +133,10 @@ EOT;
             $idSubjects = SemesterSubjects::where('semester_id', $idSemester)->pluck('subjects_id');
             $grid->model()->whereIn('id', $idSubjects);
 //            $grid->id('ID')->sortable();
-            $grid->rows(function (Grid\Row $row) {
-                $row->column('number', $row->number);
-            });
-            $grid->number('STT');
+//            $grid->rows(function (Grid\Row $row) {
+//                $row->column('number', $row->number);
+//            });
+//            $grid->number('STT');
             $grid->id('Mã môn học')->sortable();
             $grid->name('Tên môn học')->display(function ($name){
                 return  '<a href="/admin/subject/' . $this->id . '/details">'.$name.'</a>';

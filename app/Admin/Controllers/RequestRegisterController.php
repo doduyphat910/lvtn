@@ -110,10 +110,10 @@ class RequestRegisterController extends Controller
     {
         return Admin::grid(UserSubject::class, function (Grid $grid) use ($idSubject) {
             $grid->model()->where('id_subject', $idSubject);
-            $grid->rows(function (Grid\Row $row) {
-                $row->column('number', $row->number);
-            });
-            $grid->number('STT');
+//            $grid->rows(function (Grid\Row $row) {
+//                $row->column('number', $row->number);
+//            });
+//            $grid->number('STT');
             $grid->id_user('MSSV')->display(function ($idUser){
                 $user = StudentUser::find($idUser);
                 if($user->code_number){

@@ -81,11 +81,11 @@ class TimeRegisterController extends Controller
     {
         return Admin::grid(TimeRegister::class, function (Grid $grid) {
             $grid->model()->orderBy('created_at', 'DESC');
-            $grid->rows(function (Grid\Row $row) {
-                $row->column('number', $row->number);
-            });
-            $grid->number('STT');
-//            $grid->id('ID')->sortable();
+//            $grid->rows(function (Grid\Row $row) {
+//                $row->column('number', $row->number);
+//            });
+//            $grid->number('STT');
+            $grid->id('ID')->sortable();
             $grid->name('Tên')->display(function ($name){
                 return '<a href="/admin/time-register/' . $this->id . '/details" >'.$name.'</a>';
             })->sortable();
@@ -233,19 +233,19 @@ EOT;
             }
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
-
+            $form->disableReset();
         });
     }
 
     protected function details($id){
         return Admin::content(function (Content $content) use ($id) {
-//           $script = <<<EOT
-//           if (location.href.indexOf('reload')==-1)
-//           {
-//              location.href=location.href+'?reload';
-//           }
-//EOT;
-//           Admin::script($script);
+           $script = <<<EOT
+           if (location.href.indexOf('reload')==-1)
+           {
+              location.href=location.href+'?reload';
+           }
+EOT;
+           Admin::script($script);
 //             header("Refresh:0");
             $time = TimeRegister::findOrFail($id);
             $content->header('TG Đăng ký');

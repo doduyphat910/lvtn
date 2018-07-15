@@ -25,10 +25,10 @@ class APIAdminController extends Controller
             $user = Admin::user();
             $idUser = $user->id;
             $grid->model()->where('id_time_register', $idTimeRegister)->where('id_user_teacher', $idUser);
-            $grid->rows(function (Grid\Row $row) {
-                $row->column('number', $row->number);
-            });
-            $grid->number('STT');
+//            $grid->rows(function (Grid\Row $row) {
+//                $row->column('number', $row->number);
+//            });
+//            $grid->number('STT');
             $grid->id('Mã học phần')->display(function ($name) {
                 return '<a href="/admin/teacher/subject-register/' . $this->id . '/details">' . $name . '</a>';
             });
@@ -488,10 +488,10 @@ class APIAdminController extends Controller
             $user = Admin::user();
             $idUser = $user->id;
             $grid->model()->where('id_time_register', $idTimeRegister)->where('id_user_teacher', $idUser);
-            $grid->rows(function (Grid\Row $row) {
-                $row->column('number', $row->number);
-            });
-            $grid->number('STT');
+//            $grid->rows(function (Grid\Row $row) {
+//                $row->column('number', $row->number);
+//            });
+//            $grid->number('STT');
             $grid->id('Mã học phần')->display(function ($name) {
                 return '<a href="/admin/teacher/manage-point/' . $this->id . '/details">' . $name . '</a>';
             });

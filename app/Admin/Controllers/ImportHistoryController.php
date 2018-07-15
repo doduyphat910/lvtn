@@ -73,11 +73,11 @@ class ImportHistoryController extends Controller
     {
         return Admin::grid(CSVData::class, function (Grid $grid) {
             $grid->model()->orderBy('created_at', 'DESC');
-            $grid->rows(function (Grid\Row $row) {
-                $row->column('number', $row->number);
-            });
-            $grid->number('STT');
-            $grid->id('ID');
+//            $grid->rows(function (Grid\Row $row) {
+//                $row->column('number', $row->number);
+//            });
+//            $grid->number('STT');
+            $grid->id('ID')->sortable();
             $grid->file_name('Tên file');
             $grid->column('Tên model')->display(function (){
                 switch ($this->model){

@@ -80,10 +80,10 @@ class StudentUserController extends Controller
     {
         return Admin::grid(StudentUser::class, function (Grid $grid) {
             $grid->model()->orderBy('created_at', 'DESC');
-            $grid->rows(function (Grid\Row $row) {
-                $row->column('number', $row->number);
-            });
-            $grid->number('STT');
+//            $grid->rows(function (Grid\Row $row) {
+//                $row->column('number', $row->number);
+//            });
+//            $grid->number('STT');
 //            $grid->id('ID')->sortable();
 //            $grid->avatar('Avatar')->image();
             $grid->code_number('Mã số sinh viên')->sortable();
@@ -164,6 +164,7 @@ class StudentUserController extends Controller
             $form->select('level', 'Trình độ')->options(['CD'=>'Cao đẳng', 'DH'=>'Đại học'])->rules('required');
             $form->display('created_at', 'Thêm vào lúc');
             $form->display('updated_at', 'Cập nhật vào lúc');
+            $form->disableReset();
         });
     }
 
@@ -188,6 +189,7 @@ class StudentUserController extends Controller
             $form->select('level', 'Trình độ')->options(['CD'=>'Cao đẳng', 'DH'=>'Đại học']);
             $form->display('created_at', 'Thêm vào lúc');
             $form->display('updated_at', 'Cập nhật vào lúc');
+            $form->disableReset();
         });
     }
 

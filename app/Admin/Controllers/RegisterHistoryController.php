@@ -37,10 +37,11 @@ class RegisterHistoryController extends Controller
     {
         return Admin::grid(ResultRegister::class, function (Grid $grid) {
             $grid->model()->orderBy('created_at', 'DESC');
-            $grid->rows(function (Grid\Row $row) {
-                $row->column('number', $row->number);
-            });
-            $grid->number('STT');
+//            $grid->rows(function (Grid\Row $row) {
+//                $row->column('number', $row->number);
+//            });
+//            $grid->number('STT');
+            $grid->id('ID')->sortable();
             $grid->column('Họ SV')->display(function (){
                 $user = StudentUser::find($this->id_user_student);
                 if($user->first_name){

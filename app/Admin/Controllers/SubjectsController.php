@@ -87,10 +87,10 @@ class SubjectsController extends Controller
         return Admin::grid(Subjects::class, function (Grid $grid) {
 
 //            $grid->model()->orderBy('created_at','DESC');
-            $grid->rows(function (Grid\Row $row) {
-                $row->column('number', $row->number);
-            });
-            $grid->number('STT');
+//            $grid->rows(function (Grid\Row $row) {
+//                $row->column('number', $row->number);
+//            });
+//            $grid->number('STT');
 //            $grid->model()->where();
 //            $grid->id('ID')->sortable();
             $grid->id('Mã môn học')->sortable();
@@ -265,6 +265,7 @@ class SubjectsController extends Controller
             $form->select('id_rate', 'Tỷ lệ điểm')->options($arrayRate)->rules('required');
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
+            $form->disableReset();
         });
     }
 
@@ -273,10 +274,10 @@ class SubjectsController extends Controller
         return Admin::grid(SubjectRegister::class, function (Grid $grid) use ($idSubjects) {
             $grid->model()->where('id_Subjects', $idSubjects)->orderBy('created_at', 'DESC');
 //            $grid->id('ID')->sortable();
-            $grid->rows(function (Grid\Row $row) {
-                $row->column('number', $row->number);
-            });
-            $grid->number('STT');
+//            $grid->rows(function (Grid\Row $row) {
+//                $row->column('number', $row->number);
+//            });
+//            $grid->number('STT');
             $grid->id('Mã học phần')->sortable();
             $grid->id_subjects('Môn học')->display(function ($idSubject){
                 if($idSubject){

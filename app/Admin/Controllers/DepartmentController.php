@@ -149,6 +149,7 @@ class DepartmentController extends Controller
             });
             $form->display('created_at', 'Tạo vào lúc');
             $form->display('updated_at', 'Cập nhật vào lúc');
+            $form->disableReset();
         });
     }
 

@@ -80,11 +80,11 @@ class SubjectGroupController extends Controller
     protected function grid()
     {
         return Admin::grid(SubjectGroup::class, function (Grid $grid) {
-            $grid->rows(function (Grid\Row $row) {
-                $row->column('number', $row->number);
-            });
-            $grid->number('STT');
-//            $grid->id('ID')->sortable();
+//            $grid->rows(function (Grid\Row $row) {
+//                $row->column('number', $row->number);
+//            });
+//            $grid->number('STT');
+            $grid->id('ID')->sortable();
             $grid->model()->orderBy('created_at', 'DESC');
             $grid->name('Tên nhóm môn')->display(function ($name){
                 return  '<a href="/admin/subject_group/' . $this->id . '/details">'.$name.'</a>';
@@ -117,6 +117,7 @@ class SubjectGroupController extends Controller
             $form->text('name', 'Nhóm môn học')->rules('required');
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
+            $form->disableReset();
         });
     }
 
@@ -151,10 +152,10 @@ class SubjectGroupController extends Controller
             $grid->resource('admin/subject');
             $grid->model()->whereIn('id', $idSubject);
 //            $grid->id('ID')->sortable();
-            $grid->rows(function (Grid\Row $row) {
-                $row->column('number', $row->number);
-            });
-            $grid->number('STT');
+//            $grid->rows(function (Grid\Row $row) {
+//                $row->column('number', $row->number);
+//            });
+//            $grid->number('STT');
             $grid->id('Mã môn học')->sortable();
             $grid->name('Tên môn học')->display(function ($name){
                 return  '<a href="/admin/subject/' . $this->id . '/details">'.$name.'</a>';

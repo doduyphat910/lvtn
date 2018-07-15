@@ -74,11 +74,11 @@ class TimeTableController extends Controller
     {
         return Admin::grid(TimeTable::class, function (Grid $grid) {
 
-//            $grid->id('ID')->sortable();
-            $grid->rows(function (Grid\Row $row) {
-                $row->column('number', $row->number);
-            });
-            $grid->number('STT');
+            $grid->id('ID')->sortable();
+//            $grid->rows(function (Grid\Row $row) {
+//                $row->column('number', $row->number);
+//            });
+//            $grid->number('STT');
             $grid->period('Tiết học')->sortable();
             $grid->time_start('Thời gian bắt đầu')->sortable();
             $grid->time_end('Thời gian kết thúc')->sortable();
@@ -119,6 +119,7 @@ class TimeTableController extends Controller
             });
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
+            $form->disableReset();
         });
     }
 }

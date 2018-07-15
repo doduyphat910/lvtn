@@ -27,13 +27,13 @@ class HomeController extends Controller
 EOT;
                 Admin::script($script);
             }
-//            $script = <<<EOT
-//            if (location.href.indexOf('reload')==-1)
-//            {
-//               location.href=location.href+'?reload';
-//            }
-//EOT;
-//            Admin::script($script);
+            $script = <<<EOT
+            if (location.href.indexOf('reload')==-1)
+            {
+               location.href=location.href+'?reload';
+            }
+EOT;
+            Admin::script($script);
 //            header("Refresh:0");
             $content->header('Trang chủ');
 //            $content->description('Description...');
@@ -51,8 +51,8 @@ EOT;
                 array_push($countStudent, $countClass);
             }
             //chart 2
-            $timeRegisters = TimeRegister::orderBy('id', 'DESC')->limit(5)->pluck('name')->toArray();
-            $timeRegisters2 = TimeRegister::orderBy('id', 'DESC')->limit(5)->get()->toArray();
+            $timeRegisters = TimeRegister::orderBy('id', 'DESC')->limit(3)->pluck('name')->toArray();
+            $timeRegisters2 = TimeRegister::orderBy('id', 'DESC')->limit(3)->get()->toArray();
             $dataTimeRegister = [];
             foreach($timeRegisters2 as $timeRegister) {
                 $countStudentRegister = ResultRegister::where('time_register', $timeRegister['id'])->count();

@@ -78,11 +78,11 @@ class ClassroomController extends Controller
     protected function grid()
     {
         return Admin::grid(Classroom::class, function (Grid $grid) {
-            $grid->rows(function (Grid\Row $row) {
-                $row->column('number', $row->number);
-            });
-            $grid->number('STT');
-//            $grid->id('ID')->sortable();
+//            $grid->rows(function (Grid\Row $row) {
+//                $row->column('number', $row->number);
+//            });
+//            $grid->number('STT');
+            $grid->id('ID')->sortable();
             $grid->name('Tên')->display(function ($name){
                 return  '<a href="/admin/class_room/' . $this->id . '/details">'.$name.'</a>';
             })->sortable();
@@ -106,10 +106,10 @@ class ClassroomController extends Controller
 //            $grid->resource('admin/subject-register');
             $grid->model()->whereIn('id', $idSubjectRegister)->orderBy('id_time_register', 'DESC');
 //            $grid->id('ID')->sortable();
-            $grid->rows(function (Grid\Row $row) {
-                $row->column('number', $row->number);
-            });
-            $grid->number('STT');
+//            $grid->rows(function (Grid\Row $row) {
+//                $row->column('number', $row->number);
+//            });
+//            $grid->number('STT');
             $grid->id('Mã học phần');
             $grid->id_subjects('Môn học')->display(function ($idSubject){
                 if($idSubject){
@@ -236,6 +236,7 @@ class ClassroomController extends Controller
 
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
+            $form->disableReset();
         });
     }
 

@@ -86,10 +86,10 @@ class SubjectRegisterController extends Controller
     {
         return Admin::grid(SubjectRegister::class, function (Grid $grid) {
             $grid->model()->orderBy('created_at', 'DESC');
-            $grid->rows(function (Grid\Row $row) {
-                $row->column('number', $row->number);
-            });
-            $grid->number('STT');
+//            $grid->rows(function (Grid\Row $row) {
+//                $row->column('number', $row->number);
+//            });
+//            $grid->number('STT');
 //            $grid->id('ID')->sortable();
             $grid->id('Mã học phần')->display(function ($name){
                 return  '<a href="/admin/subject_register/' . $this->id . '/details">'.$name.'</a>';
@@ -238,7 +238,7 @@ EOT;
             $form->hidden('qty_current', 'Số lượng hiện tại')->value('0');
             $form->number('qty_min', 'Số lượng tối thiểu')->rules('integer|min:5');
             $form->number('qty_max', 'Số lượng tối đa')->rules('integer|min:10');
-            $form->select('id_time_register', 'Đợt đăng ký')->options(TimeRegister::all()->pluck('name', 'id'))->rules('required');
+            $form->select('id_time_register', 'Đợt đăng ký')->options(TimeRegister::orderBy('created_at','DESC')->pluck('name', 'id'))->rules('required');
             $form->date('date_start', 'Ngày bắt đầu')->placeholder('Ngày bắt đầu')->rules('required');
             $form->date('date_end', 'Ngày kết thúc')->placeholder('Ngày kết thúc')->rules('required');
             $form->display('created_at', 'Tạo vào lúc');
@@ -299,8 +299,9 @@ EOT;
                             }
                         }
                     }
-
             });
+            $form->disableReset();
+
         });
     }
 
@@ -331,10 +332,10 @@ EOT;
             $idUser = $user->id;
             $grid->model()->where('id_subject_register', $idSubjectRegister);
 //            $grid->id('ID')->sortable();
-            $grid->rows(function (Grid\Row $row) {
-                $row->column('number', $row->number);
-            });
-            $grid->number('STT');
+//            $grid->rows(function (Grid\Row $row) {
+//                $row->column('number', $row->number);
+//            });
+//            $grid->number('STT');
             $grid->id_user_student('MSSV')->display(function ($idStudent) {
                 if (StudentUser::find($idStudent)->code_number) {
                     return StudentUser::find($idStudent)->code_number;
