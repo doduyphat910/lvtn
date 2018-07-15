@@ -130,6 +130,7 @@ EOT;
                 }, 'Năm')->multipleSelect(Year::all()->pluck('name','id'));
                 $filter->between('created_at', 'Tạo vào lúc')->datetime();
             });
+            $grid->disableExport();
         });
     }
 

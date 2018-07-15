@@ -62,7 +62,7 @@ class PointSubjectController extends Controller
     {
         return User::GridUser(ResultRegister::class, function (GridUser $grid) {
             $user = Auth::user();
-            $grid->model()->where('id_user_student', $user->id)->orderBy('time_register', 'DESC');
+            $grid->model()->where('id_user_student', $user->id)->where('is_learned', 1)->orderBy('time_register', 'DESC');
             $grid->column('Mã MH')->style("text-align: center;")->display(function(){
                 $subjetRegister = Subjects::find($this->id_subject);
                 if($subjetRegister->id) {
@@ -147,6 +147,17 @@ class PointSubjectController extends Controller
                     return "<b>Đạt</b>";
                  }
                  
+            });
+            $grid->column('Sô tín chỉ hiện tại')->display(function () {
+                $idUser = Auth::user()->id;
+                $idSubject = ResultRegister::where('id_user_student', $idUser)->pluck('id_subject');
+                $subjects = Subjects::find($idSubject);
+                $sumCredit = 0;
+                foreach ($subjects as $subject){
+                    $sumCredit+=$subject->credits;
+                }
+                return $sumCredit;
+
             });
             $grid->filter(function($filter){
                 $filter->disableIdFilter();

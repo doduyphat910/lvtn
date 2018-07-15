@@ -150,6 +150,7 @@ class TimeRegisterController extends Controller
                 $filter->between('created_at', 'Tạo vào lúc')->datetime();
 
             });
+            $grid->disableExport();
         });
     }
 

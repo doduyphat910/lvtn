@@ -602,6 +602,12 @@ class ImportPointController extends Controller
         $row_add_successs = 0;
         $error_logs = [];
         foreach($data as $key => $row) {
+            if(!isset($row ['mssv']) || !isset($row ['diem_chuyen_can'])
+                || !isset($row ['diem_giua_ki'])|| !isset($row ['diem_cuoi_ki']) ){
+                $row_error += 1;
+                $error_logs[$key] = ' dữ liệu sai';
+                break;
+            }
                 if (empty($row ['mssv'])||  (empty($row ['diem_chuyen_can'])&& $row ['diem_chuyen_can'] != 0) ||
                     (empty($row ['diem_giua_ki'])&& $row ['diem_giua_ki'] != 0) ||
                     (empty($row ['diem_cuoi_ki'])&& $row ['diem_cuoi_ki'] != 0) ) {

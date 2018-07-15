@@ -134,7 +134,7 @@ class StudentUserController extends Controller
                 $filter->in('level', 'Trình độ')->radio(['CD'=>'Cao đẳng', 'DH'=>'Đại học']);
                 $filter->between('created_at', 'Tạo vào lúc')->datetime();
             });
-
+            $grid->disableExport();
         });
     }
 
@@ -157,7 +157,7 @@ class StudentUserController extends Controller
             $form->saving(function (Form $form) {
                 $form->password = $form->code_number;
             });
-            $form->image('avatar', 'Avatar');
+//            $form->image('avatar', 'Avatar');
             $form->select('id_class', 'Lớp')->options(ClassSTU::all()->pluck('name', 'id'))->rules('required');
             $form->select('id_status', 'Trạng thái')->options(Status::all()->pluck('status', 'id'))->rules('required');
             $form->year('school_year', 'Năm nhập học')->rules('required');

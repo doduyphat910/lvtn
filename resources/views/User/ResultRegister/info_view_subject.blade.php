@@ -8,7 +8,11 @@ use App\Models\TimeTable;
 $idUser = Auth::user()->id;
 $time = ResultRegister::where('id_user_student', $idUser)->orderBy('time_register', 'DESC')->first();
 if(!empty($time)) {
-    $timeRegister = TimeRegister::where('id', $time->time_register)->first();
+//    $timeRegister = TimeRegister::where('id', $time->time_register)->first();
+    $timeRegister = TimeRegister::where('status',1)->orderBy('id', 'DESC')->first();
+    if(empty($timeRegister)){
+        $timeRegister = TimeRegister::orderBy('id', 'DESC')->first();
+    }
     $idTimeRegister = $timeRegister->id;
     $idSubjectRegister = ResultRegister::where('id_user_student', $idUser)->where('time_register', $idTimeRegister)->pluck('id_subject_register');
     $timeStudys = TimeStudy::whereIn('id_subject_register', $idSubjectRegister)->get()->toArray();

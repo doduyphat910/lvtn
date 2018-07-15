@@ -110,6 +110,7 @@ class SubjectParallelController extends Controller
                 $filter->in('id_subject2', 'Môn học song song')->multipleSelect(Subjects::all()->pluck('name', 'id'));
                 $filter->between('created_at', 'Tạo vào lúc')->datetime();
             });
+            $grid->disableExport();
         });
     }
 

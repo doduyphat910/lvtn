@@ -96,6 +96,7 @@ class DepartmentController extends Controller
                 $filter->like('name', 'Tên');
                 $filter->between('created_at', 'Tạo vào lúc')->datetime();
             });
+            $grid->disableExport();
         });
     }
 

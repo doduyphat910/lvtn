@@ -154,6 +154,7 @@ class UserAdminController extends UserController
                 }
                 $filter->between('created_at', 'Tạo vào lúc')->datetime();
             });
+            $grid->disableExport();
         });
     }
 

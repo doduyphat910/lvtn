@@ -91,6 +91,7 @@ class TimeTableController extends Controller
                 $filter->between('time_end','TG kết thúc')->time();
                 $filter->between('created_at', 'Tạo vào lúc')->datetime();
             });
+            $grid->disableExport();
         });
     }
 

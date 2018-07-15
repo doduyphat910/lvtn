@@ -101,8 +101,8 @@ class RateController extends Controller
                 $filter->equal('mid_term', 'Giữa kì');
                 $filter->equal('end_term', 'Cuối kì');
                 $filter->between('created_at', 'Tạo vào lúc')->datetime();
-
             });
+            $grid->disableExport();
         });
     }
 

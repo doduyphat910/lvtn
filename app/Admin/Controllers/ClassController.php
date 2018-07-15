@@ -116,6 +116,7 @@ class ClassController extends Controller
                 $filter->in('id_department', 'Tên khoa')->select(Department::all()->pluck('name','id'));
                 $filter->between('created_at', 'Tạo vào lúc')->datetime();
             });
+            $grid->disableExport();
         });
     }
 

@@ -121,6 +121,7 @@ class CommentController extends Controller
         return Admin::form(Comments::class, function (Form $form) {
 
 //            $form->display('id', 'ID');
+            $form->text('name', 'Tiêu đề')->readOnly();
             $form->textarea('description', 'Mô tả')->readOnly();
             $form->display('created_at', 'Tạo vào lúc');
         });

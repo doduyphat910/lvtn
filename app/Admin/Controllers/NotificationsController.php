@@ -93,6 +93,7 @@ class NotificationsController extends Controller
                 $filter->like('description', 'Mô tả');
                 $filter->between('created_at', 'Tạo vào lúc')->datetime();
             });
+            $grid->disableExport();
         });
     }
 

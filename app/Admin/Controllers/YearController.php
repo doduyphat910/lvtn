@@ -101,6 +101,7 @@ EOT;
                 $filter->like('name', 'Tên năm');
                 $filter->between('created_at', 'Tạo vào lúc')->datetime();
             });
+            $grid->disableExport();
         });
     }
 

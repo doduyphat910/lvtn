@@ -187,6 +187,7 @@ class SubjectRegisterController extends Controller
                 $filter->date('date_end', 'Ngày kết thúc');
                 $filter->between('created_at', 'Tạo vào lúc')->datetime();
             });
+            $grid->disableExport();
         });
     }
 
