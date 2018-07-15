@@ -41,6 +41,7 @@ class ImportPointController extends Controller
             $csv_data_file->file_name = $request->file('csv_file')->getClientOriginalName();
             $csv_data_file->model = 'attendance_point';
             $csv_data_file->data = json_encode($data);
+            $csv_data_file->id_user = Admin::user()->id;
             $csv_data_file->save();
         }
         return Admin::content(function (Content $content) use ($csv_data, $csv_data_file, $idSubjectRegister) {
@@ -212,6 +213,7 @@ class ImportPointController extends Controller
             $csv_data_file->file_name = $request->file('csv_file')->getClientOriginalName();
             $csv_data_file->model = 'mid_term_point';
             $csv_data_file->data = json_encode($data);
+            $csv_data_file->id_user = Admin::user()->id;
             $csv_data_file->save();
         }
         return Admin::content(function (Content $content) use ($csv_data, $csv_data_file, $idSubjectRegister) {
@@ -387,6 +389,7 @@ class ImportPointController extends Controller
             $csv_data_file->file_name = $request->file('csv_file')->getClientOriginalName();
             $csv_data_file->model = 'end_term_point';
             $csv_data_file->data = json_encode($data);
+            $csv_data_file->id_user = Admin::user()->id;
             $csv_data_file->save();
         }
         return Admin::content(function (Content $content) use ($csv_data, $csv_data_file, $idSubjectRegister) {
@@ -566,6 +569,7 @@ class ImportPointController extends Controller
             $csv_data_file->file_name = $request->file('csv_file')->getClientOriginalName();
             $csv_data_file->model = 'all_point';
             $csv_data_file->data = json_encode($data);
+            $csv_data_file->id_user = Admin::user()->id;
             $csv_data_file->save();
         }
         return Admin::content(function (Content $content) use ($csv_data, $csv_data_file, $idSubjectRegister) {

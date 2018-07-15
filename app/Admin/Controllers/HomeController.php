@@ -27,13 +27,13 @@ class HomeController extends Controller
 EOT;
                 Admin::script($script);
             }
-            $script = <<<EOT
-            if (location.href.indexOf('reload')==-1)
-            {
-               location.href=location.href+'?reload';
-            }
-EOT;
-            Admin::script($script);
+//            $script = <<<EOT
+//            if (location.href.indexOf('reload')==-1)
+//            {
+//               location.href=location.href+'?reload';
+//            }
+//EOT;
+//            Admin::script($script);
 //            header("Refresh:0");
             $content->header('Trang chủ');
 //            $content->description('Description...');

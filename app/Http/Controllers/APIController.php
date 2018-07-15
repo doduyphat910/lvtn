@@ -189,7 +189,7 @@ class APIController extends Controller {
 
         //lấy số lượng tín chỉ được đăng kí tối đa
         $creditsMax = $timeRegister->credits_max;
-        $idSubject = ResultRegister::where('id_user_student', $idUser)->where('time_register', $idTimeRegister)->where('is_learned', 0)->pluck('id_subject');
+        $idSubject = ResultRegister::where('id_user_student', $idUser)->where('time_register', $idTimeRegister)->where('is_learned', 2)->pluck('id_subject');
         $creditCurrentUser = Subjects::find($idSubject)->pluck('credits')->sum();
         $idSubjects = SubjectRegister::where('id',$idSubjecRegister)->pluck('id_subjects');
         $creditSubject = Subjects::find($idSubjects)->pluck('credits')->toArray();

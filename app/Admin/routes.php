@@ -95,6 +95,9 @@ Route::group([
     $router->get('comment/{id}/details', 'CommentController@details');
     $router->resource('comment', CommentController::class);
 
+    //import history
+    $router->resource('import-history', ImportHistoryController::class);
+
     //router teacher
     //point
     $router->resource('teacher/point',PointController::class);

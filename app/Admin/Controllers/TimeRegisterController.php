@@ -239,14 +239,15 @@ EOT;
 
     protected function details($id){
         return Admin::content(function (Content $content) use ($id) {
-           $script = <<<EOT
-           if (location.href.indexOf('reload')==-1)
-           {
-              location.href=location.href+'?reload';
-           }
-EOT;
-           Admin::script($script);
+//           $script = <<<EOT
+//           if (location.href.indexOf('reload')==-1)
+//           {
+//              location.href=location.href+'?reload';
+//           }
+//EOT;
+//           Admin::script($script);
 //             header("Refresh:0");
+            Admin::js('/vendor/chartjs/dist/Chart.min.js');
             $time = TimeRegister::findOrFail($id);
             $content->header('TG Đăng ký');
             $content->description($time->name);
