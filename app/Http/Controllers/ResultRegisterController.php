@@ -68,6 +68,10 @@ class ResultRegisterController extends Controller
             $form->select('id_time_register', 'Thời gian')->options($options)->attribute(['id' => 'resultRegister']);
             $form->disableReset();
             $form->disableSubmit();
+            $form->tools(function (Form\Tools $tools) {
+           
+            $tools->disableListButton();
+            });
 
         });
     }
@@ -189,7 +193,7 @@ class ResultRegisterController extends Controller
                     return '';
                 }
             });
-            $grid->column('Sô tín chỉ hiện tại')->display(function () use ( $timeRegister){
+            $grid->column('Số tín chỉ hiện tại')->display(function () use ( $timeRegister){
                 $idUser = Auth::user()->id;
                 $idSubject = ResultRegister::where('id_user_student', $idUser)->where('time_register',  $timeRegister->id)->pluck('id_subject');
                 $subjects = Subjects::find($idSubject);

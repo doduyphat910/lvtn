@@ -454,7 +454,7 @@ EOT;
                  }
                  
             });
-            $grid->column('Sô tín chỉ hiện tại')->display(function () use ($idTimeRegister){
+            $grid->column('Số tín chỉ hiện tại')->display(function () use ($idTimeRegister){
                 $idUser = Auth::user()->id;
                 $idSubject = ResultRegister::where('id_user_student', $idUser)->where('time_register', $idTimeRegister)->pluck('id_subject');
                 $subjects = Subjects::find($idSubject);
@@ -609,7 +609,7 @@ EOT;
                 // $grid->qty_max('Số lượng tối đa');
                 // $grid->date_start('Ngày bắt đầu');
                 // $grid->date_end('Ngày kết thúc');
-            $grid->column('Sô tín chỉ hiện tại')->display(function () use ($idTimeRegister){
+            $grid->column('Số tín chỉ hiện tại')->display(function () use ($idTimeRegister){
                 $idUser = Auth::user()->id;
                 $idSubject = ResultRegister::where('id_user_student', $idUser)->where('time_register', $idTimeRegister)->pluck('id_subject');
                 $subjects = Subjects::find($idSubject);

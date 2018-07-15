@@ -85,6 +85,106 @@
             background-color: blue;*/
         .dropdown-menu>li>a{color: black;}
         .dropdown-menu>li>a{background-color: whitesmoke;}
+        /* Trigger bootstrap navbar collapse pada viewport <= 1200px */
+@media (max-width: 1200px) {
+    .navbar-header {
+        float: none;
+    }
+    .navbar-default .navbar-toggle:focus, .navbar-default .navbar-toggle:hover {
+    background-color: transparent;
+}
+    .navbar-left,
+    .navbar-right {
+        float: none !important;
+    }
+
+    .navbar-toggle {
+        display: block;
+    }
+
+    .navbar-collapse {
+        border-top: 1px solid transparent;
+       
+    }
+
+    .navbar-fixed-top {
+        top: 0;
+        border-width: 0 0 1px;
+    }
+
+    .navbar-collapse.collapse {
+        display: none!important;
+    }
+
+    .navbar-nav {
+        float: none!important;
+        margin-top: 7.5px;
+    }
+
+    .navbar-nav>li {
+        float: none;
+    }
+
+    .navbar-nav>li>a {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .collapse.in{
+        display:block !important;
+    }
+  
+
+    /* Hapus gap 15px pada .navbar-collapse */
+    .navbar .navbar-nav {
+      margin-left: -15px;
+      margin-right: -15px;
+    }
+
+    /* Merapihkan dropdown menu: Warna, posisi dll */
+    .navbar-nav .open .dropdown-menu {
+        position: static;
+        float: none;
+        width: auto;
+        margin-top: 0;
+        background-color: transparent;
+        border: 0;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+    }
+
+    
+}
+
+@media screen and (min-width: 768px) {
+    /* Rubah behaviour .container */
+  .navbar .container {
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0;
+    max-width: 1170px;
+    width: initial;
+  }
+  
+  .navbar > .container .navbar-brand {
+    margin-left: 0;
+  }
+  
+  .navbar .container .navbar-header {
+    margin-left: 0;
+    margin-right: 0;
+  }
+ 
+}
+@media screen and (max-width: 1200px){
+     .navbar-right .dropdown-menu {
+    left: 0;
+    left: auto;
+    }
+}
+.skin-blue-light .main-header .navbar .dropdown-menu li a {
+    color: black;
+}
     </style>
     <nav class="navbar navbar-default navbar-fixed-top" style="margin-left: 0px;">
       <div class="container-flud">
@@ -109,7 +209,7 @@
           <ul class="nav navbar-nav ">
             <li class="active"><a href="{{ url('user/student') }}" ><i class="fa fa-home fa-fw fa-1x" aria-hidden="true"></i> Trang chủ <span class="sr-only">(current)</span></a></li>
                     <li class="dropdown-register">
-                         <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><strong><i class="fa fa-pencil-square-o fa-fw fa-1x"></i> Đăng ký</strong> <b class="caret"></b></a>
+                         <a href="javascript:void(0);" class="dropdown-toggle" data-toggle=""><strong><i class="fa fa-pencil-square-o fa-fw fa-1x"></i> Đăng ký</strong> <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a href="{{ url('user/subject-register') }}"><i class="fa fa-pencil-square-o fa-1x"></i><strong>Đăng ký môn học</strong></a></li>
                             <li><a href="{{ url('user/learn-improvement') }}"><i class="fa fa-pencil-square fa-1x"></i><strong>Đăng ký học cải thiện, học lại</strong></a></li>

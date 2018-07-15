@@ -1,4 +1,10 @@
-
+<style type="text/css">
+    .box-header {
+        font-weight: bold;
+        /*color: #20bf6b;*/
+        font-size: 1.5rem;
+    }
+</style>
         <div class="box">
             <div class="box-header">
                 <h3 class="box-title"></h3>
@@ -6,7 +12,7 @@
                     <?php $show = 0; ?>
                     @foreach($grid->rows() as $row)
                             @foreach($grid->columnNames as $name)
-                                @if($name == 'Sô tín chỉ hiện tại' && $show == 0)
+                                @if($name == 'Số tín chỉ hiện tại' && $show == 0)
                                 <?php $show++; ?>
                                     Tổng số TC: {!! $row->column($name) !!}
                                 @endif
@@ -31,7 +37,7 @@
                 <table class="table table-hover table-striped table-bordered tableColor">
                     <tr >
                         @foreach($grid->columns() as $column)
-                            @if($column->getLabel() != 'Sô tín chỉ hiện tại' && $column->getLabel() != 'Điểm TK ALL' )
+                            @if($column->getLabel() != 'Số tín chỉ hiện tại' && $column->getLabel() != 'Điểm TK ALL' )
                         <th class="colorth" style="background-color: #3c8dbc;color: white;"><b>{{$column->getLabel()}}{!! $column->sorter() !!}</b></th>
                             @endif
                         @endforeach
@@ -40,7 +46,7 @@
                     @foreach($grid->rows() as $row)
                     <tr {!! $row->getRowAttributes() !!}>
                         @foreach($grid->columnNames as $name)
-                            @if($name != 'Sô tín chỉ hiện tại' && $name != 'Điểm TK ALL')
+                            @if($name != 'Số tín chỉ hiện tại' && $name != 'Điểm TK ALL')
                         <td {!! $row->getColumnAttributes($name) !!}>
                             {!! $row->column($name) !!}
                         </td>
