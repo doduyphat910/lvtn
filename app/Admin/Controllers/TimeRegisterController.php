@@ -247,7 +247,6 @@ EOT;
 //EOT;
 //           Admin::script($script);
 //             header("Refresh:0");
-            Admin::js('/vendor/chartjs/dist/Chart.min.js');
             $time = TimeRegister::findOrFail($id);
             $content->header('TG Đăng ký');
             $content->description($time->name);

@@ -1,6 +1,6 @@
 <style>
     .fa-fw {
-        color: white;
+        color: #2f3542;
     }
 
 </style>
