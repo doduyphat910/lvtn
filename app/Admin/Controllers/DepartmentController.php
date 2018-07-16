@@ -43,8 +43,9 @@ class DepartmentController extends Controller
     {
         return Admin::content(function (Content $content) use ($id) {
 
-            $content->header('header');
-            $content->description('description');
+            $department = Department::findOrFail($id);
+            $content->header('Khoa');
+            $content->description($department->name);
 
             $content->body($this->form()->edit($id));
         });
@@ -95,6 +96,7 @@ class DepartmentController extends Controller
                 $filter->like('name', 'Tên');
                 $filter->between('created_at', 'Tạo vào lúc')->datetime();
             });
+            $grid->disableExport();
         });
     }
 

@@ -30,7 +30,7 @@ class UserAdminController extends UserController
     public function index()
     {
         return Admin::content(function (Content $content) {
-            $content->header(trans('admin.administrator'));
+            $content->header('Tài khoản');
             $content->description(trans('admin.list'));
             $content->body($this->grid()->render());
         });
@@ -46,8 +46,9 @@ class UserAdminController extends UserController
     {
         return Admin::content(function (Content $content) use ($id) {
 
-            $content->header('header');
-            $content->description('description');
+            $content->header('Tài khoản');
+            $admin = UserAdmin::find($id);
+            $content->description($admin->name);
 
             $content->body($this->form()->edit($id));
         });
@@ -153,6 +154,7 @@ class UserAdminController extends UserController
                 }
                 $filter->between('created_at', 'Tạo vào lúc')->datetime();
             });
+            $grid->disableExport();
         });
     }
 
@@ -190,7 +192,7 @@ EOT;
             $form->text('username', trans('admin.username'))->rules('required');
             $form->text('name', trans('admin.name'))->rules('required');
             $form->email('email', 'Email');
-//            $form->image('avatar', trans('admin.avatar'));
+            $form->image('image', trans('admin.avatar'));
             $form->password('password', trans('admin.password'))->rules('required|confirmed');
             $form->password('password_confirmation', trans('admin.password_confirmation'))->rules('required')
                 ->default(function ($form) {

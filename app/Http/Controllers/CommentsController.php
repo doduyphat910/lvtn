@@ -38,6 +38,7 @@ class CommentsController extends Controller
             $form->registerBuiltinFields();
             $id = Auth::User()->id;
             $form->setAction('/user/comments');
+            $form->hidden('status')>value(0);
             $form->hidden('id_user')->value($id);
             $form->hidden('id');
             $form->textarea('name', 'Tiêu đề')->rows(2);

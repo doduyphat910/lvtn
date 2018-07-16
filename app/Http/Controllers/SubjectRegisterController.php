@@ -146,13 +146,13 @@ class SubjectRegisterController extends Controller
 //                    }
                     if(substr($nameYear,4,5) % 2 == 0){
                         if($nameSemester == 'Học kỳ hè') {
-                            return  "<span class='label label-primary'>$nameSemester</span>"  ;
+//                            return  "<span class='label label-primary'>$nameSemester</span>"  ;
                         } else {
                             return "<span class='label label-info'>{$nameSemester} - {$nameYear}</span>"  ;
                         }
                     } else {
                         if($nameSemester == 'Học kỳ hè') {
-                            return "<span class='label label-success'>{$nameSemester}</span>";
+//                            return "<span class='label label-success'>{$nameSemester}</span>";
                         } else {
                             return "<span class='label label-success'>{$nameSemester} - {$nameYear}</span>";
                         }

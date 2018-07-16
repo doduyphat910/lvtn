@@ -54,9 +54,9 @@ class SubjectRegisterController extends Controller
     {
         return Admin::content(function (Content $content) use ($id) {
 
-            $content->header('header');
-            $content->description('description');
-
+            $subjectRegister = SubjectRegister::findOrFail($id);
+            $content->header('Học phần');
+            $content->description($subjectRegister->id);
             $content->body($this->form()->edit($id));
         });
     }
@@ -102,14 +102,14 @@ class SubjectRegisterController extends Controller
                     return '';
                 }
             })->sortable();
-            $grid->column('Phòng')->display(function () {
-                $idClassroom = TimeStudy::where('id_subject_register', $this->id)->pluck('id_classroom')->toArray();
-                $classRoom = Classroom::whereIn('id', $idClassroom)->pluck('name')->toArray();
-                $classRoom = array_map(function ($classRoom) {
-                    return "<span class='label label-danger'>{$classRoom}</span>";
-                }, $classRoom);
-                return join('&nbsp;', $classRoom);
-            })->sortable();
+//            $grid->column('Phòng')->display(function () {
+//                $idClassroom = TimeStudy::where('id_subject_register', $this->id)->pluck('id_classroom')->toArray();
+//                $classRoom = Classroom::whereIn('id', $idClassroom)->pluck('name')->toArray();
+//                $classRoom = array_map(function ($classRoom) {
+//                    return "<span class='label label-danger'>{$classRoom}</span>";
+//                }, $classRoom);
+//                return join('&nbsp;', $classRoom);
+//            })->sortable();
             $grid->id_user_teacher('Giảng viên')->display(function ($id_user_teacher){
                 if($id_user_teacher){
                     $teacher = UserAdmin::find($id_user_teacher);
@@ -129,7 +129,7 @@ class SubjectRegisterController extends Controller
 //            $grid->time_study_end('Giờ học kết thúc');
             $grid->date_start('Ngày bắt đầu')->sortable();
             $grid->date_end('Ngày kết thúc')->sortable();
-            $grid->id_time_register('Đợt đăng ký')->display(function ($idTimeRegister){
+            $grid->id_time_register('Thời gian đăng ký')->display(function ($idTimeRegister){
                 $timeRegister = TimeRegister::find($idTimeRegister);
                 if(!empty($timeRegister->name)){
                     if($idTimeRegister % 2 == 0) {
@@ -187,6 +187,7 @@ class SubjectRegisterController extends Controller
                 $filter->date('date_end', 'Ngày kết thúc');
                 $filter->between('created_at', 'Tạo vào lúc')->datetime();
             });
+            $grid->disableExport();
         });
     }
 
@@ -235,13 +236,13 @@ EOT;
             $form->select('id_subjects', 'Môn học')->options(Subjects::all()->pluck('name', 'id'))->rules('required');
             $form->select('id_user_teacher', 'Giảng viên')->options(UserAdmin::where('type_user', '0')->pluck('name', 'id'))->rules('required');
             $form->hidden('qty_current', 'Số lượng hiện tại')->value('0');
-            $form->number('qty_min', 'Số lượng tối thiểu')->rules('integer|min:5');
-            $form->number('qty_max', 'Số lượng tối đa')->rules('integer|min:10');
+            $form->number('qty_min', 'Số lượng tối thiểu')->rules('integer|min:10');
+            $form->number('qty_max', 'Số lượng tối đa')->rules('integer|min:30');
             $form->select('id_time_register', 'Đợt đăng ký')->options(TimeRegister::all()->pluck('name', 'id'))->rules('required');
             $form->date('date_start', 'Ngày bắt đầu')->placeholder('Ngày bắt đầu')->rules('required');
             $form->date('date_end', 'Ngày kết thúc')->placeholder('Ngày kết thúc')->rules('required');
-            $form->display('created_at', 'Created At');
-            $form->display('updated_at', 'Updated At');
+            $form->display('created_at', 'Tạo vào lúc');
+            $form->display('updated_at', 'Cập nhật vào lúc');
             $form->hasMany('time_study', 'Thời gian học', function (Form\NestedForm $form) {
                 $options = ['2'=>'Thứ 2', '3'=>'Thứ 3', '4'=>'Thứ 4', '5'=>'Thứ 5', '6'=>'Thứ 6', '7'=>'Thứ 7', '8'=>'Chủ nhật'];
                 $form->select('day', 'Ngày học')->options($options);
@@ -334,9 +335,9 @@ EOT;
                 $row->column('number', $row->number);
             });
             $grid->number('STT');
-            $grid->column('MSSV')->display(function () {
-                if (StudentUser::find($this->id_user_student)->code_number) {
-                    return StudentUser::find($this->id_user_student)->code_number;
+            $grid->id_user_student('MSSV')->display(function ($idStudent) {
+                if (StudentUser::find($idStudent)->code_number) {
+                    return StudentUser::find($idStudent)->code_number;
                 } else {
                     return '';
                 }
@@ -347,14 +348,14 @@ EOT;
                 } else {
                     return '';
                 }
-            })->sortable();
-            $grid->id_user_student('Tên')->display(function ($idStudent) {
-                if (StudentUser::find($idStudent)->last_name) {
-                    return StudentUser::find($idStudent)->last_name;
+            });
+            $grid->column('Tên')->display(function () {
+                if (StudentUser::find($this->id_user_student)->last_name) {
+                    return StudentUser::find($this->id_user_student)->last_name;
                 } else {
                     return '';
                 }
-            })->sortable();
+            });
             $grid->id_subject_register('Mã HP')->display(function ($idSubjectRegister) {
                 if (SubjectRegister::find($idSubjectRegister)->id) {
                     return SubjectRegister::find($idSubjectRegister)->id;
@@ -380,7 +381,7 @@ EOT;
                 $idClass = StudentUser::find($this->id_user_student)->id_class;
                 $name = ClassSTU::find($idClass)->name;
                 return "<span class='label label-info'>{$name}</span>";
-            })->sortable();
+            });
             $grid->attendance('Điểm chuyên cần')->sortable();
             $grid->mid_term('Điểm giữa kì')->sortable();
             $grid->end_term('Điểm cuối kì')->sortable();

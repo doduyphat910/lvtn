@@ -43,8 +43,8 @@ class SubjectBeforeAfterController extends Controller
     {
         return Admin::content(function (Content $content) use ($id) {
 
-            $content->header('header');
-            $content->description('description');
+            $content->header('Môn học tiên quyết');
+//            $content->description('description');
 
             $content->body($this->form()->edit($id));
         });
@@ -108,6 +108,7 @@ class SubjectBeforeAfterController extends Controller
                 $filter->in('id_subject_after', 'Môn học sau')->multipleSelect(Subjects::all()->pluck('name', 'id'));
                 $filter->between('created_at', 'Tạo vào lúc')->datetime();
             });
+            $grid->disableExport();
         });
     }
 

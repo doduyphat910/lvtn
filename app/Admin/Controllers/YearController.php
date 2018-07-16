@@ -49,8 +49,9 @@ EOT;
     {
         return Admin::content(function (Content $content) use ($id) {
 
-            $content->header('header');
-            $content->description('description');
+            $year = Year::findOrFail($id);
+            $content->header('Năm');
+            $content->description($year->name);
 
             $content->body($this->form()->edit($id));
         });
@@ -100,6 +101,7 @@ EOT;
                 $filter->like('name', 'Tên năm');
                 $filter->between('created_at', 'Tạo vào lúc')->datetime();
             });
+            $grid->disableExport();
         });
     }
 

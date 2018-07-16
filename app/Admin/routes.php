@@ -12,6 +12,9 @@ Route::group([
 
     $router->get('/', 'HomeController@index')->middleware('adminIndex');
 
+    //auth setting
+    $router->get('auth/setting', 'CustomAuthController@getSetting');
+
     //year
     $router->get('year/{id}/details', 'YearController@details');
     $router->resource('year', YearController::class);

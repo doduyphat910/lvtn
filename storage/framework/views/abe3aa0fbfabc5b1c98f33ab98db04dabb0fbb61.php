@@ -4,8 +4,8 @@
     <!-- Logo -->
     <a href="<?php echo e(admin_base_path('/')); ?>" class="logo">
         
-         <span class="logo-mini"><img src="../../../uploads/images/logo_2.png" height="50px;"></span>
-         <span class="logo-lg"><img src="../../../uploads/images/logo_2.png" height="50px;"></span>
+         <span class="logo-mini"><img src="../../../../uploads/images/logo_2.png" height="50px;"></span>
+         <span class="logo-lg"><img src="../../../../uploads/images/logo_2.png" height="50px;"></span>
     </a>
 
     <!-- Header Navbar -->
@@ -30,19 +30,35 @@
                     <!-- Menu Toggle Button -->
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <!-- The user image in the navbar-->
-                        <img src="<?php echo e(Admin::user()->avatar); ?>" class="user-image" alt="User Image">
-                        <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                        <?php $admin = Admin::user();  ?>
+                        
+                    <img src="../../../../uploads/<?php
+                        if(empty($admin->image)) {
+                            echo 'images/user2-160x160.jpg';
+                        }
+                        else {
+                         echo $admin->image;
+                        }
+                    ?>" class="user-image" alt="User Image">
+                    <!-- hidden-xs hides the username on small devices so only the image appears. -->
                         <span class="hidden-xs"><?php echo e(Admin::user()->name); ?></span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- The user image in the menu -->
                         <li class="user-header">
-                            <img src="<?php echo e(Admin::user()->avatar); ?>" class="img-circle" alt="User Image">
 
+                            <img src="../../../../uploads/<?php
+                            if(empty($admin->image)) {
+                                echo 'images/user2-160x160.jpg';
+                            }
+                            else {
+                                echo $admin->image;
+                            }
+                            ?>" class="img-circle" alt="User Image">
                             <p>
                                 <?php echo e(Admin::user()->name); ?>
 
-                                <small>Member since admin <?php echo e(Admin::user()->created_at); ?></small>
+                                <small>Thành viên từ ngày <?php echo e(Admin::user()->created_at); ?></small>
                             </p>
                         </li>
                         <li class="user-footer">

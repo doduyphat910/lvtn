@@ -1,10 +1,4 @@
-<style type="text/css">
-    .box-header {
-        font-weight: bold;
-        /*color: #20bf6b;*/
-        font-size: 1.5rem;
-    }
-</style>
+
         <div class="box">
             <div class="box-header">
                 <h3 class="box-title"></h3>

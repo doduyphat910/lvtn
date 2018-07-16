@@ -189,7 +189,7 @@ class APIController extends Controller {
 
         //lấy số lượng tín chỉ được đăng kí tối đa
         $creditsMax = $timeRegister->credits_max;
-        $idSubject = ResultRegister::where('id_user_student', $idUser)->where('time_register', $idTimeRegister)->where('is_learned', 0)->pluck('id_subject');
+        $idSubject = ResultRegister::where('id_user_student', $idUser)->where('time_register', $idTimeRegister)->where('is_learned', 2)->pluck('id_subject');
         $creditCurrentUser = Subjects::find($idSubject)->pluck('credits')->sum();
         $idSubjects = SubjectRegister::where('id',$idSubjecRegister)->pluck('id_subjects');
         $creditSubject = Subjects::find($idSubjects)->pluck('credits')->toArray();
@@ -367,7 +367,7 @@ EOT;
             // $timeRegister = TimeRegister::orderBy('id', 'DESC')->first();
             // $timeRegister = TimeRegister::where('id', $idTimeRegister)->first();
 
-            $grid->model()->where('id_user_student', $user->id)->where('time_register', $idTimeRegister);
+            $grid->model()->where('id_user_student', $user->id)->where('is_learned', 1)->where('time_register', $idTimeRegister);
 
             $grid->column('Mã MH')->display(function(){
                 $subjetRegister = Subjects::find($this->id_subject);
@@ -495,7 +495,7 @@ EOT;
         $idTimeRegister = $request->id;
         return User::gridUser(ResultRegister::class, function (GridUser $grid) use($idTimeRegister) {
             $user = Auth::user();
-            $timeRegister = TimeRegister::find($idTimeRegister)->first();
+            $timeRegister = TimeRegister::where('id',$idTimeRegister)->first();
             $grid->model()->where('time_register', $idTimeRegister)->where('id_user_student', $user->id);
                // $grid->id('ID');
             $grid->column('Mã học phần')->display(function () {
@@ -625,9 +625,9 @@ EOT;
             $grid->disableExport();
             $grid->disableRowSelector();
             $grid->disableFilter();
-            if($timeRegister->status == 0) {
+//            if($timeRegister->status == 0) {
                 $grid->disableActions();
-            } 
+//            }
             $grid->actions(function ($actions){
                 $actions->disableEdit();
                 $actions->disableDelete();
@@ -689,8 +689,9 @@ SCRIPT;
 
         $arrDays = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ nhật"];
         $arrPeriods =DB::table('time_table')->select('time_start', 'time_end')->get();
-        $arrPeriods = collect($arrPeriods)->map(function($x){ return (array) $x; })->toArray();
 
+        $arrPeriods = collect($arrPeriods)->map(function($x){ return (array) $x; })->toArray();
+        //dd($arrPeriods);
         ?>
         </div>
         <div class="row">

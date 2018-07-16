@@ -48,8 +48,9 @@ class SubjectGroupController extends Controller
     {
         return Admin::content(function (Content $content) use ($id) {
 
-            $content->header('header');
-            $content->description('description');
+            $subjectGroup = SubjectGroup::findOrFail($id);
+            $content->header('Nhóm môn học');
+            $content->description($subjectGroup->name);
 
             $content->body($this->form()->edit($id));
         });
@@ -99,6 +100,7 @@ class SubjectGroupController extends Controller
                 $filter->between('created_at', 'Tạo vào lúc')->datetime();
 
             });
+            $grid->disableExport();
         });
     }
 

@@ -46,8 +46,9 @@ class RateController extends Controller
     {
         return Admin::content(function (Content $content) use ($id) {
 
-            $content->header('header');
-            $content->description('description');
+            $rate = Rate::findOrFail($id);
+            $content->header('Tỷ lệ điểm');
+            $content->description($rate->name);
 
             $content->body($this->form()->edit($id));
         });
@@ -100,8 +101,8 @@ class RateController extends Controller
                 $filter->equal('mid_term', 'Giữa kì');
                 $filter->equal('end_term', 'Cuối kì');
                 $filter->between('created_at', 'Tạo vào lúc')->datetime();
-
             });
+            $grid->disableExport();
         });
     }
 
@@ -137,7 +138,7 @@ class RateController extends Controller
         return Admin::content(
             function (Content $content) use ($id) {
                 $rate = Rate::findOrFail($id);
-                $content->header('Học kỳ');
+                $content->header('Tỷ lệ điểm');
                 $content->description($rate->name);
                 $content->body($this->detailsView($id));
             });

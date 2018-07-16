@@ -6,7 +6,16 @@
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel">
             <div class="pull-left image">
-                <img src="<?php echo e(Admin::user()->avatar); ?>" class="img-circle" alt="User Image">
+                <?php $admin = Admin::user(); ?>
+                
+                <img src="../../../../uploads/<?php
+                if(empty($admin->image)) {
+                    echo 'images/user2-160x160.jpg';
+                }
+                else {
+                    echo $admin->image;
+                }
+                ?>" class="img-circle" alt="User Image">
             </div>
             <div class="pull-left info">
                 <p><?php echo e(Admin::user()->name); ?></p>

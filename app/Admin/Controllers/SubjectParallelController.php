@@ -43,8 +43,8 @@ class SubjectParallelController extends Controller
     {
         return Admin::content(function (Content $content) use ($id) {
 
-            $content->header('header');
-            $content->description('description');
+            $content->header('Môn học song song');
+//            $content->description('description');
 
             $content->body($this->form()->edit($id));
         });
@@ -110,6 +110,7 @@ class SubjectParallelController extends Controller
                 $filter->in('id_subject2', 'Môn học song song')->multipleSelect(Subjects::all()->pluck('name', 'id'));
                 $filter->between('created_at', 'Tạo vào lúc')->datetime();
             });
+            $grid->disableExport();
         });
     }
 

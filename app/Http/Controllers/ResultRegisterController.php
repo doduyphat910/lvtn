@@ -79,7 +79,10 @@ class ResultRegisterController extends Controller
     {
         return User::GridUser(ResultRegister::class, function (GridUser $grid) {
             $user = Auth::user();
-            $timeRegister = TimeRegister::orderBy('id', 'DESC')->first();
+            $timeRegister = TimeRegister::where('status',1)->orderBy('id', 'DESC')->first();
+            if(empty($timeRegister)){
+                $timeRegister = TimeRegister::orderBy('id', 'DESC')->first();
+            }
             $grid->model()->where('time_register', $timeRegister->id)->where('id_user_student', $user->id);
                // $grid->id('ID');
             $grid->column('Mã học phần')->style("text-align: center;")->display(function () {
