@@ -5,23 +5,23 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">Import</h3>
 
-                    <div class="box-tools">
-                        <div class="btn-group pull-right" style="margin-right: 10px">
-                            <a href="../admin/student_user"
-                               class="btn btn-sm btn-default"><i class="fa fa-list"></i>&nbsp;Danh sách</a>
-                        </div>
-                        <div class="btn-group pull-right" style="margin-right: 10px">
-                            <a href="../admin/student_user"
-                               class="btn btn-sm btn-default form-history-back"><i class="fa fa-arrow-left"></i>&nbsp;Trở về</a>
-                        </div>
-                    </div>
+                    {{--<div class="box-tools">--}}
+                        {{--<div class="btn-group pull-right" style="margin-right: 10px">--}}
+                            {{--<a href="../admin/student_user"--}}
+                               {{--class="btn btn-sm btn-default"><i class="fa fa-list"></i>&nbsp;Danh sách</a>--}}
+                        {{--</div>--}}
+                        {{--<div class="btn-group pull-right" style="margin-right: 10px">--}}
+                            {{--<a href="../admin/student_user"--}}
+                               {{--class="btn btn-sm btn-default form-history-back"><i class="fa fa-arrow-left"></i>&nbsp;Trở về</a>--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
                 </div>
 
                 <div class="panel-body">
                     <form class="form-horizontal" method="POST" action="{{$router_target}}"
                           enctype="multipart/form-data">
                         {{ csrf_field() }}
-
+                        <input type="hidden" value="{{$idClass}}" name="idClass">
                         <div class="form-group{{ $errors->has('csv_file') ? ' has-error' : '' }}">
                             <label for="csv_file" class="col-md-4 control-label">Chọn CSV file</label>
 
@@ -54,7 +54,7 @@
                             </div>
                         </div>
                     </form>
-                    <a href="{{asset('storage/Danh sách SV.xlsx')}}" download src="file" target="_blank">
+                    <a href="{{asset('storage/Mẫu DSSV.xlsx')}}" download src="file" target="_blank">
                         Tải mẫu danh sách
                     </a>
                 </div>

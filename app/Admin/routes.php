@@ -68,6 +68,11 @@ Route::group([
     $router->get('class/{id}/details', 'ClassController@details');
     $router->resource('class', ClassController::class);
 
+    //import student of class
+    $router->get('import-student-class/{id}', 'ImportStudentController@importStudentClass');
+    $router->post('import-student-class/review', 'ImportStudentController@studentClassReview');
+    $router->post('import-student-class/parse', 'ImportStudentController@studentClassParse');
+
     //department
     $router->get('department/{id}/details', 'DepartmentController@details');
     $router->resource('department', DepartmentController::class);
