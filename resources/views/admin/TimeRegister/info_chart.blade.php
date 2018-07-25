@@ -1,5 +1,6 @@
 <head>
     <script src="{{ admin_asset("/vendor/laravel-admin/chartjs/chart.js")}}"></script>
+    {{--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>--}}
 </head>
 <div class="container-fluid box box-default">
     <div class="box-header with-border">
@@ -27,8 +28,6 @@
         </div>
     </div>
 </div>
-
-
 
 
 

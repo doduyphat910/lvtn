@@ -81,11 +81,11 @@ class TimeRegisterController extends Controller
     {
         return Admin::grid(TimeRegister::class, function (Grid $grid) {
             $grid->model()->orderBy('created_at', 'DESC');
-            $grid->rows(function (Grid\Row $row) {
-                $row->column('number', $row->number);
-            });
-            $grid->number('STT');
-//            $grid->id('ID')->sortable();
+//            $grid->rows(function (Grid\Row $row) {
+//                $row->column('number', $row->number);
+//            });
+//            $grid->number('STT');
+            $grid->id('ID')->sortable();
             $grid->name('Tên')->display(function ($name){
                 return '<a href="/admin/time-register/' . $this->id . '/details" >'.$name.'</a>';
             })->sortable();
@@ -233,7 +233,7 @@ EOT;
             }
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
-
+            $form->disableReset();
         });
     }
 

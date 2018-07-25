@@ -74,11 +74,11 @@ class SubjectParallelController extends Controller
     protected function grid()
     {
         return Admin::grid(SubjectParallel::class, function (Grid $grid) {
-            $grid->rows(function (Grid\Row $row) {
-                $row->column('number', $row->number);
-            });
-            $grid->number('STT');
-//            $grid->id('ID')->sortable();
+//            $grid->rows(function (Grid\Row $row) {
+//                $row->column('number', $row->number);
+//            });
+//            $grid->number('STT');
+            $grid->id('ID')->sortable();
             $grid->id_subject1('Môn học trước')->display(function ($idSubject1){
                 $subject1 = Subjects::find($idSubject1);
                 if(!empty($subject1->name)){
@@ -137,6 +137,7 @@ class SubjectParallelController extends Controller
                     return back()->with(compact('error'));
                 }
             });
+            $form->disableReset();
         });
     }
 }

@@ -28,13 +28,6 @@ class YearController extends Controller
 
             $content->header('Năm, học kỳ');
             $content->description('Danh sách năm');
-            $script = <<<EOT
-            if (location.href.indexOf('reload')==-1)
-            {
-               location.href=location.href+'?reload';
-            }
-EOT;
-            Admin::script($script);
             $content->body($this->grid());
         });
     }
@@ -82,11 +75,11 @@ EOT;
     {
         return Admin::grid(Year::class, function (Grid $grid) {
 
-//            $grid->id('ID')->sortable();
-            $grid->rows(function (Grid\Row $row) {
-                $row->column('number', $row->number);
-            });
-            $grid->number('STT');
+            $grid->id('ID')->sortable();
+//            $grid->rows(function (Grid\Row $row) {
+//                $row->column('number', $row->number);
+//            });
+//            $grid->number('STT');
             $grid->name('Tên năm')->display(function ($name){
                 return  '<a href="/admin/year/' . $this->id . '/details">'.$name.'</a>';
             })->sortable();
@@ -167,6 +160,7 @@ EOT;
             });
             $form->display('created_at', 'Tạo vào lúc');
             $form->display('updated_at', 'Cập nhật vào lúc');
+            $form->disableReset();
         });
     }
     public function details($id){

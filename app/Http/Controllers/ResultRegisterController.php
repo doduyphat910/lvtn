@@ -79,6 +79,7 @@ class ResultRegisterController extends Controller
     {
         return User::GridUser(ResultRegister::class, function (GridUser $grid) {
             $user = Auth::user();
+            //ưu tiên theo đợt đang mở trước
             $timeRegister = TimeRegister::where('status',1)->orderBy('id', 'DESC')->first();
             if(empty($timeRegister)){
                 $timeRegister = TimeRegister::orderBy('id', 'DESC')->first();

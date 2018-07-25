@@ -78,17 +78,17 @@ class UserAdminController extends UserController
     protected function grid()
     {
         return Admin::grid(UserAdmin::class,function (Grid $grid) {
-//            $grid->id('ID')->sortable();
+            $grid->id('ID')->sortable();
             $currentPath = Route::getFacadeRoot()->current()->uri();
             if ($currentPath == 'admin/teacher_user') {
                 $grid->model()->where('type_user', 0);
             } else if($currentPath == 'admin/user_admin') {
                 $grid->model()->where('type_user', 1);
             }
-            $grid->rows(function (Grid\Row $row) {
-                $row->column('number', $row->number);
-            });
-            $grid->number('STT');
+//            $grid->rows(function (Grid\Row $row) {
+//                $row->column('number', $row->number);
+//            });
+//            $grid->number('STT');
 //            $grid->code_number('Mã số');
             $grid->username(trans('admin.username'))->sortable();
             $grid->name(trans('admin.name'))->sortable();
@@ -189,7 +189,11 @@ EOT;
 //            if($currentPath == "admin/teacher_user/create") {
 //                $form->text('code_number', 'Mã GV')->rules('required');
 //            }
-            $form->text('username', trans('admin.username'))->rules('required');
+            $form->text('username', trans('admin.username'))->rules(function ($form){
+                if (!$id = $form->model()->id) {
+                    return 'required|unique:user_admin,username';
+                }
+            });
             $form->text('name', trans('admin.name'))->rules('required');
             $form->email('email', 'Email');
             $form->image('image', trans('admin.avatar'));
@@ -227,6 +231,7 @@ EOT;
 //                    $form->code_number = $code . '00'. ($count + 1);
 //                }
 //            });
+            $form->disableReset();
         });
     }
 }

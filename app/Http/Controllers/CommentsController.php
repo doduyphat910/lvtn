@@ -40,6 +40,7 @@ class CommentsController extends Controller
             $form->setAction('/user/comments');
             $form->hidden('status')->value(0);
             $form->hidden('id_user')->value($id);
+            $form->hidden('status')->value(0);
             $form->hidden('id');
             $form->textarea('name', 'Tiêu đề')->rows(2);
             $form->textarea('description', 'Nội dung')->rows(10);

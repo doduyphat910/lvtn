@@ -51,8 +51,8 @@ EOT;
                 array_push($countStudent, $countClass);
             }
             //chart 2
-            $timeRegisters = TimeRegister::orderBy('id', 'DESC')->limit(5)->pluck('name')->toArray();
-            $timeRegisters2 = TimeRegister::orderBy('id', 'DESC')->limit(5)->get()->toArray();
+            $timeRegisters = TimeRegister::orderBy('id', 'DESC')->limit(3)->pluck('name')->toArray();
+            $timeRegisters2 = TimeRegister::orderBy('id', 'DESC')->limit(3)->get()->toArray();
             $dataTimeRegister = [];
             foreach($timeRegisters2 as $timeRegister) {
                 $countStudentRegister = ResultRegister::where('time_register', $timeRegister['id'])->count();

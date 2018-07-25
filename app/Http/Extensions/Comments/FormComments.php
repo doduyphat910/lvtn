@@ -110,7 +110,6 @@ class FormComments extends Form
 
                 DB::transaction(function () {
                     $inserts = $this->prepareInsert($this->updates);
-
                     foreach ($inserts as $column => $value) {
                         $this->model->setAttribute($column, $value);
                     }

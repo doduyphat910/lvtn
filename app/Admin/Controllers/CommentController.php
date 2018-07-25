@@ -41,11 +41,11 @@ class CommentController extends Controller
     {
         return Admin::grid(Comments::class, function (Grid $grid) {
             $grid->model()->orderBy('created_at', 'DESC');
-            $grid->rows(function (Grid\Row $row) {
-                $row->column('number', $row->number);
-            });
-            $grid->number('STT');
-//            $grid->id('ID')->sortable();
+//            $grid->rows(function (Grid\Row $row) {
+//                $row->column('number', $row->number);
+//            });
+//            $grid->number('STT');
+            $grid->id('ID')->sortable();
             $grid->name('Tiêu đề')->display(function ($name) {
                 return '<a href="/admin/comment/' . $this->id . '/details">'.$name.'</a>';
             });
@@ -124,6 +124,7 @@ class CommentController extends Controller
             $form->text('name', 'Tiêu đề')->readOnly();
             $form->textarea('description', 'Mô tả')->readOnly();
             $form->display('created_at', 'Tạo vào lúc');
+            $form->disableReset();
         });
     }
 

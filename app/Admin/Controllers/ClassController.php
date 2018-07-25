@@ -77,11 +77,11 @@ class ClassController extends Controller
     protected function grid()
     {
         return Admin::grid(ClassSTU::class, function (Grid $grid) {
-//            $grid->id('ID')->sortable();
-            $grid->rows(function (Grid\Row $row) {
-                $row->column('number', $row->number);
-            });
-            $grid->number('STT');
+            $grid->id('ID')->sortable();
+//            $grid->rows(function (Grid\Row $row) {
+//                $row->column('number', $row->number);
+//            });
+//            $grid->number('STT');
             $grid->name('Tên lớp')->display(function ($name){
                 return '<a href="/admin/class/' . $this->id . '/details">'.$name.'</a>';
             })->sortable();
@@ -124,10 +124,10 @@ class ClassController extends Controller
     {
         return Admin::grid(StudentUser::class, function (Grid $grid) use ($idClass) {
             $grid->model()->where('id_class', $idClass);
-            $grid->rows(function (Grid\Row $row) {
-                $row->column('number', $row->number);
-            });
-            $grid->number('STT');
+//            $grid->rows(function (Grid\Row $row) {
+//                $row->column('number', $row->number);
+//            });
+//            $grid->number('STT');
 //            $grid->id('ID')->sortable();
 //            $grid->avatar('Avatar')->image();
             $grid->code_number('Mã số sinh viên')->sortable();
@@ -182,6 +182,7 @@ class ClassController extends Controller
             $form->select('id_user_teacher', 'GV cố vấn')->options(UserAdmin::where('type_user', 0)->pluck('name', 'id'));
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
+            $form->disableReset();
         });
     }
 

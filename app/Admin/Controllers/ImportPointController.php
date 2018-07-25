@@ -41,6 +41,7 @@ class ImportPointController extends Controller
             $csv_data_file->file_name = $request->file('csv_file')->getClientOriginalName();
             $csv_data_file->model = 'attendance_point';
             $csv_data_file->data = json_encode($data);
+            $csv_data_file->id_user = Admin::user()->id;
             $csv_data_file->save();
         }
         return Admin::content(function (Content $content) use ($csv_data, $csv_data_file, $idSubjectRegister) {
@@ -77,6 +78,11 @@ class ImportPointController extends Controller
         $row_add_successs = 0;
         $error_logs = [];
         foreach($data as $key => $row) {
+            if(!isset($row ['mssv']) || !isset($row ['diem_chuyen_can'])){
+                $row_error += 1;
+                $error_logs[$key] = ' dữ liệu sai';
+                break;
+            }
                 if (empty($row ['mssv']) ||  (empty($row ['diem_chuyen_can'])&& $row ['diem_chuyen_can'] != 0) ) {
                     $row_error += 1;
                     $error_logs[$key] = $row['mssv'] . ' trống dữ liệu';
@@ -212,6 +218,7 @@ class ImportPointController extends Controller
             $csv_data_file->file_name = $request->file('csv_file')->getClientOriginalName();
             $csv_data_file->model = 'mid_term_point';
             $csv_data_file->data = json_encode($data);
+            $csv_data_file->id_user = Admin::user()->id;
             $csv_data_file->save();
         }
         return Admin::content(function (Content $content) use ($csv_data, $csv_data_file, $idSubjectRegister) {
@@ -246,6 +253,11 @@ class ImportPointController extends Controller
         $row_add_successs = 0;
         $error_logs = [];
         foreach($data as $key => $row) {
+            if(!isset($row ['mssv']) || !isset($row ['diem_giua_ki']) ){
+                $row_error += 1;
+                $error_logs[$key] = ' dữ liệu sai';
+                break;
+            }
                 if (empty($row ['mssv']) ||  (empty($row ['diem_giua_ki'])&& $row ['diem_giua_ki'] != 0) ) {
                 $row_error += 1;
                 $error_logs[$key] = $row['mssv'] . ' trống dữ liệu';
@@ -387,6 +399,7 @@ class ImportPointController extends Controller
             $csv_data_file->file_name = $request->file('csv_file')->getClientOriginalName();
             $csv_data_file->model = 'end_term_point';
             $csv_data_file->data = json_encode($data);
+            $csv_data_file->id_user = Admin::user()->id;
             $csv_data_file->save();
         }
         return Admin::content(function (Content $content) use ($csv_data, $csv_data_file, $idSubjectRegister) {
@@ -421,6 +434,11 @@ class ImportPointController extends Controller
         $row_add_successs = 0;
         $error_logs = [];
         foreach($data as $key => $row) {
+            if(!isset($row ['mssv']) || !isset($row ['diem_cuoi_ki']) ){
+                $row_error += 1;
+                $error_logs[$key] = ' dữ liệu sai';
+                break;
+            }
                 if (empty($row ['mssv']) || (empty($row ['diem_cuoi_ki'])&& $row ['diem_cuoi_ki'] != 0)) {
                     $row_error += 1;
                     $error_logs[$key] = $row['mssv'] . ' trống dữ liệu';
@@ -566,6 +584,7 @@ class ImportPointController extends Controller
             $csv_data_file->file_name = $request->file('csv_file')->getClientOriginalName();
             $csv_data_file->model = 'all_point';
             $csv_data_file->data = json_encode($data);
+            $csv_data_file->id_user = Admin::user()->id;
             $csv_data_file->save();
         }
         return Admin::content(function (Content $content) use ($csv_data, $csv_data_file, $idSubjectRegister) {

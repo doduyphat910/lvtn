@@ -36,6 +36,7 @@ class ImportStudentController extends Controller
             $csv_data_file = new CSVData();
             $csv_data_file->file_name = $request->file('csv_file')->getClientOriginalName();
             $csv_data_file->model = 'student_user';
+            $csv_data_file->id_user = Admin::user()->id;
             $csv_data_file->data = json_encode($data);
             $csv_data_file->save();
         }
@@ -54,6 +55,12 @@ class ImportStudentController extends Controller
         $row_add_successs = 0;
         $error_logs = [];
         foreach($data as $key => $row) {
+            if(!isset($row ['mssv']) || !isset($row ['ho']) || !isset($row ['ten'])|| !isset($row ['lop']) ||
+                !isset($row ['nam_nhap_hoc']) || !isset($row ['trinh_do'])|| !isset($row ['trang_thai']) ){
+                $row_error += 1;
+                $error_logs[$key] = ' dữ liệu sai';
+                break;
+            }
                 if (empty($row ['mssv']) || empty($row ['ho']) || empty($row ['ten']) || empty($row ['lop'])
                     || empty($row ['nam_nhap_hoc']) || empty($row ['trinh_do']) || empty($row ['trang_thai']) ) {
                     $row_error += 1;
@@ -104,25 +111,25 @@ class ImportStudentController extends Controller
                 }
         }
         foreach($data as $key => $row) {
-            $studentUser = new StudentUser();
-            $idClass = ClassSTU::where('name', $row['lop'])->pluck('id')->first();
-            $studentUser->id_class = $idClass;
-            $studentUser->code_number = $row['mssv'];
-            $studentUser->first_name = $row['ho'];
-            $studentUser->last_name = $row['ten'];
-            if(isset($row['email'])) {
-                $studentUser->email = $row['email'];
-            } else {
-                $studentUser->email = null;
-            }
-            $studentUser->school_year = $row['nam_nhap_hoc'];
-            $studentUser->level = $row['trinh_do'];
-            $studentUser->id_status = $row['trang_thai'];
-            $studentUser->password = $studentUser->code_number;
             if ($row_error == 0) {
-                if($studentUser->save()) {
-                    $row_add_successs += 1;
+                $studentUser = new StudentUser();
+                $idClass = ClassSTU::where('name', $row['lop'])->pluck('id')->first();
+                $studentUser->id_class = $idClass;
+                $studentUser->code_number = $row['mssv'];
+                $studentUser->first_name = $row['ho'];
+                $studentUser->last_name = $row['ten'];
+                if(isset($row['email'])) {
+                    $studentUser->email = $row['email'];
+                } else {
+                    $studentUser->email = null;
                 }
+                $studentUser->school_year = $row['nam_nhap_hoc'];
+                $studentUser->level = $row['trinh_do'];
+                $studentUser->id_status = $row['trang_thai'];
+                $studentUser->password = $studentUser->code_number;
+                    if($studentUser->save()) {
+                        $row_add_successs += 1;
+                    }
             } else {
                 $row_error += 1;
             }

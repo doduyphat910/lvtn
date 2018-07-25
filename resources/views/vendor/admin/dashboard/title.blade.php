@@ -1,6 +1,7 @@
   <head>
     <script src="{{ admin_asset("/vendor/laravel-admin/chartjs/chart.js")}}"></script>
-</head>
+      {{--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>--}}
+  </head>
 <style>
    .title {
    font-size: 50px;

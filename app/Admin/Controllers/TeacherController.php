@@ -85,10 +85,10 @@ class TeacherController extends Controller
             $user = Admin::user();
             $idUser = $user->id;
             $grid->model()->where('id_user_teacher', $idUser);
-            $grid->rows(function (Grid\Row $row) {
-                $row->column('number', $row->number);
-            });
-            $grid->number('STT');
+//            $grid->rows(function (Grid\Row $row) {
+//                $row->column('number', $row->number);
+//            });
+//            $grid->number('STT');
 //            $grid->id('ID')->sortable();
             $grid->name('Tên lớp')->display(function ($name) {
                 return '<a href="/admin/teacher/class/' . $this->id . '/details">' . $name . '</a>';
@@ -123,10 +123,10 @@ class TeacherController extends Controller
     {
         return Admin::grid(StudentUser::class, function (Grid $grid) use ($idClass) {
             $grid->model()->where('id_class', $idClass);
-            $grid->rows(function (Grid\Row $row) {
-                $row->column('number', $row->number);
-            });
-            $grid->number('STT');
+//            $grid->rows(function (Grid\Row $row) {
+//                $row->column('number', $row->number);
+//            });
+//            $grid->number('STT');
 //            $grid->id('ID')->sortable();
             $grid->code_number('Mã số sinh viên')->sortable();
 //            $grid->avatar('Avatar')->image();
@@ -264,10 +264,10 @@ class TeacherController extends Controller
             } else {
                 $grid->model()->where('id', '-1');
             }
-            $grid->rows(function (Grid\Row $row) {
-                $row->column('number', $row->number);
-            });
-            $grid->number('STT');
+//            $grid->rows(function (Grid\Row $row) {
+//                $row->column('number', $row->number);
+//            });
+//            $grid->number('STT');
             $grid->id('Mã học phần')->display(function ($name) {
                 return '<a href="/admin/teacher/subject-register/' . $this->id . '/details">' . $name . '</a>';
             });
@@ -441,10 +441,10 @@ EOT;
             $idUser = $user->id;
             $grid->model()->where('id_subject_register', $idSubjectRegister);
 //            $grid->id('ID')->sortable();
-            $grid->rows(function (Grid\Row $row) {
-                $row->column('number', $row->number);
-            });
-            $grid->number('STT');
+//            $grid->rows(function (Grid\Row $row) {
+//                $row->column('number', $row->number);
+//            });
+//            $grid->number('STT');
             $grid->id_user_student('MSSV')->display(function () {
                 if (StudentUser::find($this->id_user_student)->code_number) {
                     return StudentUser::find($this->id_user_student)->code_number;
