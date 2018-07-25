@@ -109,11 +109,16 @@ class PointSubjectController extends Controller
                 return $this->rate_end_term;
             });
             $grid->column('Điểm QT')->style("text-align: center;")->display(function () {
-                if(!empty($this->attendance))
+                if($this->rate_attendance == 0) {
+                    return '';
+                } else {
+                     if(!empty($this->attendance))
                 {
                     return $this->attendance;
                 }
                 else{ return "0"; }
+                }
+               
             });
             $grid->column('Điểm GK')->style("text-align: center;")->display(function () {
                 if(!empty($this->mid_term))
@@ -208,8 +213,7 @@ class PointSubjectController extends Controller
             $form->select('id_time_register', 'Thời gian')->options($options)->attribute(['id' => 'resultPoint']);
             $form->disableReset();
             $form->disableSubmit();
-            $form->tools(function (Form\Tools $tools) {
-           
+            $form->tools(function (Form\Tools $tools) {    
             $tools->disableListButton();
             });
 

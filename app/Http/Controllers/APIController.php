@@ -412,7 +412,7 @@ EOT;
                 return $this->rate_mid_term;
             });
             $grid->column('%CK')->display(function () {
-                return $this->rate_mid_term;
+                return $this->rate_end_term;
             });
             $grid->column('Điểm QT')->display(function () {
                 if(!empty($this->attendance))
@@ -429,9 +429,9 @@ EOT;
                 else{ return "0"; }
             });
             $grid->column('Điểm QT')->display(function () {
-                if(!empty($this->mid_term))
+                if(!empty($this->end_term))
                 {
-                    return $this->mid_term;
+                    return $this->end_term;
                 }
                 else{ return "0"; }
             });

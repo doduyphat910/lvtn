@@ -56,19 +56,25 @@ class LearnImprovenmentController extends Controller
             
             $grid->registerColumnDisplayer();
             $user = Auth::user();
-
-            $schoolYearUser = $user->school_year;
+            //$schoolYearUser = $user->school_year;
             //check school year
             $timeRegister = TimeRegister::where('status', 1)->orderBy('id', 'DESC')->first();
-//             $schoolYearUser = (string) $schoolYearUser;
             if ($timeRegister) {
-//                 //get school year in time register and school year = "ALL"
-//                 if(in_array($schoolYearUser, $timeRegister->school_year) || $timeRegister->school_year['0'] == "All") {
-//                 } else {
-//                     $grid->model()->where('id', -1);
-//                 }
-
                 //open subject register follow semester
+                // $nameSemester = $timeRegister->semester;
+                // $idSemester = Semester::where('name', $nameSemester)->pluck('id');
+                // $subjects_id = SemesterSubjects::whereIn('semester_id', $idSemester)->orderBy('semester_id', 'DESC')->pluck('subjects_id')->toArray();
+                // //sort follow semester
+                // $field = '';
+                // foreach ($subjects_id as $id) {
+                //     $field .= ('"'.$id.'"' . ',');
+                // }
+                // $field = substr($field, 0, strlen($field) - 1);
+                // //get subject user learned (xét điều kiện sai dang ky là 1 thì xét ngược lại where)
+                // $idSubjectRegister = ResultRegister::where('id_user_student', $user->id)->where('is_learned', 1)->pluck('id_subject_register')->toArray();
+                // $idSubjectLearned = SubjectRegister::whereIn('id', $idSubjectRegister)->pluck('id_subjects')->toArray();
+                // //show subject not learned and subjects in semester in time register (hiển thị các môn đã học & trong đợt đang mở)
+                // $grid->model()->whereIn('id', $subjects_id)->whereIn('id', $idSubjectLearned)->orderBy(DB::raw('FIELD(id, ' . $field . ')'));
                 $nameSemester = $timeRegister->semester;
                 $idSemester = Semester::where('name', $nameSemester)->pluck('id');
                 $subjects_id = SemesterSubjects::whereIn('semester_id', $idSemester)->orderBy('semester_id', 'DESC')->pluck('subjects_id')->toArray();
@@ -78,35 +84,11 @@ class LearnImprovenmentController extends Controller
                     $field .= ('"'.$id.'"' . ',');
                 }
                 $field = substr($field, 0, strlen($field) - 1);
-                //get subject user learned (xét điều kiện sai dang ky là 2 thì xét ngược lại where)
+                //get subject user learned
                 $idSubjectRegister = ResultRegister::where('id_user_student', $user->id)->where('is_learned', 1)->pluck('id_subject_register')->toArray();
                 $idSubjectLearned = SubjectRegister::whereIn('id', $idSubjectRegister)->pluck('id_subjects')->toArray();
-                //show subject not learned and subjects in semester in time register (hiển thị các môn đã học & trong đợt đang mở)
+                //show subject not learned and subjects in semester in time register (hiển thị các môn chưa học & trong đợt đăng kí đang mở)
                 $grid->model()->whereIn('id', $subjects_id)->whereIn('id', $idSubjectLearned)->orderBy(DB::raw('FIELD(id, ' . $field . ')'));
-
-                // $grid->model()->whereIn('id', $subjects_id)->whereIn('id', $idSubjectLearned)->orderBy(DB::raw('FIELD(id, ' . $field . ')'));
-                // hoc cai thien >5 
-                // $arrSubjectRegister = ResultRegister::where('id_user_student', $user->id)->where('is_learned', 1)->get()->toArray();
-                // $arrfinal=[];
-                // foreach ($arrSubjectRegister as $val) {
-                //           $final = (($val['attendance'] *  $val['rate_attendance']) +
-                //                 ($val['mid_term'] * $val['rate_mid_term']) +
-                //                 ($val['end_term'] * $val['rate_end_term'])) / 100;
-                //           if($final>=5){
-                //             array_push($arrfinal, $val['id_subject_register']);
-                //           }
-                // }
-
-                // $idSubjectLearned = SubjectRegister::whereIn('id', $arrfinal)->pluck('id_subjects')->toArray();
-                // $arrSubjectTime = [];
-                // array_map(function($idSubjectLearned) use ($subjects_id, &$arrSubjectTime){
-                //     if(in_array($idSubjectLearned, $subjects_id)) {
-                //          array_push($arrSubjectTime,$idSubjectLearned);
-                //     }
-                // }, $idSubjectLearned);
-                // //show subject not learned and subjects in semester in time register (hiển thị các môn đã học & trong đợt đăng kí đang mở)
-                // $grid->model()->whereIn('id', $subjects_id)->whereIn('id', $arrSubjectTime)->orderBy(DB::raw('FIELD(id, ' . $field . ')'));
-                
             }
             //$grid->id('id');
             $grid->id('Mã môn học')->style("text-align: center;");
@@ -145,9 +127,27 @@ class LearnImprovenmentController extends Controller
                         case 2:
                             $nameSemester = 'Học kì 2';
                     }
-                    $year = Semester::find($arraySemester)->year()->get();
-                    $nameYear = $year['0']->name;
-                    return "<span class='label label-info'>{$nameSemester} - {$nameYear}</span>";
+                    $year = Semester::find($arraySemester)->year()->first();
+                    if(!empty($year)) {
+                        $nameYear = $year->name;
+
+                    } else {
+                        $nameYear = '';
+                    }
+                    if(substr($nameYear,4,5) % 2 == 0){
+                        if($nameSemester == 'Học kì hè') {
+//                            return  "<span class='label label-primary'>$nameSemester</span>"  ;
+                        } else {
+                            return "<span class='label label-info'>{$nameSemester} - {$nameYear}</span>"  ;
+                        }
+                    } else {
+                        if($nameSemester == 'Học kì hè') {
+//                            return  "<span class='label label-primary'>$nameSemester</span>"  ;
+                        } else {
+                            return "<span class='label label-success'>{$nameSemester} - {$nameYear}</span>";
+                        }
+                    }
+                    // return "<span class='label label-info'>{$nameSemester} - {$nameYear}</span>";
                 }, $arraySemester);
                 return join('&nbsp;', $name);
             });

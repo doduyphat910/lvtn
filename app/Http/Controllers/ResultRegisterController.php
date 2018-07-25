@@ -69,7 +69,6 @@ class ResultRegisterController extends Controller
             $form->disableReset();
             $form->disableSubmit();
             $form->tools(function (Form\Tools $tools) {
-           
             $tools->disableListButton();
             });
 
@@ -82,10 +81,11 @@ class ResultRegisterController extends Controller
             //ưu tiên theo đợt đang mở trước
             $timeRegister = TimeRegister::where('status',1)->orderBy('id', 'DESC')->first();
             if(empty($timeRegister)){
+
                 $timeRegister = TimeRegister::orderBy('id', 'DESC')->first();
             }
             $grid->model()->where('time_register', $timeRegister->id)->where('id_user_student', $user->id);
-               // $grid->id('ID');
+            // $grid->id('ID');
             $grid->column('Mã học phần')->style("text-align: center;")->display(function () {
                     $subjectRegister = SubjectRegister::where('id',$this->id_subject_register)->first();
                     if (!empty($subjectRegister)) {

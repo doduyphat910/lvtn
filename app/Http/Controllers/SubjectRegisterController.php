@@ -84,7 +84,6 @@ class SubjectRegisterController extends Controller
                     $field .= ('"'.$id.'"' . ',');
                 }
                 $field = substr($field, 0, strlen($field) - 1);
-//                dd($field);
                 //get subject user learned
                 $idSubjectRegister = ResultRegister::where('id_user_student', $user->id)->where('is_learned', 1)->pluck('id_subject_register')->toArray();
                 $idSubjectLearned = SubjectRegister::whereIn('id', $idSubjectRegister)->pluck('id_subjects')->toArray();
