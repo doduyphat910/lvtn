@@ -311,9 +311,10 @@ EOT;
                 $name = ClassSTU::find($idClass)->name;
                 return "<span class='label label-info'>{$name}</span>";
             });
-            $idTimeRegister = ResultRegister::where('id_subject_register', $idSubjectRegister)->pluck('time_register');
+//            $idTimeRegister = ResultRegister::where('id_subject_register', $idSubjectRegister)->pluck('time_register');
+            $idTimeRegister = SubjectRegister::find($idSubjectRegister)->id_time_register;
             $timeRegister = TimeRegister::find($idTimeRegister)->first();
-            $statusImport = $timeRegister->status_import;
+//            $statusImport = $timeRegister->status_import;
             $statusEditPoint = $timeRegister->status_edit_point;
             if($statusEditPoint == null || $statusEditPoint == []) {
                 $grid->attendance('Điểm chuyên cần')->sortable();
