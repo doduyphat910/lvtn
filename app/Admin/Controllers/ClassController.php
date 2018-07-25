@@ -148,9 +148,9 @@ class ClassController extends Controller
             $grid->created_at('Thêm vào lúc')->sortable();
             $grid->updated_at('Cập nhật vào lúc')->sortable();
             //import student
-//            $grid->tools(function ($tools) {
-//                $tools->append("<a href='/admin/import_student' class='btn btn-info btn-sm '><i class='fa fa-sign-in'></i> Import DS sinh viên</a>");
-//            });
+            $grid->tools(function ($tools) use ($idClass) {
+                $tools->append('<a href="/admin/import-student-class/'.$idClass .'" class="btn btn-info btn-sm"><i class="fa fa-sign-i"></i> Import sinh viên</a>');
+            });
             $grid->filter(function ($filter){
                 $filter->disableIdFilter();
                 $filter->like('code_number', 'MSSV');
@@ -164,6 +164,12 @@ class ClassController extends Controller
             $grid->disableCreateButton();
             $grid->disableExport();
             $grid->disableRowSelector();
+            $grid->actions(function ($actions) {
+                $actions->disableEdit();
+                $actions->disableDelete();
+                $actions->append('<a href="/admin/student_user/' . $actions->getKey() . '/edit"><i class="fa fa-edit" ></i></a>');
+                $actions->append('<a href="/admin/student_user/' . $actions->getKey() . '/details"><i class="fa fa-eye"></i></a>');
+            });
         });
     }
     /**

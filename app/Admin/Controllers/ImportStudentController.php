@@ -146,8 +146,131 @@ class ImportStudentController extends Controller
                 ));
 
             });
-
     }
+
+    public function importStudentClass($idClass)
+    {
+        return Admin::content(function (Content $content) use ($idClass) {
+
+            $content->header('Lớp');
+            $class = ClassSTU::find($idClass);
+            $content->description($class->name);
+            $content->body(view('admin.ImportStudentClass.import',
+                [
+                    'router_target' => '/admin/import-student-class/review',
+                    'idClass' => $idClass
+                ]));
+        });
+    }
+
+    public function studentClassReview(Request $request) {
+        $idClass = $request->idClass;
+        $path = $request->file('csv_file')->getRealPath();
+        $data = Excel::load($path, function ($reader) {
+        })->get()->toArray();
+        if(count($data) > 0 ) {
+            foreach($data as $key => $value) {
+                $csv_data_field[] = $key;
+            }
+            $csv_data = array_slice($data, 0, 2);
+            $csv_data_file = new CSVData();
+            $csv_data_file->file_name = $request->file('csv_file')->getClientOriginalName();
+            $csv_data_file->model = 'student_user';
+            $csv_data_file->id_user = Admin::user()->id;
+            $csv_data_file->data = json_encode($data);
+            $csv_data_file->save();
+        }
+        return Admin::content(function (Content $content) use ($csv_data, $csv_data_file, $idClass) {
+            $class = ClassSTU::find($idClass);
+            $content->header('Lớp');
+            $content->description($class->name);
+            $content->body(view('admin.ImportStudentClass.import_review',
+                [
+                    'csv_data' => $csv_data,
+                    'csv_data_file' => $csv_data_file,
+                    'idClass' => $idClass
+                ]
+            ));
+        });
+    }
+
+    public function studentClassParse (Request $request){
+        $idClass = $request->idClass;
+        $csv_data = CsvData::find($request->csv_data_file_id);
+        $data = json_decode($csv_data->data, true);
+        $row_error = 0 ;
+        $row_add_successs = 0;
+        $error_logs = [];
+        foreach($data as $key => $row) {
+            if(!isset($row ['mssv']) || !isset($row ['ho']) || !isset($row ['ten'])||
+                !isset($row ['nam_nhap_hoc']) || !isset($row ['trinh_do'])|| !isset($row ['trang_thai']) ){
+                $row_error += 1;
+                $error_logs[$key] = ' dữ liệu sai';
+                break;
+            }
+            if (empty($row ['mssv']) || empty($row ['ho']) || empty($row ['ten'])
+                || empty($row ['nam_nhap_hoc']) || empty($row ['trinh_do']) || empty($row ['trang_thai']) ) {
+                $row_error += 1;
+                $error_logs[$key] = $row['mssv'] . ', không có dữ liệu';
+            } else {
+                if ($row['trinh_do'] != 'CD' && $row['trinh_do'] != 'DH') {
+                    $row_error += 1;
+                    $error_logs[$key] = $row['mssv'] .', cột trình độ không được khác CD hoặc DH';
+                }
+                if ($row['nam_nhap_hoc'] < 2000 || $row['nam_nhap_hoc'] > ((int)date("Y"))) {
+                    $row_error += 1;
+                    $error_logs[$key] = $row['mssv'] .', cột năm nhập học sai dữ liệu';
+                }
+                $status = Status::all()->pluck('id')->toArray();
+                if (in_array($row['trang_thai'], $status) == false) {
+                    $row_error += 1;
+                    $error_logs[$key] = $row['mssv'] .', trạng thái không có trong CSDL';
+                }
+                $arrayCodeNumber = StudentUser::all()->pluck('code_number')->toArray();
+                if (in_array($row['mssv'], $arrayCodeNumber) == true) {
+                    $row_error += 1;
+                    $error_logs[$key] = $row['mssv'] . ', đã tồn tại';
+                }
+            }
+        }
+        foreach($data as $key => $row) {
+            if ($row_error == 0) {
+                $studentUser = new StudentUser();
+                $studentUser->id_class = $idClass;
+                $studentUser->code_number = $row['mssv'];
+                $studentUser->first_name = $row['ho'];
+                $studentUser->last_name = $row['ten'];
+                if(isset($row['email'])) {
+                    $studentUser->email = $row['email'];
+                } else {
+                    $studentUser->email = null;
+                }
+                $studentUser->school_year = $row['nam_nhap_hoc'];
+                $studentUser->level = $row['trinh_do'];
+                $studentUser->id_status = $row['trang_thai'];
+                $studentUser->password = $studentUser->code_number;
+                if($studentUser->save()) {
+                    $row_add_successs += 1;
+                }
+            } else {
+                $row_error += 1;
+            }
+        }
+        return Admin::content(function (Content $content) use ($row_error, $error_logs, $row_add_successs, $idClass) {
+            $class = ClassSTU::find($idClass);
+            $content->header('Lớp');
+            $content->description($class->name);
+            $content->body(view('admin.ImportStudentClass.import_parse',
+                [
+                    'row_error' => $row_error,
+                    'error_logs' => $error_logs,
+                    'row_add_successs' => $row_add_successs
+                ]
+            ));
+        });
+    }
+
+
 
 
 }
