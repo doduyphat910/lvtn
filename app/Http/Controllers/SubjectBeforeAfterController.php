@@ -22,10 +22,10 @@ class SubjectBeforeAfterController extends Controller
     {
         return User::content(function (ContentUser $content) {
 
-            $content->header('Môn học tiên quyết');
-            $content->description('Danh sách môn học tiên quyết');
+            $content->header('Môn học trước');
+            $content->description('Danh sách môn học trước');
             $content->breadcrumb(
-                ['text' => 'Môn học tiên quyết', 'url' => '../user/subject-before-after']
+                ['text' => 'Môn học trước', 'url' => '../user/subject-before-after']
             );
             $content->body($this->grid());
             

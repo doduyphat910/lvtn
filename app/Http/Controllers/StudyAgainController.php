@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\MessageBag;
 
-class LearnImprovenmentController extends Controller
+class StudyAgainController extends Controller
 {
     use ModelForm;
 
@@ -42,10 +42,10 @@ class LearnImprovenmentController extends Controller
     {
         return User::content(function (ContentUser $content) {
 
-            $content->header('Đăng ký môn học cải thiện, học lại');
+            $content->header('Đăng ký môn học lại');
             $content->description('Danh sách môn học');
             $content->breadcrumb(
-                ['text' => 'Đăng ký môn học cải thiện, học lại', 'url' => '../user/learn-improvement']
+                ['text' => 'Đăng ký môn học lại', 'url' => '../user/learn-improvement']
             );
             $content->body($this->grid());
         });
@@ -80,32 +80,31 @@ class LearnImprovenmentController extends Controller
                 $field = substr($field, 0, strlen($field) - 1);
                 //get subject user learned (xét điều kiện sai dang ky là 2 thì xét ngược lại where)
                 $idSubjectRegister = ResultRegister::where('id_user_student', $user->id)->where('is_learned', 1)->pluck('id_subject_register')->toArray();
-                $idSubjectLearned = SubjectRegister::whereIn('id', $idSubjectRegister)->pluck('id_subjects')->toArray();
-                //show subject not learned and subjects in semester in time register (hiển thị các môn đã học & trong đợt đang mở)
-                $grid->model()->whereIn('id', $subjects_id)->whereIn('id', $idSubjectLearned)->orderBy(DB::raw('FIELD(id, ' . $field . ')'));
+                // $idSubjectLearned = SubjectRegister::whereIn('id', $idSubjectRegister)->pluck('id_subjects')->toArray();
+                // $grid->model()->whereIn('id', $subjects_id)->whereIn('id', $idSubjectLearned)->orderBy(DB::raw('FIELD(id, ' . $field . ')'));
 
                 // $grid->model()->whereIn('id', $subjects_id)->whereIn('id', $idSubjectLearned)->orderBy(DB::raw('FIELD(id, ' . $field . ')'));
                 // hoc cai thien >5 
-                // $arrSubjectRegister = ResultRegister::where('id_user_student', $user->id)->where('is_learned', 1)->get()->toArray();
-                // $arrfinal=[];
-                // foreach ($arrSubjectRegister as $val) {
-                //           $final = (($val['attendance'] *  $val['rate_attendance']) +
-                //                 ($val['mid_term'] * $val['rate_mid_term']) +
-                //                 ($val['end_term'] * $val['rate_end_term'])) / 100;
-                //           if($final>=5){
-                //             array_push($arrfinal, $val['id_subject_register']);
-                //           }
-                // }
+                $arrSubjectRegister = ResultRegister::where('id_user_student', $user->id)->where('is_learned', 1)->get()->toArray();
+                $arrfinal=[];
+                foreach ($arrSubjectRegister as $val) {
+                          $final = (($val['attendance'] *  $val['rate_attendance']) +
+                                ($val['mid_term'] * $val['rate_mid_term']) +
+                                ($val['end_term'] * $val['rate_end_term'])) / 100;
+                          if($final<5){
+                            array_push($arrfinal, $val['id_subject_register']);
+                          }
+                }
 
-                // $idSubjectLearned = SubjectRegister::whereIn('id', $arrfinal)->pluck('id_subjects')->toArray();
-                // $arrSubjectTime = [];
-                // array_map(function($idSubjectLearned) use ($subjects_id, &$arrSubjectTime){
-                //     if(in_array($idSubjectLearned, $subjects_id)) {
-                //          array_push($arrSubjectTime,$idSubjectLearned);
-                //     }
-                // }, $idSubjectLearned);
-                // //show subject not learned and subjects in semester in time register (hiển thị các môn đã học & trong đợt đăng kí đang mở)
-                // $grid->model()->whereIn('id', $subjects_id)->whereIn('id', $arrSubjectTime)->orderBy(DB::raw('FIELD(id, ' . $field . ')'));
+                $idSubjectLearned = SubjectRegister::whereIn('id', $arrfinal)->pluck('id_subjects')->toArray();
+                $arrSubjectTime = [];
+                array_map(function($idSubjectLearned) use ($subjects_id, &$arrSubjectTime){
+                    if(in_array($idSubjectLearned, $subjects_id)) {
+                         array_push($arrSubjectTime,$idSubjectLearned);
+                    }
+                }, $idSubjectLearned);
+                //show subject not learned and subjects in semester in time register (hiển thị các môn đã học & trong đợt đăng kí đang mở)
+                $grid->model()->whereIn('id', $subjects_id)->whereIn('id', $arrSubjectTime)->orderBy(DB::raw('FIELD(id, ' . $field . ')'));
                 
             }
             //$grid->id('id');

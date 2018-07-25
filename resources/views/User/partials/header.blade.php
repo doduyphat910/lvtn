@@ -221,7 +221,7 @@
                     <li><a href="{{ url('user/result-register') }}"><i class="fa fa-th-list fa-fw fa-1x" aria-hidden="true"></i> Kết quả đăng ký</a></li>
                     <li><a href="{{ url('user/point-subject') }}"><i class="fa fa-list fa-fw fa-1x" aria-hidden="true"></i> Xem điểm</a></li>
                     <li><a href="{{ url('user/subject-parallel') }}"><i class="fa fa-list fa-fw fa-1x" aria-hidden="true"></i> Xem môn song song</a></li>
-                    <li><a href="{{ url('user/subject-before-after') }}"><i class="fa fa-list fa-fw fa-1x" aria-hidden="true"></i> Xem môn tiên quyết</a></li>
+                    <li><a href="{{ url('user/subject-before-after') }}"><i class="fa fa-list fa-fw fa-1x" aria-hidden="true"></i> Xem môn trước</a></li>
                     <li><a href="{{ url('user/comments') }}"><i class="fa fa-paper-plane fa-fw fa-1x" aria-hidden="true"></i> Góp ý kiến</a></li>
 
                     @if(Auth::check())

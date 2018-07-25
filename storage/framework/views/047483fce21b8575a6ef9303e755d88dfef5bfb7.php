@@ -1,6 +1,7 @@
   <head>
     <script src="<?php echo e(admin_asset("/vendor/laravel-admin/chartjs/chart.js")); ?>"></script>
-</head>
+      
+  </head>
 <style>
    .title {
    font-size: 50px;

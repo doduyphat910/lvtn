@@ -58,6 +58,10 @@ Route::group(['prefix'=>'user', 'middleware'=>'studentLogin'], function(Router $
         $router->get('subject-register/{id}/checkParallel', 'APIController@checkParallel');
         //learn-improvement
         $router->resource('learn-improvement',LearnImprovenmentController::class);
+        //improvement
+        $router->resource('improvement',ImprovenmentController::class);
+        //study-again
+        $router->resource('study-again',StudyAgainController::class);
     });
 });
 
