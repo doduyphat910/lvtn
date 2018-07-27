@@ -183,8 +183,7 @@ $('.grid-row-delete').unbind('click').click(function() {
       confirmButtonColor: "#DD6B55",
       confirmButtonText: "$confirm",
       closeOnConfirm: false,
-      cancelButtonText: "$cancel",
-      html: true
+      cancelButtonText: "$cancel"
     },
     function(){
         $.ajax({
