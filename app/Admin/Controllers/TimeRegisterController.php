@@ -211,7 +211,7 @@ EOT;
                     $form->status_edit_point = ["1","2","3"];
                 }
                 if($form->status == 'on' ) {
-                    if (!$id = $form->model()->id) {
+//                    if (!$id = $form->model()->id) {
                         $countStatusActive = TimeRegister::where('status', 1)->get()->count();
                         if ($countStatusActive > 0) {
                             $error = new MessageBag([
@@ -220,7 +220,7 @@ EOT;
                             ]);
                             return back()->with(compact('error'));
                         }
-                    }
+//                    }
                 }
             });
             $currentPath = Route::getFacadeRoot()->current()->uri();

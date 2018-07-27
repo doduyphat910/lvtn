@@ -227,12 +227,17 @@ class SubjectRegisterController extends Controller
 EOT;
             Admin::script($script);
 //            $form->display('id', 'ID');
-            $form->text('id', 'Mã học phần')->rules(function ($form){
-                if (!$id = $form->model()->id) {
-                    return 'required|unique:subjects,id';
-                }
+            $currentPath = Route::getFacadeRoot()->current()->uri();
+            if($currentPath == 'admin/subject_register/{subject_register}/edit'){
+                $form->display('id', 'Mã học phần');
+            } else {
+                $form->text('id', 'Mã học phần')->rules(function ($form){
+                    if (!$id = $form->model()->id) {
+                        return 'required|unique:subjects,id';
+                    }
 //                return 'required|unique:subject_register,'.$form->model()->id.',id,deleted_at,NULL';
-            });
+                });
+            }
             $form->select('id_subjects', 'Môn học')->options(Subjects::all()->pluck('name', 'id'))->rules('required');
             $form->select('id_user_teacher', 'Giảng viên')->options(UserAdmin::where('type_user', '0')->pluck('name', 'id'))->rules('required');
             $form->hidden('qty_current', 'Số lượng hiện tại')->value('0');
@@ -387,7 +392,7 @@ EOT;
             $grid->mid_term('Điểm giữa kì')->sortable();
             $grid->end_term('Điểm cuối kì')->sortable();
             $grid->column('Điểm tổng kết')->display(function () {
-                if(!$this->attendance || !$this->mid_term || !$this->end_term) {
+                if((!$this->attendance && $this->attendance !=0) || (!$this->mid_term && $this->mid_term !=0)  || (!$this->end_term && $this->end_term != 0)) {
                     return 'X';
                 } else {
                     return (($this->attendance * $this->rate_attendance) +

@@ -313,7 +313,7 @@ EOT;
             });
 //            $idTimeRegister = ResultRegister::where('id_subject_register', $idSubjectRegister)->pluck('time_register');
             $idTimeRegister = SubjectRegister::find($idSubjectRegister)->id_time_register;
-            $timeRegister = TimeRegister::find($idTimeRegister)->first();
+            $timeRegister = TimeRegister::where('id', $idTimeRegister)->first();
 //            $statusImport = $timeRegister->status_import;
             $statusEditPoint = $timeRegister->status_edit_point;
             if($statusEditPoint == null || $statusEditPoint == []) {
@@ -336,7 +336,7 @@ EOT;
 
             } else {
                 switch (true){
-                    case in_array('1', $statusEditPoint)&& in_array('2', $statusEditPoint) && in_array('3', $statusEditPoint):
+                    case in_array('1', $statusEditPoint) && in_array('2', $statusEditPoint) && in_array('3', $statusEditPoint):
                         $grid->attendance('Điểm chuyên cần')->editable()->sortable();
                         $grid->mid_term('Điểm giữa kì')->editable()->sortable();
                         $grid->end_term('Điểm cuối kì')->editable()->sortable();
@@ -382,7 +382,7 @@ EOT;
                         $(document).on ("click", ".editable-submit", function () {
                          setTimeout(function(){ 
                            location.reload();
-                         }, 1700);
+                         }, 1000);
                         });
                     });
 SCRIPT;

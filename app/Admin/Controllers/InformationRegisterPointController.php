@@ -74,8 +74,8 @@ class InformationRegisterPointController extends Controller
     protected function grid($id)
     {
         return Admin::Grid(ResultRegister::class, function (Grid $grid) use ($id) {
-            $timeRegister = TimeRegister::orderBy('id', 'DESC')->first();
-            $grid->model()->where('time_register', $timeRegister->id)->where('id_user_student', $id);
+            $timeRegister = ResultRegister::where('id_user_student', $id)->orderBy('time_register', 'DESC')->first()->time_register;
+            $grid->model()->where('time_register', $timeRegister)->where('id_user_student', $id);
             // $grid->id('ID');
             $grid->column('Mã học phần')->display(function () {
                 $subjectRegister = SubjectRegister::where('id',$this->id_subject_register)->first();
@@ -172,7 +172,7 @@ class InformationRegisterPointController extends Controller
                 }
             });
             $grid->column('Sô tín chỉ hiện tại')->display(function () use ($id, $timeRegister){
-                $idSubject = ResultRegister::where('id_user_student', $id)->where('time_register',  $timeRegister->id)->pluck('id_subject');
+                $idSubject = ResultRegister::where('id_user_student', $id)->where('time_register',  $timeRegister)->pluck('id_subject');
                 $subjects = Subjects::find($idSubject);
                 $sumCredit = 0;
                 foreach ($subjects as $subject){

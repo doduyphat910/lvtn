@@ -802,7 +802,7 @@ html {
 </div>
 <div class="container-fluid box box-default">
    <div class="box-header with-border">
-      <h3 class="box-title">Thống kê</h3>
+      <h3 class="box-title">Biểu đồ</h3>
       <div class="box-tools pull-right">
          <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
          </button>
@@ -811,16 +811,18 @@ html {
    </div>
    <div class="row box-body">
         <div class="col-lg-6 col-sm-6 col-md-6">
-              <canvas id="myChart"></canvas>   
+              <canvas id="myChart"></canvas><br>
+            <div style="text-align: center; font-weight: bold; font-size: large">Biểu đồ số lượng sinh viên</div>
         </div>
          <div class="col-lg-6 col-sm-6 col-md-6">
-              <canvas id="myLineChart"></canvas>   
-        </div>
+              <canvas id="myLineChart"></canvas><br>
+             <div style="text-align: center; font-weight: bold; font-size: large">Biểu đồ số lượt đăng ký</div>
+         </div>
    </div>
 </div>
 <div class="container-fluid box box-default">
    <div class="box-header with-border">
-      <h3 class="box-title">Thống kê</h3>
+      <h3 class="box-title">Tiện ích</h3>
       <div class="box-tools pull-right">
          <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
          </button>

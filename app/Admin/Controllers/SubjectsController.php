@@ -22,6 +22,7 @@ use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\ModelForm;
 use App\Models\Semester;
 use App\Models\SubjectGroup;
+use Illuminate\Support\Facades\Route;
 
 class SubjectsController extends Controller
 {
@@ -245,13 +246,19 @@ class SubjectsController extends Controller
 //            $form->text('id', 'Mã môn học')->rules(function ($form){
 //                return 'required|unique:subjects,'.$form->model()->id.',id,deleted_at,NULL';
 //            });
-            $form->text('id', 'Mã môn học')->rules(function ($form){
-                if (!$id = $form->model()->id) {
-                    return 'required|unique:subjects,id';
-                }
+            $currentPath = Route::getFacadeRoot()->current()->uri();
+            if($currentPath != "admin/subjects/{subject}/edit"){
+                $form->text('id', 'Mã môn học')->rules(function ($form){
+                    if (!$id = $form->model()->id) {
+                        return 'required|unique:subjects,id';
+                    }
 //                return 'required|unique:subjects,'.$form->model()->id.',id,deleted_at,NULL';
 
-            });
+                });
+            } else {
+                $form->display('id', 'ID');
+            }
+
             $form->text('name','Tên môn học')->rules('required');
             $form->number('credits','Tín chỉ')->rules('integer|min:1|max:6');
             $form->number('credits_fee', 'Tín chỉ học phí')->rules('integer|min:1|max:15');
