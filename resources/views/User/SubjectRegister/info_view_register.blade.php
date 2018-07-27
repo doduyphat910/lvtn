@@ -14,6 +14,7 @@
                 <div class="tab-content fields-group">
                     <div class="tab-pane active" id="tab-form-1">
                         @include('User.SubjectRegister.table_subject_register')
+                        @include('User.SubjectRegister.info_view_subject')
                     </div>
                 </div>
 

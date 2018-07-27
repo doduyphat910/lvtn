@@ -259,7 +259,11 @@ class SubjectsController extends Controller
                 $form->display('id', 'ID');
             }
 
-            $form->text('name','Tên môn học')->rules('required');
+            $form->text('name','Tên môn học')->rules(function ($form){
+                if (!$id = $form->model()->id) {
+                    return 'required|unique:subjects,name';
+                }
+            });
             $form->number('credits','Tín chỉ')->rules('integer|min:1|max:6');
             $form->number('credits_fee', 'Tín chỉ học phí')->rules('integer|min:1|max:15');
 //            $form->select('id_semester', 'Học kỳ')->options(Semester::all()->pluck('name', 'id'));

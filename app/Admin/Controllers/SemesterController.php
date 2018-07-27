@@ -326,7 +326,6 @@ class SemesterController extends Controller
             $form->display('created_at', 'Tạo vào lúc');
             $form->display('updated_at', 'Cập nhật vào lúc');
             $form->disableReset();
-//            $form->saving(function (Form $form) use ($currentPath) {
             $form->saving(function (Form $form)  {
                 if(($form->name == 1 || $form->name == 2) && $form->id_year == null )
                 {
@@ -342,9 +341,19 @@ class SemesterController extends Controller
                     ]);
                     return back()->with(compact('error'));
                 }
-                    if ($form->name && $form->id_year) {
-                        $count = Semester::where('name', $form->name)->where('id_year', $form->id_year)->where('id', '!=' ,$form->model()->id)->count();
-                        if ($count > 1) {
+                if($form->name == 0) {
+                    $count = Semester::where('name', $form->name)->where('id', '!=' ,$form->model()->id)->count();
+                    if ($count >= 1) {
+                        $error = new MessageBag([
+                            'title' => 'Lỗi',
+                            'message' => 'Đã tồn tại học kỳ hè ',
+                        ]);
+                        return back()->with(compact('error'));
+                    }
+                } else {
+                    if ($form->name && $form->id_year  ) {
+                        $count = Semester::where('name', $form->name)->where('id_year', $form->id_year)->where('id', '!=', $form->model()->id)->count();
+                        if ($count >= 1) {
                             $nameYear = Year::find($form->id_year)->name;
                             $error = new MessageBag([
                                 'title' => 'Lỗi',
@@ -353,6 +362,8 @@ class SemesterController extends Controller
                             return back()->with(compact('error'));
                         }
                     }
+                }
+
                 //check subject in semester
 //                if($form->subjects != null) {
 //                    $semesterSummer = Semester::where('name', 0)->pluck('id')->toArray();
@@ -360,6 +371,26 @@ class SemesterController extends Controller
 //                    dd($count);
 //                }
 
+            });
+        });
+    }
+
+    protected function formDetails($id)
+    {
+        return Admin::form(Semester::class, function (Form $form) use ($id) {
+            $form->display('id', 'ID');
+            $form->select('name', 'Tên học kì')->options(['0'=>' Học kỳ hè', '1' => 'Học kì 1', '2' => 'Học kì 2'])
+                ->rules('required')->readOnly();
+            $form->select('id_year', 'Năm')->options(Year::all()->pluck('name', 'id'))->readOnly();
+            $currentPath = Route::getFacadeRoot()->current()->uri();
+            if($currentPath != "admin/semester/{id}/details") {
+                $form->listbox('subjects', 'Môn học')->options(Subjects::all()->pluck('name', 'id'));
+            }
+            $form->display('created_at', 'Tạo vào lúc');
+            $form->display('updated_at', 'Cập nhật vào lúc');
+            $form->disableReset();
+            $form->tools(function (Form\Tools $tools) use ($id) {
+                $tools->add('<a href="/admin/semester/'.$id.'/edit" class="btn btn-sm btn-default" style="margin-right: 10px;"><i class="fa fa-edit"></i>&nbsp;&nbsp;Sửa</a>');
             });
         });
     }
@@ -375,7 +406,7 @@ class SemesterController extends Controller
     }
 
     public function detailsView($id){
-        $form = $this->form()->view($id);
+        $form = $this->formDetails($id)->view($id);
         $gridSubject = $this->gridSubject($id)->render();
         $idSubject = SemesterSubjects::where('semester_id', $id)->pluck('subjects_id');
         $gridSubjectRegister = $this->gridSubjectRegister($idSubject)->render();
