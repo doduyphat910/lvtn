@@ -144,9 +144,27 @@ class ImprovenmentController extends Controller
                         case 2:
                             $nameSemester = 'Học kì 2';
                     }
-                    $year = Semester::find($arraySemester)->year()->get();
-                    $nameYear = $year['0']->name;
-                    return "<span class='label label-info'>{$nameSemester} - {$nameYear}</span>";
+                    $year = Semester::find($arraySemester)->year()->first();
+                    if(!empty($year)) {
+                        $nameYear = $year->name;
+
+                    } else {
+                        $nameYear = '';
+                    }
+                    if(substr($nameYear,4,5) % 2 == 0){
+                        if($nameSemester == 'Học kì hè') {
+//                            return  "<span class='label label-primary'>$nameSemester</span>"  ;
+                        } else {
+                            return "<span class='label label-info'>{$nameSemester} - {$nameYear}</span>"  ;
+                        }
+                    } else {
+                        if($nameSemester == 'Học kì hè') {
+//                            return  "<span class='label label-primary'>$nameSemester</span>"  ;
+                        } else {
+                            return "<span class='label label-success'>{$nameSemester} - {$nameYear}</span>";
+                        }
+                    }
+                    // return "<span class='label label-info'>{$nameSemester} - {$nameYear}</span>";
                 }, $arraySemester);
                 return join('&nbsp;', $name);
             });

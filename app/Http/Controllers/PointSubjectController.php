@@ -100,7 +100,11 @@ class PointSubjectController extends Controller
                     }
             });
             $grid->column('%QT')->style("text-align: center;")->display(function () {
-                return $this->rate_attendance;
+                if($this->rate_attendance==0){
+                    return "";
+                }
+                else{return $this->rate_attendance;}
+                
             });
             $grid->column('%GK')->style("text-align: center;")->display(function () {
                 return $this->rate_mid_term;

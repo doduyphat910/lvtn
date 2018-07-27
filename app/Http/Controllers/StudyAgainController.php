@@ -144,19 +144,33 @@ class StudyAgainController extends Controller
                         case 2:
                             $nameSemester = 'Học kì 2';
                     }
-                    $year = Semester::find($arraySemester)->year()->get();
-                    $nameYear = $year['0']->name;
-                    return "<span class='label label-info'>{$nameSemester} - {$nameYear}</span>";
+                    $year = Semester::find($arraySemester)->year()->first();
+                    if(!empty($year)) {
+                        $nameYear = $year->name;
+
+                    } else {
+                        $nameYear = '';
+                    }
+                    if(substr($nameYear,4,5) % 2 == 0){
+                        if($nameSemester == 'Học kì hè') {
+//                            return  "<span class='label label-primary'>$nameSemester</span>"  ;
+                        } else {
+                            return "<span class='label label-info'>{$nameSemester} - {$nameYear}</span>"  ;
+                        }
+                    } else {
+                        if($nameSemester == 'Học kì hè') {
+//                            return  "<span class='label label-primary'>$nameSemester</span>"  ;
+                        } else {
+                            return "<span class='label label-success'>{$nameSemester} - {$nameYear}</span>";
+                        }
+                    }
+                    // return "<span class='label label-info'>{$nameSemester} - {$nameYear}</span>";
                 }, $arraySemester);
                 return join('&nbsp;', $name);
             });
             $grid->column('Đăng ký')->style("text-align: center;")->display(function () {
                 return '<a href="/user/subject-register/' . $this->id . '/details" data-id='.$this->id.'  target="_blank" class="btn btn-md" ><i class="fa fa-pencil-square"></i></a>';
             });
-
-
-
-            
             $grid->disableCreateButton();
             $grid->disableExport();
             $grid->disableRowSelector();

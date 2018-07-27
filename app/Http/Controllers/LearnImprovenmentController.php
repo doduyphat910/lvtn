@@ -77,6 +77,7 @@ class LearnImprovenmentController extends Controller
                 // $grid->model()->whereIn('id', $subjects_id)->whereIn('id', $idSubjectLearned)->orderBy(DB::raw('FIELD(id, ' . $field . ')'));
                 $nameSemester = $timeRegister->semester;
                 $idSemester = Semester::where('name', $nameSemester)->pluck('id');
+                
                 $subjects_id = SemesterSubjects::whereIn('semester_id', $idSemester)->orderBy('semester_id', 'DESC')->pluck('subjects_id')->toArray();
                 //sort follow semester
                 $field = '';

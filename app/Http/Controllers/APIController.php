@@ -406,7 +406,10 @@ EOT;
                     }
             });
             $grid->column('%QT')->display(function () {
-                return $this->rate_attendance;
+              if($this->rate_attendance==0){
+                    return "";
+                }
+                else{return $this->rate_attendance;}
             });
             $grid->column('%GK')->display(function () {
                 return $this->rate_mid_term;
@@ -415,11 +418,16 @@ EOT;
                 return $this->rate_end_term;
             });
             $grid->column('Điểm QT')->display(function () {
-                if(!empty($this->attendance))
+                if($this->rate_attendance == 0) {
+                    return '';
+                } else {
+                     if(!empty($this->attendance))
                 {
                     return $this->attendance;
                 }
                 else{ return "0"; }
+                }
+                    
             });
             $grid->column('Điểm GK')->display(function () {
                 if(!empty($this->mid_term))
@@ -428,7 +436,7 @@ EOT;
                 }
                 else{ return "0"; }
             });
-            $grid->column('Điểm QT')->display(function () {
+            $grid->column('Điểm CK')->display(function () {
                 if(!empty($this->end_term))
                 {
                     return $this->end_term;
