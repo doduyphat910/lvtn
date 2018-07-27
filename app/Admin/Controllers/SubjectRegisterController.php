@@ -8,6 +8,8 @@ use App\Admin\Extensions\Subject\FormID;
 use App\Models\Classroom;
 use App\Models\ClassSTU;
 use App\Models\ResultRegister;
+use App\Models\Semester;
+use App\Models\SemesterSubjects;
 use App\Models\StudentUser;
 use App\Models\TimeTable;
 use App\Models\UserAdmin;
@@ -22,6 +24,8 @@ use Encore\Admin\Facades\Admin;
 use Encore\Admin\Layout\Content;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\ModelForm;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\MessageBag;
 
@@ -238,12 +242,13 @@ EOT;
 //                return 'required|unique:subject_register,'.$form->model()->id.',id,deleted_at,NULL';
                 });
             }
+            $form->select('id_time_register', 'Đợt đăng ký')->options(TimeRegister::orderBy('created_at','DESC')
+                ->pluck('name', 'id'))->rules('required')->load('id_subjects','/admin/subject-register/subject');
             $form->select('id_subjects', 'Môn học')->options(Subjects::all()->pluck('name', 'id'))->rules('required');
             $form->select('id_user_teacher', 'Giảng viên')->options(UserAdmin::where('type_user', '0')->pluck('name', 'id'))->rules('required');
             $form->hidden('qty_current', 'Số lượng hiện tại')->value('0');
             $form->number('qty_min', 'Số lượng tối thiểu')->rules('integer|min:5');
             $form->number('qty_max', 'Số lượng tối đa')->rules('integer|min:10');
-            $form->select('id_time_register', 'Đợt đăng ký')->options(TimeRegister::orderBy('created_at','DESC')->pluck('name', 'id'))->rules('required');
             $form->date('date_start', 'Ngày bắt đầu')->placeholder('Ngày bắt đầu')->rules('required');
             $form->date('date_end', 'Ngày kết thúc')->placeholder('Ngày kết thúc')->rules('required');
             $form->display('created_at', 'Tạo vào lúc');
@@ -263,6 +268,39 @@ EOT;
 //                $subject = Subjects::find($form->id_subjects);
 //                $idSemester = $subject->semester()->pluck('id')->toArray();
 //                $form->id_semester = $idSemester['0'] ;
+                $currentPath = Route::getFacadeRoot()->current()->uri();
+                //check teacher the same time
+                $idTeacher = $form->id_user_teacher;
+                $idTimeRegister = $form->id_time_register;
+                $subjectTeacherRegister = SubjectRegister::where('id_user_teacher', $idTeacher)->where('id_time_register', $idTimeRegister)->pluck('id')->toArray();
+                if($currentPath == "admin/subject_register/{subject_register}") {
+                    if (($key = array_search($form->model()->id, $subjectTeacherRegister )) !== false) {
+                        unset($subjectTeacherRegister[$key]);
+                    }
+                    $timeStudyTeacher = TimeStudy::whereIn('id_subject_register', $subjectTeacherRegister)->get()->toArray();
+                } else {
+                    $timeStudyTeacher = TimeStudy::whereIn('id_subject_register',$subjectTeacherRegister)->get()->toArray();
+                }
+                if($form->time_study) {
+                    foreach ($form->time_study as $day) {
+                        foreach ($timeStudyTeacher as $timeStudy) {
+                            if ($day['day'] == $timeStudy['day']) {
+                                if (
+                                    ($day['time_study_end'] > $timeStudy['time_study_start'] && $day['time_study_end'] <= $timeStudy['time_study_end']) ||
+                                    ($day['time_study_start'] >= $timeStudy['time_study_start'] && $day['time_study_start'] < $timeStudy['time_study_end']) ||
+                                    ($day['time_study_start'] >= $timeStudy['time_study_start'] && $day['time_study_end'] <= $timeStudy['time_study_end'])  ||
+                                    ($day['time_study_start'] <= $timeStudy['time_study_start'] && $day['time_study_end'] >= $timeStudy['time_study_end'])
+                                ) {
+                                    $error = new MessageBag([
+                                        'title' => 'Lỗi',
+                                        'message' => 'Giảng viên đã có giờ dạy này ',
+                                    ]);
+                                    return back()->with(compact('error'));
+                                }
+                            }
+                        }
+                    }
+                }
                 //check time study
                 if($form->time_study) {
                     foreach($form->time_study as $timeStudy) {
@@ -308,6 +346,20 @@ EOT;
             $form->disableReset();
 
         });
+    }
+
+    public function subject(Request $request)
+    {
+        $timeRegisterId = $request->get('q');
+        $timeRegister = TimeRegister::find($timeRegisterId);
+        $semesterName = $timeRegister->semester;
+        $semesters = Semester::where('name', $semesterName)->get()->toArray();
+        $subject = [];
+        foreach($semesters as $semester) {
+            $semes = Semester::find($semester['id']);
+            array_push($subject, $semes->subjects()->get(['id', DB::raw('name as text')])) ;
+        }
+        return $subject;
     }
 
     public function details($id){

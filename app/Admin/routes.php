@@ -24,6 +24,7 @@ Route::group([
     $router->resource('semester', SemesterController::class);
 
     //subject_register
+    $router->get('subject-register/subject', 'SubjectRegisterController@subject');
     $router->get('subject_register/{id}/details', 'SubjectRegisterController@details');
     $router->resource('subject_register', SubjectRegisterController::class);
 
