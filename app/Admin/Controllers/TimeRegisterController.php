@@ -220,8 +220,8 @@ EOT;
                             ]);
                             return back()->with(compact('error'));
                         }
-//                    }
-                }
+                    }
+//                }
             });
             $currentPath = Route::getFacadeRoot()->current()->uri();
             if($currentPath == "admin/time-register/{time_register}/edit") {
@@ -234,6 +234,64 @@ EOT;
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
             $form->disableReset();
+        });
+    }
+
+    protected function formDetails($id)
+    {
+        return Admin::form(TimeRegister::class, function (Form $form) use ($id) {
+            $form->display('id', 'ID');
+            $form->text('name', 'Tên')->rules('required')
+                ->help('Bạn nên đặt tên là HK - Năm học (VD:HK2 - Năm 2018-2019 ) ')->readOnly();
+            $form->datetimeRange('time_register_start', 'time_register_end', 'Thời gian đăng ký')
+                ->rules('required')->readOnly();
+            $options = [0 => 'Học kỳ hè', 1 => 'Học kỳ 1', 2 => 'Học kỳ 2'];
+            $form->select('semester', 'Học kỳ')->options($options)->readOnly();
+            $schoolYear = StudentUser::distinct('school_year')->orderBy('school_year', 'DESC')->limit(6)->pluck('school_year', 'school_year')->toArray();
+            $schoolYear['0'] = "Tất cả";
+            ksort($schoolYear);
+            $form->multipleSelect('school_year','Khóa đăng ký')->options($schoolYear)->readOnly()->readOnly();
+            $states = [
+                'on'  => ['value' => 1, 'text' => 'Mở', 'color' => 'success'],
+                'off' => ['value' => 0, 'text' => 'Đóng', 'color' => 'danger'],
+            ];
+            $form->switch('status', 'Trạng thái')->states($states)->default('0')->readOnly();
+            $options = ['All'=>'Tất cả', '1'=>'Chuyên cần', '2'=>'Giữa kì', '3'=>'Cuối kì' ];
+            $options2 = ['AllPoint'=>'Tất cả', '1'=>'Chuyên cần', '2'=>'Giữa kì', '3'=>'Cuối kì' ];
+
+            $form->checkbox('status_import', 'Trạng thái import')->options($options)->readOnly();
+            $form->checkbox('status_edit_point', 'Trạng thái sửa điểm')->options($options2)->readOnly();
+            $script = <<<EOT
+            $(function () {
+                $('input[value="All"]').on('ifChecked', function(event){
+                  $('input[name="status_import[]"]').iCheck('check');
+                });
+                $('input[value="All"]').on('ifUnchecked', function(event){
+                  $('input[name="status_import[]"]').iCheck('uncheck');
+                });
+                 $('input[value="AllPoint"]').on('ifChecked', function(event){
+                  $('input[name="status_edit_point[]"]').iCheck('check');
+                });
+                $('input[value="AllPoint"]').on('ifUnchecked', function(event){
+                  $('input[name="status_edit_point[]"]').iCheck('uncheck');
+                });
+            });
+EOT;
+            Admin::script($script);
+            $currentPath = Route::getFacadeRoot()->current()->uri();
+            if($currentPath == "admin/time-register/{time_register}/edit") {
+                $form->number('credits_max', 'Số tín chỉ lớn nhất')->rules('integer|max:28');
+                $form->number('credits_min', 'Số tín chỉ nhỏ nhất')->rules('integer|min:10');
+            } else {
+                $form->hidden('credits_min')->value(10);
+                $form->hidden('credits_max')->value(28);
+            }
+            $form->display('created_at', 'Created At');
+            $form->display('updated_at', 'Updated At');
+            $form->disableReset();
+            $form->tools(function (Form\Tools $tools) use ($id) {
+                $tools->add('<a href="/admin/time-register/'.$id.'/edit" class="btn btn-sm btn-default" style="margin-right: 10px;"><i class="fa fa-edit"></i>&nbsp;&nbsp;Sửa</a>');
+            });
         });
     }
 
@@ -256,7 +314,7 @@ EOT;
 
     protected function detailsView($id)
     {
-        $form = $this->form()->view($id);
+        $form = $this->formDetails($id)->view($id);
             $arrIDSubject = UserSubject::where('id_time_register',$id)->select('id_subject')->distinct()->pluck('id_subject')->toArray();
             $dataStudents = [];
             foreach($arrIDSubject as $idSubject) {

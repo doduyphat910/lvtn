@@ -348,6 +348,65 @@ EOT;
         });
     }
 
+    protected function formDetails($id)
+    {
+        return AdminMissID::form(SubjectRegister::class, function (FormID $form) use ($id) {
+            $script = <<<EOT
+        $(function () {
+            var url = window.location.href;
+            var action_link =url.split("/");
+            var action  = action_link[action_link.length-1]
+            if(action=="create"){
+                var is_create_error = $('i').hasClass('fa-times-circle-o');
+//                if(is_create_error){
+//                     $('.remove')[0].remove();
+//                }else{
+                   $('.add').click();
+                  // $('.remove').remove();
+               // }
+            }
+            if(action=="edit")
+            {
+//                $('.remove')[0].remove();
+            }
+            if(action=="details")
+            {
+                $('.remove').remove();
+                $('.add').remove();
+            }
+
+        });
+EOT;
+            Admin::script($script);
+            $form->display('id', 'Mã học phần');
+            $form->select('id_time_register', 'Đợt đăng ký')->options(TimeRegister::orderBy('created_at','DESC')
+                ->pluck('name', 'id'))->rules('required')->readOnly();
+            $form->select('id_subjects', 'Môn học')->options(Subjects::all()->pluck('name', 'id'))->rules('required')->readOnly();
+            $form->select('id_user_teacher', 'Giảng viên')->options(UserAdmin::where('type_user', '0')->pluck('name', 'id'))->rules('required')->readOnly();
+            $form->hidden('qty_current', 'Số lượng hiện tại')->value('0');
+            $form->number('qty_min', 'Số lượng tối thiểu')->rules('integer|min:5')->readOnly();
+            $form->number('qty_max', 'Số lượng tối đa')->rules('integer|min:10')->readOnly();
+            $form->date('date_start', 'Ngày bắt đầu')->placeholder('Ngày bắt đầu')->rules('required')->readOnly();
+            $form->date('date_end', 'Ngày kết thúc')->placeholder('Ngày kết thúc')->rules('required')->readOnly();
+            $form->display('created_at', 'Tạo vào lúc');
+            $form->display('updated_at', 'Cập nhật vào lúc');
+            $form->hasMany('time_study', 'Thời gian học', function (Form\NestedForm $form) {
+                $options = ['2'=>'Thứ 2', '3'=>'Thứ 3', '4'=>'Thứ 4', '5'=>'Thứ 5', '6'=>'Thứ 6', '7'=>'Thứ 7', '8'=>'Chủ nhật'];
+                $form->select('day', 'Ngày học')->options($options)->readOnly();
+                $form->select('id_classroom', 'Phòng học')->options(Classroom::all()->pluck('name', 'id'))->readOnly();
+                $timeStart = Timetable::all()->pluck('time_start', 'time_start' );
+                $timeEnd = Timetable::all()->pluck('time_end', 'time_end' );
+                $form->select('time_study_start', 'Giờ học bắt đầu')->options($timeStart)->readOnly();
+                $form->select('time_study_end', 'Giờ học kết thúc')->options($timeEnd)->readOnly();
+            })->rules('required');
+            $form->disableReset();
+            $form->tools(function (Form\Tools $tools) use ($id) {
+                $tools->add('<a href="/admin/subject_register/'.$id.'/edit" class="btn btn-sm btn-default" style="margin-right: 10px;"><i class="fa fa-edit"></i>&nbsp;&nbsp;Sửa</a>');
+            });
+
+        });
+    }
+
     public function subject(Request $request)
     {
         $timeRegisterId = $request->get('q');
@@ -372,7 +431,7 @@ EOT;
     }
 
     public function detailsView($id){
-        $form = $this->form()->view($id);
+        $form = $this->formDetails($id)->view($id);
         return view('vendor.details',
             [
                 'template_body_name' => 'admin.SubjectRegister.info',

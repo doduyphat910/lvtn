@@ -192,6 +192,26 @@ class ClassController extends Controller
         });
     }
 
+    protected function formDetails($id)
+    {
+        return Admin::form(ClassSTU::class, function (Form $form) use ($id) {
+            $form->display('id', 'ID');
+            $form->text('name', 'Tên lớp')->rules(function ($form){
+                return 'required|unique:class,name,'.$form->model()->id.',id';
+            })->readOnly();
+            $form->select('id_department', 'Tên khoa')->options(Department::all()->pluck('name', 'id'))
+                ->rules('required')->readOnly();
+            $form->select('id_user_teacher', 'GV cố vấn')->options(UserAdmin::where('type_user', 0)
+                ->pluck('name', 'id'))->readOnly();
+            $form->display('created_at', 'Created At');
+            $form->display('updated_at', 'Updated At');
+            $form->disableReset();
+            $form->tools(function (Form\Tools $tools) use ($id) {
+                $tools->add('<a href="/admin/class/'.$id.'/edit" class="btn btn-sm btn-default" style="margin-right: 10px;"><i class="fa fa-edit"></i>&nbsp;&nbsp;Sửa</a>');
+            });
+        });
+    }
+
     public function details($id){
         return Admin::content(
             function (Content $content) use ($id) {
@@ -203,7 +223,7 @@ class ClassController extends Controller
     }
 
     public function detailsView($id) {
-        $form = $this->form()->view($id);
+        $form = $this->formDetails($id)->view($id);
         $gridStudent = $this->gridStudent($id);
         return view('vendor.details',
             [

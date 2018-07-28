@@ -34,18 +34,18 @@ class SubjectsParallelController extends Controller
         return User::GridUser(SubjectParallel::class, function (GridUser $grid) {
 
             //$grid->id('ID')->sortable();
-            $grid->id_subject1('Môn học trước')->display(function ($idSubject1){
+            $grid->id_subject1('Môn học 1')->display(function ($idSubject1){
                 $name = Subjects::find($idSubject1)->name;
                 return $name;
             });
-            $grid->id_subject2('Môn học song song')->display(function ($idSubject2){
+            $grid->id_subject2('Môn học 2')->display(function ($idSubject2){
                 $name = Subjects::find($idSubject2)->name;
                 return $name;
             });
             $grid->filter(function($filter){
                 $filter->disableIdFilter();
-                $filter->in('id_subject1', 'Môn học trước')->multipleSelect(Subjects::all()->pluck('name', 'id'));
-                $filter->in('id_subject2', 'Môn học song song')->multipleSelect(Subjects::all()->pluck('name', 'id'));
+                $filter->in('id_subject1', '1')->multipleSelect(Subjects::all()->pluck('name', 'id'));
+                $filter->in('id_subject2', '2')->multipleSelect(Subjects::all()->pluck('name', 'id'));
             });
             $grid->disableActions();
             $grid->disableCreateButton();

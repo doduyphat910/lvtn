@@ -514,6 +514,7 @@ class Form
                 'message' => trans('admin.update_succeeded'),
             ]);
         }
+
         /* @var Model $this->model */
         $this->model = $this->model->with($this->getRelations())->findOrFail($id);
 

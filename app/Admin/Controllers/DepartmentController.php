@@ -153,6 +153,23 @@ class DepartmentController extends Controller
         });
     }
 
+    protected function formDetails($id)
+    {
+        return Admin::form(Department::class, function (Form $form) use ($id) {
+
+            $form->display('id', 'ID');
+            $form->text('name', 'Tên khoa')->rules(function ($form){
+                return 'required|unique:department,name,'.$form->model()->id.',id';
+            })->readOnly();
+            $form->display('created_at', 'Tạo vào lúc');
+            $form->display('updated_at', 'Cập nhật vào lúc');
+            $form->disableReset();
+            $form->tools(function (Form\Tools $tools) use ($id) {
+                $tools->add('<a href="/admin/department/'.$id.'/edit" class="btn btn-sm btn-default" style="margin-right: 10px;"><i class="fa fa-edit"></i>&nbsp;&nbsp;Sửa</a>');
+            });
+        });
+    }
+
     public function details($id){
         return Admin::content(function (Content $content) use ($id) {
             $department = Department::findOrFail($id);
@@ -163,7 +180,7 @@ class DepartmentController extends Controller
     }
 
     public function detailsView($id) {
-         $form = $this->form()->view($id);
+         $form = $this->formDetails($id)->view($id);
          $idClass = ClassSTU::where('id_department', $id)->pluck('id');
          $gridClass = $this->gridClass($idClass)->render();
          return view('vendor.details',

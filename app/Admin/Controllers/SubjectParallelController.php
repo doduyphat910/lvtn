@@ -79,7 +79,7 @@ class SubjectParallelController extends Controller
 //            });
 //            $grid->number('STT');
             $grid->id('ID')->sortable();
-            $grid->id_subject1('Môn học trước')->display(function ($idSubject1){
+            $grid->id_subject1('Môn học 1')->display(function ($idSubject1){
                 $subject1 = Subjects::find($idSubject1);
                 if(!empty($subject1->name)){
                     return '<a href="/admin/subject/' . $idSubject1 . '/details">'.$subject1->name.'</a>';
@@ -87,7 +87,7 @@ class SubjectParallelController extends Controller
                     return '';
                 }
             })->sortable();
-            $grid->id_subject2('Môn học song song')->display(function ($idSubject2){
+            $grid->id_subject2('Môn học 2')->display(function ($idSubject2){
                 $subject2 = Subjects::find($idSubject2);
                 if(!empty($subject2->name)){
                     return '<a href="/admin/subject/' . $idSubject2 . '/details">'.$subject2->name.'</a>';
@@ -106,8 +106,8 @@ class SubjectParallelController extends Controller
 //                        $query->whereIn('id_subject1', $subject1);
 //                    });
 //                }, 'Môn học trước');
-                $filter->in('id_subject1', 'Môn học trước')->multipleSelect(Subjects::all()->pluck('name', 'id'));
-                $filter->in('id_subject2', 'Môn học song song')->multipleSelect(Subjects::all()->pluck('name', 'id'));
+                $filter->in('id_subject1', 'Môn học 1')->multipleSelect(Subjects::all()->pluck('name', 'id'));
+                $filter->in('id_subject2', 'Môn học 2')->multipleSelect(Subjects::all()->pluck('name', 'id'));
                 $filter->between('created_at', 'Tạo vào lúc')->datetime();
             });
             $grid->disableExport();
@@ -124,8 +124,8 @@ class SubjectParallelController extends Controller
         return Admin::form(SubjectParallel::class, function (Form $form) {
 
             $form->display('id', 'ID');
-            $form->select('id_subject1', 'Môn học song song')->options(Subjects::all()->pluck('name', 'id'))->rules('required');
-            $form->select('id_subject2', 'Môn học sau ')->options(Subjects::all()->pluck('name', 'id'))->rules('required');
+            $form->select('id_subject1', 'Môn học 1')->options(Subjects::all()->pluck('name', 'id'))->rules('required');
+            $form->select('id_subject2', 'Môn học 2 ')->options(Subjects::all()->pluck('name', 'id'))->rules('required');
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
             $form->saving(function (Form $form){
