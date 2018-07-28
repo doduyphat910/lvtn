@@ -240,6 +240,23 @@ class ClassroomController extends Controller
         });
     }
 
+    protected function formDetails($id)
+    {
+        return Admin::form(Classroom::class, function (Form $form) use ($id) {
+
+            $form->display('id', 'ID');
+            $form->text('name', 'Tên phòng')->rules(function ($form){
+                return 'required|unique:class_room,name,'.$form->model()->id.',id';
+            })->readOnly();
+            $form->display('created_at', 'Created At');
+            $form->display('updated_at', 'Updated At');
+            $form->disableReset();
+            $form->tools(function (Form\Tools $tools) use ($id) {
+                $tools->add('<a href="/admin/class_room/'.$id.'/edit" class="btn btn-sm btn-default" style="margin-right: 10px;"><i class="fa fa-edit"></i>&nbsp;&nbsp;Sửa</a>');
+            });
+        });
+    }
+
     public function details($id){
         return Admin::content(function (Content $content) use ($id) {
             $classRoom = Classroom::findOrFail($id);
@@ -250,7 +267,7 @@ class ClassroomController extends Controller
     }
 
     public function detailsView($id){
-        $form = $this->form()->view($id);
+        $form = $this->formDetails($id)->view($id);
         $idSubjectRegister = TimeStudy::where('id_classroom', $id)->pluck('id_subject_register');
         $gridSubjectRegister = $this->gridSubjectRegister($idSubjectRegister)->render();
         return view('vendor.details',
