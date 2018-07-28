@@ -193,6 +193,32 @@ class StudentUserController extends Controller
         });
     }
 
+    public function formDetails($id)
+    {
+        return Admin::form(StudentUser::class, function (Form $form) use ($id) {
+            $form->display('id', 'ID');
+            $form->text('first_name', 'Họ')->rules('required')->readOnly();
+            $form->text('last_name', 'Tên')->rules('required')->readOnly();
+            $form->text('code_number', 'Mã số SV')->rules(function ($form){
+                return 'required|min:10|unique:student_user,code_number,'.$form->model()->id.',id';
+            })->readOnly();
+            $form->email('email', 'Email')->readOnly();
+            $form->hidden('password');
+            $form->select('id_class', 'Lớp')->options(ClassSTU::all()->pluck('name', 'id'))
+                ->rules('required')->readOnly();
+            $form->select('id_status', 'Trạng thái')
+                ->options(Status::all()->pluck('status', 'id'))->rules('required')->readOnly();
+            $form->year('school_year', 'Năm nhập học')->rules('required')->readOnly();
+            $form->select('level', 'Trình độ')->options(['CD'=>'Cao đẳng', 'DH'=>'Đại học'])->rules('required')->readOnly();
+            $form->display('created_at', 'Thêm vào lúc');
+            $form->display('updated_at', 'Cập nhật vào lúc');
+            $form->disableReset();
+            $form->tools(function (Form\Tools $tools) use ($id) {
+                $tools->add('<a href="/admin/student_user/'.$id.'/edit" class="btn btn-sm btn-default" style="margin-right: 10px;"><i class="fa fa-edit"></i>&nbsp;&nbsp;Sửa</a>');
+            });
+        });
+    }
+
     public function details($id){
         return Admin::content(function (Content $content) use ($id) {
             $studentUser = StudentUser::findOrFail($id);
@@ -203,7 +229,7 @@ class StudentUserController extends Controller
     }
 
     public function detailsView($id){
-        $form = $this->form()->view($id);
+        $form = $this->formDetails($id)->view($id);
         return view('vendor.details',
             [
                 'template_body_name' => 'admin.StudentUser.info',

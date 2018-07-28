@@ -280,6 +280,34 @@ class SubjectsController extends Controller
         });
     }
 
+    protected function formDetails($id)
+    {
+        return AdminMissID::form(Subjects::class, function (FormID $form) use ($id) {
+            $form->display('id', 'ID');
+            $form->text('name','Tên môn học')->rules(function ($form){
+                if (!$id = $form->model()->id) {
+                    return 'required|unique:subjects,name';
+                }
+            })->readOnly();
+            $form->number('credits','Tín chỉ')->rules('integer|min:1|max:6')->readOnly();
+            $form->number('credits_fee', 'Tín chỉ học phí')->rules('integer|min:1|max:15')->readOnly();
+            $form->multipleSelect('subject_group', 'Nhóm môn')->options(SubjectGroup::all()->pluck('name', 'id'))
+                ->rules('required')->readOnly();
+            $rates = Rate::all();
+            $arrayRate = [];
+            foreach($rates as $rate) {
+                $arrayRate += [$rate['id'] => $rate['attendance'] . '-'.  $rate['mid_term'] .'-' .$rate['end_term']];
+            }
+            $form->select('id_rate', 'Tỷ lệ điểm')->options($arrayRate)->rules('required')->readOnly();
+            $form->display('created_at', 'Created At');
+            $form->display('updated_at', 'Updated At');
+            $form->disableReset();
+            $form->tools(function (Form\Tools $tools) use ($id) {
+                $tools->add('<a href="/admin/subjects/'.$id.'/edit" class="btn btn-sm btn-default" style="margin-right: 10px;"><i class="fa fa-edit"></i>&nbsp;&nbsp;Sửa</a>');
+            });
+        });
+    }
+
     protected function gridSubjectRegister($idSubjects)
     {
         return Admin::grid(SubjectRegister::class, function (Grid $grid) use ($idSubjects) {
@@ -411,7 +439,7 @@ class SubjectsController extends Controller
     }
 
     public function detailsView($id){
-        $form = $this->form()->view($id);
+        $form = $this->formDetails($id)->view($id);
         $gridSubjectRegister = $this->gridSubjectRegister($id)->render();
         return view('vendor.details',
             [

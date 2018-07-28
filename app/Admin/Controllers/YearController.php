@@ -163,6 +163,24 @@ class YearController extends Controller
             $form->disableReset();
         });
     }
+
+    protected function formDetails($id)
+    {
+        return Admin::form(Year::class, function (Form $form) use ($id) {
+
+            $form->display('id', 'ID');
+            $options = ['Năm 1'=>'Năm 1', 'Năm 2'=>'Năm 2', 'Năm 3'=>'Năm 3', 'Năm 4'=>'Năm 4', 'Năm 5'=>'Năm 5', 'Năm 6'=>'Năm 6' ];
+            $form->select('name', 'Tên năm')->options($options)->rules(function ($form){
+                return 'required|unique:year,name,'.$form->model()->id.',id';
+            })->readOnly();
+            $form->display('created_at', 'Tạo vào lúc');
+            $form->display('updated_at', 'Cập nhật vào lúc');
+            $form->disableReset();
+            $form->tools(function (Form\Tools $tools) use ($id) {
+                $tools->add('<a href="/admin/class/'.$id.'/edit" class="btn btn-sm btn-default" style="margin-right: 10px;"><i class="fa fa-edit"></i>&nbsp;&nbsp;Sửa</a>');
+            });
+        });
+    }
     public function details($id){
         return Admin::content(
             function (Content $content) use ($id) {
@@ -173,7 +191,7 @@ class YearController extends Controller
             });
     }
     public function detailsView($id) {
-        $form = $this->form()->view($id);
+        $form = $this->formDetails($id)->view($id);
         $gridSemester = $this->gridSemester($id)->render();
         return view('vendor.details',
             [

@@ -134,6 +134,26 @@ class RateController extends Controller
         });
     }
 
+    protected function formDetails($id)
+    {
+        return Admin::form(Rate::class, function (Form $form) use ($id) {
+            $form->display('id', 'ID');
+            $form->text('name', 'Tên tỷ lệ')->rules('required')->readOnly();
+            $form->number('attendance', 'Tỉ lệ điểm chuyên cần')
+                ->rules('integer|max:30')->rules('integer|min:0')->readOnly();
+            $form->number('mid_term', 'Tỉ lệ điểm giữa kì')
+                ->rules('integer|max:50')->rules('integer|min:0')->readOnly();
+            $form->number('end_term', 'Tỉ lệ điểm cuối kì')
+                ->rules('integer|max:100')->rules('integer|min:50')->readOnly();
+            $form->display('created_at', 'Created At');
+            $form->display('updated_at', 'Updated At');
+            $form->disableReset();
+            $form->tools(function (Form\Tools $tools) use ($id) {
+                $tools->add('<a href="/admin/rate/'.$id.'/edit" class="btn btn-sm btn-default" style="margin-right: 10px;"><i class="fa fa-edit"></i>&nbsp;&nbsp;Sửa</a>');
+            });
+        });
+    }
+
     //details
     public function details($id){
         return Admin::content(
@@ -146,7 +166,7 @@ class RateController extends Controller
     }
 
     public function detailsView($id){
-        $form = $this->form()->view($id);
+        $form = $this->formDetails($id)->view($id);
         $gridSubject = $this->gridSubject($id)->render();
         return view('vendor.details',
             [

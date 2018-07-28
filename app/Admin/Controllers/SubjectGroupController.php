@@ -120,6 +120,20 @@ class SubjectGroupController extends Controller
             $form->disableReset();
         });
     }
+    protected function formDetails($id)
+    {
+        return Admin::form(SubjectGroup::class, function (Form $form) use ($id) {
+
+            $form->display('id', 'ID');
+            $form->text('name', 'Nhóm môn học')->rules('required')->readOnly();
+            $form->display('created_at', 'Created At');
+            $form->display('updated_at', 'Updated At');
+            $form->disableReset();
+            $form->tools(function (Form\Tools $tools) use ($id) {
+                $tools->add('<a href="/admin/subject_group/'.$id.'/edit" class="btn btn-sm btn-default" style="margin-right: 10px;"><i class="fa fa-edit"></i>&nbsp;&nbsp;Sửa</a>');
+            });
+        });
+    }
 
     //details
     public function details($id){
@@ -132,7 +146,7 @@ class SubjectGroupController extends Controller
     }
 
     public function detailsView($id){
-        $form = $this->form()->view($id);
+        $form = $this->formDetails($id)->view($id);
         $group = SubjectGroup::find($id);
         $idSubject = $group->subject()->pluck('id')->toArray();
         $gridSubject = $this->gridSubject($idSubject)->render();
