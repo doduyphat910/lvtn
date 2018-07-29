@@ -161,14 +161,14 @@ class APIAdminController extends Controller
                                         $isExisted = false;
                                         if(isset($arrayTable[$key])) {
                                             foreach ($arrayTable[$key] as $pSubKey => $item) {
-                                                if (isset($item[$idSubject])) {
-                                                    $arrayTable[$key][$pSubKey][$idSubject] = $arrayTable[$key][$pSubKey][$idSubject] + 1;
+                                                if (isset($item[$timeStudy['id_subject_register']])) {
+                                                    $arrayTable[$key][$pSubKey][$timeStudy['id_subject_register']] = $arrayTable[$key][$pSubKey][$timeStudy['id_subject_register']] + 1;
                                                     $isExisted = true;
                                                 }
                                             }
                                         }
                                         if (!$isExisted) {
-                                            $arrayTable[$key][$periodKey][$idSubject] = 1;
+                                            $arrayTable[$key][$periodKey][$timeStudy['id_subject_register']] = 1;
                                         } else {
                                             $arrayTable[$key][$periodKey] = false;
                                         }
@@ -186,9 +186,10 @@ class APIAdminController extends Controller
                             if(isset($arrayTable[$dayKey][$periodKey])) {
                                 if ($arrayTable[$dayKey][$periodKey] && count($arrayTable[$dayKey][$periodKey]) > 0) {
                                     $count = 1;
-                                    $subjectId = array_keys($arrayTable[$dayKey][$periodKey])[0];
+                                    $subjectRegisterId = array_keys($arrayTable[$dayKey][$periodKey])[0];
                                     $count = array_values($arrayTable[$dayKey][$periodKey])[0];
-                                    $nameSubject = Subjects::where("id", $subjectId)->first();
+                                    $idSubject = SubjectRegister::where("id", $subjectRegisterId)->first()->id_subjects;
+                                    $nameSubject = Subjects::where('id',$idSubject)->first();
                                     echo "<td rowspan='$count' style='background-color:#ecf0f1;border-color:Gray;border-width:1px;border-style:solid;height:22px;width:110px;color:Teal;text-align:center'>$nameSubject->name</td>";
                                 } else if(is_array($arrayTable[$dayKey][$periodKey])){// nếu như là array thì render
                                     echo "<td rowspan='1' class='td-object'></td>";

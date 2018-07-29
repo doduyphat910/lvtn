@@ -382,7 +382,7 @@ EOT;
                         $(document).on ("click", ".editable-submit", function () {
                          setTimeout(function(){ 
                            location.reload();
-                         }, 1000);
+                         }, 1500);
                         });
                     });
 SCRIPT;
@@ -395,7 +395,7 @@ SCRIPT;
             }
 
 //            $grid->created_at('Tạo vào lúc');
-//            $grid->updated_at('Cập nhật vào lúc');
+            $grid->updated_at('Cập nhật vào lúc');
             $grid->filter(function($filter) use ($idSubjectRegister) {
                 $filter->disableIdFilter();
                 $filter->where(function ($query){

@@ -211,8 +211,12 @@ EOT;
                     $form->status_edit_point = ["1","2","3"];
                 }
                 if($form->status == 'on' ) {
-//                    if (!$id = $form->model()->id) {
+                    $currentPath = Route::getFacadeRoot()->current()->uri();
+                    if($currentPath != "admin/time-register/{time_register}") {
                         $countStatusActive = TimeRegister::where('status', 1)->get()->count();
+                    } else {
+                        $countStatusActive = TimeRegister::where('id', '!=', $form->model()->id)->where('status', 1)->get()->count();
+                    }
                         if ($countStatusActive > 0) {
                             $error = new MessageBag([
                                 'title' => 'Lỗi',

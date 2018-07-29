@@ -32,7 +32,7 @@ class ImportStudentController extends Controller
             foreach($data as $key => $value) {
                 $csv_data_field[] = $key;
             }
-            $csv_data = array_slice($data, 0, 2);
+            $csv_data = array_slice($data, 0, count($data));
             $csv_data_file = new CSVData();
             $csv_data_file->file_name = $request->file('csv_file')->getClientOriginalName();
             $csv_data_file->model = 'student_user';
@@ -172,7 +172,7 @@ class ImportStudentController extends Controller
             foreach($data as $key => $value) {
                 $csv_data_field[] = $key;
             }
-            $csv_data = array_slice($data, 0, 2);
+            $csv_data = array_slice($data, 0, count($data));
             $csv_data_file = new CSVData();
             $csv_data_file->file_name = $request->file('csv_file')->getClientOriginalName();
             $csv_data_file->model = 'student_user';
