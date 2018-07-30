@@ -80,9 +80,10 @@ class ResultRegisterController extends Controller
             $user = Auth::user();
             //ưu tiên theo đợt đang mở trước
             $timeRegister = TimeRegister::where('status',1)->orderBy('id', 'DESC')->first();
+            // dd($timeRegister);
             if(empty($timeRegister)){
-
-                $timeRegister = TimeRegister::orderBy('id', 'DESC')->first();
+                $timeRegisterOfStudent = ResultRegister::where('id_user_student', $user->id)->orderBy('time_register', 'DESC')->first();
+                $timeRegister = TimeRegister::where('id',$timeRegisterOfStudent->time_register)->first();
             }
             $grid->model()->where('time_register', $timeRegister->id)->where('id_user_student', $user->id);
             // $grid->id('ID');

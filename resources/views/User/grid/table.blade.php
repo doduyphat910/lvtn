@@ -8,9 +8,20 @@
                             @foreach($grid->columnNames as $name)
                                 @if($name == 'Số tín chỉ hiện tại' && $show == 0)
                                 <?php $show++; ?>
-                                    Tổng số TC: {!! $row->column($name) !!}
+                                   <div class="btn btn-success btn-sm" style="font-weight: bold;"> Tổng số TC: {!! $row->column($name) !!} </div>
                                 @endif
                             @endforeach
+                    @endforeach
+                </div>
+                <div class="pull-left" style="margin-left: 10px;">
+                    <?php $showPoint = 0; ?>
+                    @foreach($grid->rows() as $row)
+                        @foreach($grid->columnNames as $name)
+                            @if($name == 'Điểm TK ALL' && $showPoint == 0)
+                                <?php $showPoint++; ?>
+                                <div class="btn btn-danger btn-sm" style="font-weight: bold;"> Điểm TK: {!! $row->column($name) !!}</div>
+                            @endif
+                        @endforeach
                     @endforeach
                 </div>
                 <div class="pull-right">
@@ -55,17 +66,7 @@
             </div>
             <div class="box-footer clearfix">
                 {!! $grid->paginator() !!} <br><br>
-                <div class="pull-left">
-                    <?php $showPoint = 0; ?>
-                    @foreach($grid->rows() as $row)
-                        @foreach($grid->columnNames as $name)
-                            @if($name == 'Điểm TK ALL' && $showPoint == 0)
-                                <?php $showPoint++; ?>
-                                Điểm TK: {!! $row->column($name) !!}
-                            @endif
-                        @endforeach
-                    @endforeach
-                </div>
+
             </div>
             <!-- /.box-body -->
         </div>
