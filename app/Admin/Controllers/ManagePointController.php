@@ -380,9 +380,20 @@ EOT;
                         $script = <<<SCRIPT
                     $(document).ready ( function () {
                         $(document).on ("click", ".editable-submit", function () {
-                         setTimeout(function(){ 
-                           location.reload();
-                         }, 1500);
+                          setTimeout(function(){ 
+                            if($('.editable-error-block').is(':visible'))
+                            {
+                                var text = $('.editable-error-block').text();
+                                var countText = text.length;
+                                var text2 = text.substr(0, countText-2 );
+                                $('.editable-error-block').text(text2);
+                            } else {
+                                location.reload();
+                            }
+                         }, 500);
+//                         setTimeout(function(){ 
+//                           location.reload();
+//                         }, 1700);
                         });
                     });
 SCRIPT;
