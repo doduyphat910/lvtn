@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SubjectGroup extends Model
 {
-    use SoftDeletes;
+//    use SoftDeletes;
 
     protected $table = 'subject_group';
     public function subject() {

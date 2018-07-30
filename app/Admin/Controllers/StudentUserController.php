@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Extensions\ModelFormCustom;
 use App\Models\ClassSTU;
 use App\Models\Status;
 use App\Models\StudentUser;
@@ -19,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 
 class StudentUserController extends Controller
 {
-    use ModelForm;
+    use ModelFormCustom;
 
     /**
      * Index interface.

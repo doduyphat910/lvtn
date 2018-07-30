@@ -8,7 +8,7 @@ use Encore\Admin\Auth\Database\Administrator;
 
 class StudentUser  extends Model
 {
-    use SoftDeletes;
+//    use SoftDeletes;
 
     protected $table = 'student_user';
     protected $fillable = ['email', 'id_class','code_number' , 'first_name', 'password', 'last_name', 'avatar', 'id_status'];

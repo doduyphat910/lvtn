@@ -20,7 +20,7 @@ use Encore\Admin\Controllers\ModelForm;
 
 class SubjectGroupController extends Controller
 {
-    use ModelForm;
+    use ModelFormCustom;
 
     /**
      * Index interface.

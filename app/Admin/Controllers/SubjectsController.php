@@ -267,7 +267,7 @@ class SubjectsController extends Controller
             $form->number('credits','Tín chỉ')->rules('integer|min:1|max:6');
             $form->number('credits_fee', 'Tín chỉ học phí')->rules('integer|min:1|max:15');
 //            $form->select('id_semester', 'Học kỳ')->options(Semester::all()->pluck('name', 'id'));
-            $form->multipleSelect('subject_group', 'Nhóm môn')->options(SubjectGroup::all()->pluck('name', 'id'))->rules('required');
+            $form->multipleSelect('subject_group', 'Nhóm môn')->options(SubjectGroup::all()->pluck('name', 'id'));
             $rates = Rate::all();
             $arrayRate = [];
             foreach($rates as $rate) {

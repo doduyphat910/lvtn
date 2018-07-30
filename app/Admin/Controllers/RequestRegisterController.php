@@ -50,8 +50,8 @@ class RequestRegisterController extends Controller
                 }
             })->sortable();
             $grid->column('SL yêu cầu')->display(function (){
-                $countStudent = UserSubject::where('id_time_register', $this->id_time_register)->where('id_subject', $this->id_subject)
-                    ->groupBy('id_user')->count();
+                $countStudent = UserSubject::distinct('id_user')->where('id_time_register', $this->id_time_register)->where('id_subject', $this->id_subject)
+                   ->count();
                 return $countStudent;
             });
             $grid->id_time_register('Đợt ĐK')->display(function ($idTimeRegister){
