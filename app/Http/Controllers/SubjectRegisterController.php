@@ -130,6 +130,29 @@ class SubjectRegisterController extends Controller
                     $year = Semester::find($arraySemester)->year()->get()->toArray();
                     if(!empty($year)) {
                         $nameYear = $year['0']['name'];
+                         $schoolYear = StudentUser::orderBy('school_year', 'DESC')->groupBy('school_year')->pluck('school_year')->toArray();
+                         switch ($nameYear){
+                             case 'Năm 1' :
+                             $nameYear = 'Khóa '.$schoolYear['0'];
+                             break;
+                             case 'Năm 2' :
+                                 $nameYear = 'Khóa '.$schoolYear['1'];
+                                 break;
+                             case 'Năm 3' :
+                                 $nameYear = 'Khóa '.$schoolYear['2'];
+                                 break;
+                             case 'Năm 4' :
+                                 $nameYear = 'Khóa '.$schoolYear['3'];
+                                 break;
+                             case 'Năm 5' :
+                                 $nameYear = 'Khóa '.$schoolYear['4'];
+                                 break;
+                             case 'Năm 6' :
+                                 $nameYear = 'Khóa '.$schoolYear['5'];
+                                 break;
+                             default:
+                                 $nameYear = '';
+                         }
 
                     } else {
                         $nameYear = '';
@@ -143,7 +166,7 @@ class SubjectRegisterController extends Controller
 //                    } else {
 //                        return "<span class='label label-success'>{$nameSemester} - {$nameYear}</span>";
 //                    }
-                    if(substr($nameYear,4,5) % 2 == 0){
+                    if(substr($nameYear,8,9) % 2 == 0){
                         if($nameSemester == 'Học kỳ hè') {
 //                            return  "<span class='label label-primary'>$nameSemester</span>"  ;
                         } else {
@@ -176,7 +199,31 @@ class SubjectRegisterController extends Controller
                         $optionSemesters += [$semester['id'] => 'Học kỳ hè'];
                     } else {
                         $nameYear = Year::where('id', $semester['id_year'])->first();
-                        $optionSemesters += [$semester['id'] => 'Học kỳ '. $semester['name']. ' - ' . $nameYear->name];
+                        $nameYear = $nameYear->name;
+                        $schoolYear = StudentUser::orderBy('school_year', 'DESC')->groupBy('school_year')->pluck('school_year')->toArray();
+                        switch ($nameYear){
+                            case 'Năm 1' :
+                                $nameYear = 'Khóa '.$schoolYear['0'];
+                                break;
+                            case 'Năm 2' :
+                                $nameYear = 'Khóa '.$schoolYear['1'];
+                                break;
+                            case 'Năm 3' :
+                                $nameYear = 'Khóa '.$schoolYear['2'];
+                                break;
+                            case 'Năm 4' :
+                                $nameYear = 'Khóa '.$schoolYear['3'];
+                                break;
+                            case 'Năm 5' :
+                                $nameYear = 'Khóa '.$schoolYear['4'];
+                                break;
+                            case 'Năm 6' :
+                                $nameYear = 'Khóa '.$schoolYear['5'];
+                                break;
+                            default:
+                                $nameYear = '';
+                        }
+                        $optionSemesters += [$semester['id'] => 'Học kỳ '. $semester['name']. ' - ' . $nameYear];
                     }
                 }
                 $filter->where(function ($query){

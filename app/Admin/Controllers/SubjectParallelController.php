@@ -95,8 +95,8 @@ class SubjectParallelController extends Controller
                     return '';
                 }
             })->sortable();
-            $grid->created_at()->sortable();
-            $grid->updated_at()->sortable();
+            $grid->created_at('Tạo vào lúc')->sortable();
+            $grid->updated_at('Cập nhật vào lúc')->sortable();
             $grid->filter(function($filter){
                 $filter->disableIdFilter();
 //                $filter->where(function ($query){
