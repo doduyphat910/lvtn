@@ -18,4 +18,13 @@
  *
  */
 
+
+use App\Admin\Extensions\Form\CKEditor;
+use Encore\Admin\Form;
+use Encore\Admin\Facades\Admin;
+
+
 Encore\Admin\Form::forget(['map', 'editor']);
+//Admin::js('public/vendor/laravel-admin/chartjs/chart.js');
+
+Form::extend('ckeditor', CKEditor::class);

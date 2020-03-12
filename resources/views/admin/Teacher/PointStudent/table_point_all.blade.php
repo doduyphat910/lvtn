@@ -1,0 +1,3 @@
+@php
+    echo $gridPoint;
+@endphp

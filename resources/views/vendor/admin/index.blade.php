@@ -2,7 +2,9 @@
 <html lang="{{ config('app.locale') }}">
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+    {{--<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>--}}
+
     <title>{{ Admin::title() }}</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -10,7 +12,7 @@
     <link rel="stylesheet" href="{{ admin_asset("/vendor/laravel-admin/AdminLTE/bootstrap/css/bootstrap.min.css") }}">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{{ admin_asset("/vendor/laravel-admin/font-awesome/css/font-awesome.min.css") }}">
-
+    
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ admin_asset("/vendor/laravel-admin/AdminLTE/dist/css/skins/" . config('admin.skin') .".min.css") }}">
 
@@ -38,7 +40,12 @@
     <![endif]-->
 
 </head>
+<style>
+/*    .fa-fw {
+        color: white;
+    }*/
 
+</style>
 <body class="hold-transition {{config('admin.skin')}} {{join(' ', config('admin.layout'))}}">
 <div class="wrapper">
 
@@ -71,4 +78,16 @@
 <script src="{{ admin_asset ("/vendor/laravel-admin/laravel-admin/laravel-admin.js") }}"></script>
 
 </body>
+<style>
+    body {
+        font-family: "Times New Roman";
+    }
+    .fontchuindam{
+        font-family: "Times New Roman";
+        font-weight: bold;
+    }
+    .sweet-alert h2{
+        font-family: "Times New Roman";
+    }
+</style>
 </html>

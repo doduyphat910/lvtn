@@ -76,6 +76,8 @@ return [
         ],
     ],
 
+
+
     /*
      * Laravel-admin database setting.
      */
@@ -85,7 +87,11 @@ return [
         'connection' => '',
 
         // User tables and model.
-        'users_table' => 'admin_users',
+        'users_table' => 'user_admin',
+//        'users_table' => 'admin_users',
+//        'users_table' => 'teacher_user',
+
+
         'users_model' => Encore\Admin\Auth\Database\Administrator::class,
 
         // Role table and model.
@@ -140,8 +146,9 @@ return [
     |               | sidebar-mini                            |
     |---------------------------------------------------------|
      */
-    'layout' => ['sidebar-mini', 'sidebar-collapse'],
 
+    // 'layout' => ['sidebar-mini', 'sidebar-collapse'],
+     'layout' => ['sidebar-mini'],
     /*
      * Version displayed in footer.
      */
@@ -152,5 +159,16 @@ return [
      */
     'extensions' => [
 
+    ],
+
+    'student_user_fields' => [
+        'mssv',
+        'ho',
+        'ten',
+        'email',
+        'lop',
+        'nam_nhap_hoc',
+        'trinh_do',
+        'trang_thai'
     ],
 ];
